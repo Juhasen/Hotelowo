@@ -1,10 +1,17 @@
-import Link from 'next/link';
+import Image from 'next/image';
+
+import mainImage from "../../public/assets/images/hotel-main.jpg"
 
 export default function Home() {
   return (
-      <div className="flex w-full bg-red-500">
-        <h1>Hotelowo HOME PAGE</h1>
-          <Link href="/about" className="text-blue-500" >O mnie</Link>
+      <div className="relative w-screen h-screen">
+          <Image
+              src={mainImage}
+              alt="Main Hotel Image"
+              fill
+              className="object-cover"
+              priority
+          />
       </div>
   );
 }
