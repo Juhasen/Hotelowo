@@ -1,12 +1,14 @@
 'use client';
 
+import {useTranslations} from 'next-intl';
 import Image from 'next/image';
-import mainImage from '../../public/assets/images/hotel-main.jpg';
-import SearchBar from '@/app/components/SearchBar';
+import mainImage from '../../../public/assets/images/hotel-main.jpg';
+import SearchBar from '@/app/[locale]/components/SearchBar';
 import {Typography} from "@mui/material";
 
 
 export default function Home() {
+    const t = useTranslations('HomePage');
     return (
         <div className="relative w-screen h-screen">
             <Image
@@ -23,7 +25,7 @@ export default function Home() {
             <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
                 <div className="flex flex-col gap-8 p-7 rounded-4xl shadow-2xl">
                     <Typography variant="h1" className="text-white text-4xl font-bold mb-4">
-                        Find Your Perfect Stay
+                        {t('title')}
                     </Typography>
                     <SearchBar/>
                 </div>
