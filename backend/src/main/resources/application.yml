@@ -12,3 +12,9 @@
     hibernate:
       ddl-auto: create-drop
     show-sql: false
+
+    properties:
+      hibernate:
+        format_sql: true
+
+    database: postgresql
