@@ -28,3 +28,4 @@ public class Amenity {
 
     @Column(name = "description_en")
     private String description_en;
+}
