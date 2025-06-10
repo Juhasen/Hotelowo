@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.juhas.backend.token.Token;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class User implements UserDetails {
     private String lastname;
 
     private String email;
+
+    private String phoneNumber;
 
     //I should have also getPassword method but Lombok already does it for me
     private String password;
@@ -55,6 +59,12 @@ public class User implements UserDetails {
         return password;
     }
 
+    @CreatedDate
+    @Column(
+            nullable = false,
+            updatable = false
+    )
+    private LocalDateTime createdAt;
 
     @Override
     public boolean isAccountNonExpired() {
