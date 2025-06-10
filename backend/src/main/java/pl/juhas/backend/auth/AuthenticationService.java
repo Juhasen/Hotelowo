@@ -17,6 +17,7 @@ import pl.juhas.backend.user.User;
 import pl.juhas.backend.user.UserRepository;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,9 @@ public class AuthenticationService {
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .createdAt(LocalDateTime.now())
                 .role(request.getRole())
                 .build();
         var savedUser = repository.save(user);
