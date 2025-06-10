@@ -16,5 +16,15 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    private String street;
+
+    private String city;
+
+    private String postalCode;
+
+    private String latitude;
+
+    private String longitude;
 }
 
