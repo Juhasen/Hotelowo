@@ -48,9 +48,12 @@ public class Hotel {
     @Column(length = 100)
     private String email;
 
+    @Column(length = 100)
+    private String website;
+
     private Boolean isAvailableSearch;
 
-    @ManyToMany(mappedBy = "hotels")
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Amenity> amenities;
 
     @CreatedDate
