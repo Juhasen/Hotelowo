@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import pl.juhas.backend.hotel.Hotel;
+
+import java.util.List;
 
 @Data
 @With
@@ -28,4 +31,7 @@ public class Amenity {
 
     @Column(name = "description_en")
     private String description_en;
+
+    @ManyToMany
+    private List<Hotel> hotels;
 }
