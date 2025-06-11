@@ -120,4 +120,14 @@ public class HotelService {
         return true;
     }
 
+    public Boolean deleteHotel(Integer id) {
+        Optional<Hotel> optionalHotel = hotelRepository.findById(id);
+        if (optionalHotel.isEmpty()) {
+            return false;
+        }
+
+        Hotel hotel = optionalHotel.get();
+        hotelRepository.delete(hotel);
+        return true;
+    }
 }
