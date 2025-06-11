@@ -1,6 +1,6 @@
 package pl.juhas.backend.address;
 
-public record AddressDTO(
+public record AddressRequest(
     String street,
     String city,
     String postalCode,
