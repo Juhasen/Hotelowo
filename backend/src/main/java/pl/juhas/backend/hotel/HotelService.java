@@ -40,7 +40,7 @@ public class HotelService {
         return hotelRepository.findById(id);
     }
 
-    public Boolean createHotel(CreateHotelRequest hotel) {
+    public Boolean createHotel(HotelRequest hotel) {
 
         //1. Save address
         Address address;
@@ -79,6 +79,44 @@ public class HotelService {
                 .withAddress(address);
 
         hotelRepository.save(newHotel);
+        return true;
+    }
+
+    public Boolean updateHotel(Integer id, HotelRequest hotel) {
+        Optional<Hotel> optionalHotel = hotelRepository.findById(id);
+        if (optionalHotel.isEmpty()) {
+            return false;
+        }
+
+        Hotel existingHotel = optionalHotel.get();
+
+        // Update address
+        Address address = existingHotel.getAddress();
+        if (hotel.address() != null) {
+            address.setStreet(hotel.address().street());
+            address.setCity(hotel.address().city());
+            address.setPostalCode(hotel.address().postalCode());
+            address.setLatitude(hotel.address().latitude());
+            address.setLongitude(hotel.address().longitude());
+            addressRepository.save(address);
+        }
+
+        // Update amenities
+        List<Amenity> amenities = null;
+        if (hotel.amenityIds() != null && hotel.amenityIds().length > 0) {
+            amenities = amenityRepository.findAmenitiesByIds(hotel.amenityIds());
+        }
+
+        existingHotel.setName(hotel.name());
+        existingHotel.setDescription_pl(hotel.description_pl());
+        existingHotel.setDescription_en(hotel.description_en());
+        existingHotel.setPhone(hotel.phone());
+        existingHotel.setEmail(hotel.email());
+        existingHotel.setWebsite(hotel.website());
+        existingHotel.setIsAvailableSearch(hotel.isAvailableSearch());
+        existingHotel.setAmenities(amenities);
+
+        hotelRepository.save(existingHotel);
         return true;
     }
 

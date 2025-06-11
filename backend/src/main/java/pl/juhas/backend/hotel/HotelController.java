@@ -13,15 +13,15 @@ import java.util.List;
 public class HotelController {
 
     private final HotelService service;
-    
+
     @GetMapping("/{locale}")
     public ResponseEntity<List<HotelResponse>> getAllHotels(@PathVariable LocaleType locale) {
         return ResponseEntity.ok(service.getAllHotels(locale.name()));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createHotel(
-            @RequestBody CreateHotelRequest request
+            @RequestBody HotelRequest request
     ) {
         Boolean res = service.createHotel(request);
         if (!res) {
@@ -29,5 +29,17 @@ public class HotelController {
                     .body("Invalid hotel data provided.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateHotel(@PathVariable Integer id,
+                                         @RequestBody HotelRequest request
+    ) {
+        Boolean res = service.updateHotel(id, request);
+        if (!res) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid hotel data provided.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
