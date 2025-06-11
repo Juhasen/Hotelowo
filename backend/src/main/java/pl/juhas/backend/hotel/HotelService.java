@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.address.Address;
+import pl.juhas.backend.address.AddressDTO;
 import pl.juhas.backend.address.AddressRepository;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
@@ -11,7 +12,6 @@ import pl.juhas.backend.amenity.AmenityRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
@@ -44,13 +44,14 @@ public class HotelService {
 
         //1. Save address
         Address address;
-        if (hotel.latitude() != null && hotel.longitude() != null) {
+        AddressDTO addressRequest = hotel.address();
+        if (addressRequest != null) {
             address = new Address()
-                    .withStreet(hotel.street())
-                    .withCity(hotel.city())
-                    .withPostalCode(hotel.postalCode())
-                    .withLatitude(hotel.latitude())
-                    .withLongitude(hotel.longitude());
+                    .withStreet(addressRequest.street())
+                    .withCity(addressRequest.city())
+                    .withPostalCode(addressRequest.postalCode())
+                    .withLatitude(addressRequest.latitude())
+                    .withLongitude(addressRequest.longitude());
             addressRepository.save(address);
         } else {
             return false;

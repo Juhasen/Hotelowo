@@ -23,8 +23,8 @@ public class Address {
 
     private String postalCode;
 
-    private String latitude;
+    private Double latitude;
 
-    private String longitude;
+    private Double longitude;
 }
 

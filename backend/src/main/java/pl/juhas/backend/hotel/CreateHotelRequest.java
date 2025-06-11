@@ -1,5 +1,7 @@
 package pl.juhas.backend.hotel;
 
+import pl.juhas.backend.address.AddressDTO;
+
 public record CreateHotelRequest(
     String name,
     String description_pl,
@@ -7,12 +9,8 @@ public record CreateHotelRequest(
     String phone,
     String email,
     String website,
-    String city,
-    String postalCode,
-    String street,
-    String latitude,
-    String longitude,
     Boolean isAvailableSearch,
-    Integer[] amenityIds
+    Integer[] amenityIds,
+    AddressDTO address
 ) {
 }

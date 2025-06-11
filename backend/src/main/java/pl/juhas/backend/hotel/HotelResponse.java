@@ -1,6 +1,6 @@
 package pl.juhas.backend.hotel;
 
-import pl.juhas.backend.address.Address;
+import pl.juhas.backend.address.AddressDTO;
 import pl.juhas.backend.amenity.Amenity;
 import java.util.List;
 
@@ -10,7 +10,7 @@ public record HotelResponse(
     String phone,
     String email,
     String website,
-    Address address,
+    AddressDTO address,
     Boolean isAvailableSearch,
     List<Amenity> amenities
 ) {}

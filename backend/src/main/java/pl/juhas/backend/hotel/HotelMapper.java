@@ -1,5 +1,8 @@
 package pl.juhas.backend.hotel;
 
+import pl.juhas.backend.address.AddressDTO;
+import pl.juhas.backend.address.AddressMapper;
+
 public class HotelMapper {
     public static HotelResponse toResponse(Hotel hotel, String locale) {
 
@@ -10,13 +13,15 @@ public class HotelMapper {
             description = hotel.getDescription_en();
         }
 
+        AddressDTO addressDTO = AddressMapper.mapToAddressDTO(hotel.getAddress());
+
         return new HotelResponse(
                 hotel.getName(),
                 description,
                 hotel.getPhone(),
                 hotel.getEmail(),
                 hotel.getWebsite(),
-                hotel.getAddress(),
+                addressDTO,
                 hotel.getIsAvailableSearch(),
                 hotel.getAmenities()
         );
