@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.address.Address;
-import pl.juhas.backend.address.AddressDTO;
+import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressRepository;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
 import pl.juhas.backend.hotelImage.HotelImage;
 import pl.juhas.backend.hotelImage.HotelImageDTO;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
+import pl.juhas.backend.hotelImage.HotelImageRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -57,7 +56,7 @@ public class HotelService {
 
         //1. Save address
         Address address;
-        AddressDTO addressRequest = hotel.address();
+        AddressRequest addressRequest = hotel.address();
         if (addressRequest != null) {
             address = new Address()
                     .withStreet(addressRequest.street())
@@ -99,12 +98,23 @@ public class HotelService {
         if (hotel.images() != null && !hotel.images().isEmpty()) {
             List<HotelImage> hotelImages = new ArrayList<>();
 
-            for (HotelImageDTO imageDTO : hotel.images()) {
+            // Znajdź główny obraz jeśli istnieje
+            boolean hasPrimaryImage = hotel.images().stream()
+                    .anyMatch(img -> img.isPrimary() != null && img.isPrimary());
+
+            for (HotelImageRequest imageDTO : hotel.images()) {
+                // Przy tworzeniu hotelu zawsze tworzymy nowe obrazy, ignorując ewentualnie podane id
                 HotelImage hotelImage = new HotelImage()
                         .withFilePath(imageDTO.filePath())
                         .withAltText(imageDTO.altText())
                         .withIsPrimary(imageDTO.isPrimary())
                         .withHotel(savedHotel);
+
+                // Jeśli nie ma głównego obrazu, ustaw pierwszy jako główny
+                if (!hasPrimaryImage && hotelImages.isEmpty()) {
+                    hotelImage.setIsPrimary(true);
+                }
+
                 hotelImages.add(hotelImage);
             }
 
@@ -155,55 +165,39 @@ public class HotelService {
         existingHotel.setIsAvailableSearch(hotel.isAvailableSearch());
         existingHotel.setAmenities(amenities);
 
-        // Handle images - remove existing images if there are new ones
         if (hotel.images() != null && !hotel.images().isEmpty()) {
-            // Clear existing images that are not in the new list
-            List<HotelImage> existingImages = existingHotel.getImages();
-            if (existingImages != null) {
-                // Create a map of ID to existing images for faster lookup
-                List<Long> newImageIds = hotel.images().stream()
-                        .filter(img -> img.id() != null)
-                        .map(HotelImageDTO::id)
-                        .toList();
 
-                // Remove images that are not in the new list
-                List<HotelImage> imagesToRemove = existingImages.stream()
-                        .filter(image -> image.getId() != null &&
-                                !newImageIds.contains(image.getId()))
-                        .toList();
+            List<HotelImage> existingImages = hotelImageRepository.findByHotel(existingHotel);
 
-                for (HotelImage image : imagesToRemove) {
-                    existingHotel.getImages().remove(image);
-                }
+            if (existingImages != null && !existingImages.isEmpty()) {
+                hotelImageRepository.deleteAll(existingImages);
+                existingHotel.setImages(new ArrayList<>());
             }
 
-            // Add or update images
-            for (HotelImageDTO imageDTO : hotel.images()) {
-                if (imageDTO.id() == null) {
-                    // Create new image
-                    HotelImage newImage = new HotelImage()
-                            .withFilePath(imageDTO.filePath())
-                            .withAltText(imageDTO.altText())
-                            .withIsPrimary(imageDTO.isPrimary())
-                            .withHotel(existingHotel);
+            List<HotelImage> newImages = new ArrayList<>();
 
-                    hotelImageRepository.save(newImage);
-                    existingHotel.getImages().add(newImage);
-                } else {
-                    // Update existing image
-                    Optional<HotelImage> existingImage = existingHotel.getImages().stream()
-                            .filter(img -> img.getId().intValue() == imageDTO.id())
-                            .findFirst();
+            boolean hasPrimaryImage = hotel.images().stream()
+                    .anyMatch(img -> img.isPrimary() != null && img.isPrimary());
 
-                    if (existingImage.isPresent()) {
-                        HotelImage image = existingImage.get();
-                        image.setFilePath(imageDTO.filePath());
-                        image.setAltText(imageDTO.altText());
-                        image.setIsPrimary(imageDTO.isPrimary());
-                        hotelImageRepository.save(image);
-                    }
+            for (int i = 0; i < hotel.images().size(); i++) {
+                HotelImageRequest imageReq = hotel.images().get(i);
+
+                HotelImage newImage = new HotelImage()
+                        .withFilePath(imageReq.filePath())
+                        .withAltText(imageReq.altText())
+                        .withIsPrimary(imageReq.isPrimary())
+                        .withHotel(existingHotel);
+
+                // Jeśli nie ma głównego obrazu, ustaw pierwszy jako główny
+                if (!hasPrimaryImage && i == 0) {
+                    newImage.setIsPrimary(true);
                 }
+
+                newImages.add(newImage);
             }
+
+            hotelImageRepository.saveAll(newImages);
+            existingHotel.setImages(newImages);
         }
 
         hotelRepository.save(existingHotel);
