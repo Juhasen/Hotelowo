@@ -2,6 +2,10 @@ package pl.juhas.backend.hotel;
 
 import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressMapper;
+import pl.juhas.backend.hotelImage.HotelImageMapper;
+import pl.juhas.backend.hotelImage.HotelImageRequest;
+
+import java.util.List;
 
 public class HotelMapper {
     public static HotelResponse toResponse(Hotel hotel, String locale) {
@@ -14,6 +18,9 @@ public class HotelMapper {
         }
 
         AddressRequest addressDTO = AddressMapper.mapToAddressDTO(hotel.getAddress());
+        List<HotelImageRequest> images = hotel.getImages().stream()
+                .map(HotelImageMapper::mapToHotelImageRequest)
+                .toList();
 
         return new HotelResponse(
                 hotel.getName(),
@@ -24,7 +31,7 @@ public class HotelMapper {
                 addressDTO,
                 hotel.getIsAvailableSearch(),
                 hotel.getAmenities(),
-                hotel.getImages()
+                images
         );
     }
 }

@@ -57,7 +57,7 @@ public class Hotel {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Amenity> amenities;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HotelImage> images;
 
     @CreatedDate
