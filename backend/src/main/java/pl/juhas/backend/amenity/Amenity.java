@@ -32,6 +32,12 @@ public class Amenity {
     @Column(name = "description_en")
     private String description_en;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "hotel_amenity",
+            joinColumns = @JoinColumn(name = "amenity_id"),
+            inverseJoinColumns = @JoinColumn(name = "hotel_id")
+    )
     private List<Hotel> hotels;
+
 }
