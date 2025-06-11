@@ -2,7 +2,7 @@ package pl.juhas.backend.hotel;
 
 import pl.juhas.backend.address.AddressDTO;
 
-public record CreateHotelRequest(
+public record HotelRequest(
     String name,
     String description_pl,
     String description_en,
