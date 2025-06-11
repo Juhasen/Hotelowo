@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.juhas.backend.address.Address;
 import pl.juhas.backend.amenity.Amenity;
+import pl.juhas.backend.hotelImage.HotelImage;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -55,6 +56,9 @@ public class Hotel {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Amenity> amenities;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HotelImage> images;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

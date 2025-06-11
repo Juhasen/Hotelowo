@@ -25,10 +25,10 @@ public class Room {
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
-    @JoinColumn(name = "room_number", nullable = false)
+    @JoinColumn(nullable = false)
     private String number;
 
-    @JoinColumn(name = "room_type", nullable = false)
+    @JoinColumn(nullable = false)
     private RoomType type;
 
     @Column(precision = 8, scale = 2)

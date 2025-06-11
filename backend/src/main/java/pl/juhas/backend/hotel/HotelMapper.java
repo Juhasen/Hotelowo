@@ -23,7 +23,8 @@ public class HotelMapper {
                 hotel.getWebsite(),
                 addressDTO,
                 hotel.getIsAvailableSearch(),
-                hotel.getAmenities()
+                hotel.getAmenities(),
+                hotel.getImages()
         );
     }
 }
