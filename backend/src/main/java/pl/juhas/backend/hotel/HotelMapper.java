@@ -1,12 +1,18 @@
 package pl.juhas.backend.hotel;
 
 public class HotelMapper {
-    public static HotelResponse toResponse(Hotel hotel) {
+    public static HotelResponse toResponse(Hotel hotel, String locale) {
+
+        String description;
+        if(locale.equals("pl")) {
+            description = hotel.getDescription_pl();
+        } else {
+            description = hotel.getDescription_en();
+        }
+
         return new HotelResponse(
-                hotel.getId().intValue(),
                 hotel.getName(),
-                hotel.getDescription_pl(),
-                hotel.getDescription_en(),
+                description,
                 hotel.getPhone(),
                 hotel.getEmail(),
                 hotel.getWebsite(),

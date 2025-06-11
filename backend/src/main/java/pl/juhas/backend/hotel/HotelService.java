@@ -24,15 +24,15 @@ public class HotelService {
     private final AmenityRepository amenityRepository;
 
     @Transactional(readOnly = true)
-    public List<HotelResponse> getAllHotels() {
+    public List<HotelResponse> getAllHotels(String locale) {
         List<Hotel> hotels = hotelRepository.findAll();
 
-        if (hotels.isEmpty()) {
+        if (hotels.isEmpty() || (!locale.equals("pl") && !locale.equals("en"))) {
             return List.of();
         }
 
         return hotels.stream()
-                .map(HotelMapper::toResponse)
+                .map(hotel -> HotelMapper.toResponse(hotel, locale))
                 .toList();
     }
 

@@ -14,9 +14,13 @@ public class HotelController {
 
     private final HotelService service;
     
-    @GetMapping
-    public ResponseEntity<List<HotelResponse>> getAllHotels() {
-        return ResponseEntity.ok(service.getAllHotels());
+    @GetMapping("/{locale}")
+    public ResponseEntity<List<HotelResponse>> getAllHotels(@PathVariable String locale) {
+        if (!locale.equals("pl") && !locale.equals("en")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(List.of());
+        }
+        return ResponseEntity.ok(service.getAllHotels(locale));
     }
 
     @PostMapping("/create")
