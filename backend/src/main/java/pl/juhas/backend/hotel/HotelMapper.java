@@ -1,6 +1,6 @@
 package pl.juhas.backend.hotel;
 
-import pl.juhas.backend.address.AddressDTO;
+import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressMapper;
 
 public class HotelMapper {
@@ -13,7 +13,7 @@ public class HotelMapper {
             description = hotel.getDescription_en();
         }
 
-        AddressDTO addressDTO = AddressMapper.mapToAddressDTO(hotel.getAddress());
+        AddressRequest addressDTO = AddressMapper.mapToAddressDTO(hotel.getAddress());
 
         return new HotelResponse(
                 hotel.getName(),
