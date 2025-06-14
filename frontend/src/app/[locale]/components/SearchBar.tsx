@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import { useState } from 'react';
-import { Paper, IconButton, MenuItem, Select, FormControl, InputLabel, Stack } from '@mui/material';
+import { Paper, IconButton, MenuItem, Select, FormControl, InputLabel, Stack, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import {primaryBrown, secondaryBrown} from '../lib/theme';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -27,6 +27,9 @@ export default function SearchBar() {
         dayjs.locale(locale);
     }, [locale]);
 
+    // Format daty DD/MM/YYYY
+    const dateFormat = 'DD/MM/YYYY';
+
     // Konwersja zakresu dat do natywnych obiektów Date dla API
     const getNativeDateRange = () => {
         if (!startDate || !endDate) return null;
@@ -47,7 +50,7 @@ export default function SearchBar() {
     };
 
     return (
-        <div className="w-full max-w-3xl mx-auto z-20">
+        <div className="w-full mx-auto z-20">
             <Paper
                 component="form"
                 elevation={5}
@@ -55,88 +58,110 @@ export default function SearchBar() {
                     p: '16px',
                     display: 'flex',
                     alignItems: 'center',
-                    borderRadius: '9999px',
+                    borderRadius: { xs:'10px', md: '9999px'},
                     width: '100%',
-                    gap: 2,
-                    flexWrap: 'wrap',
-                    border: `1px solid ${secondaryBrown}` // Dodanie obramowania do całego formularza
+                    border: `1px solid ${secondaryBrown}`,
+                    flexDirection: { xs: 'column', md: 'row' }, // Kolumna na małych ekranach, wiersz na średnich i większych
+                    gap: 2
                 }}
-                className="flex flex-row gap-x-2 w-full"
                 onSubmit={handleSubmit}
             >
-                <CountrySelect value={country} onChange={setCountry} />
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: 'center',
+                    paddingX: '10px',
+                    width: '100%',
+                    gap: 2
+                }}>
+                    <Box sx={{ width: { xs: '100%', md: 'auto' } }}>
+                        <CountrySelect value={country} onChange={setCountry} />
+                    </Box>
 
-                <div style={{ flexGrow: 1, minWidth: '280px' }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
-                        <Stack direction="row" spacing={1} sx={{ width: '100%' }}>
-                            <DatePicker
-                                label={t('checkIn')}
-                                value={startDate}
-                                onChange={setStartDate}
-                                slotProps={{
-                                    textField: {
-                                        size: 'small',
-                                        fullWidth: true
+                    <Box sx={{ flexGrow: 1, width: { xs: '100%', md: 'auto' } }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: '100%' }}>
+                                <DatePicker
+                                    label={t('checkIn')}
+                                    value={startDate}
+                                    onChange={setStartDate}
+                                    format={dateFormat}
+                                    slotProps={{
+                                        textField: {
+                                            size: 'small',
+                                            fullWidth: true,
+                                            inputProps: {
+                                                placeholder: "DD/MM/YYYY"
+                                            }
+                                        }
+                                    }}
+                                    disablePast
+                                />
+                                <DatePicker
+                                    label={t('checkOut')}
+                                    value={endDate}
+                                    onChange={setEndDate}
+                                    format={dateFormat}
+                                    slotProps={{
+                                        textField: {
+                                            size: 'small',
+                                            fullWidth: true,
+                                            inputProps: {
+                                                placeholder: "DD/MM/YYYY"
+                                            }
+                                        }
+                                    }}
+                                    minDate={startDate || undefined}
+                                    disablePast
+                                />
+                            </Stack>
+                        </LocalizationProvider>
+                    </Box>
+
+                    <Box sx={{ width: { xs: '100%', md: 'auto' } }}>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="capacity-label" sx={{
+                                color: 'text.primary',
+                                '&.Mui-focused': {
+                                    color: primaryBrown
+                                }
+                            }}>{t('personCount')}</InputLabel>
+                            <Select
+                                labelId="capacity-label"
+                                value={capacity}
+                                label={t('personCount')}
+                                onChange={e => setCapacity(Number(e.target.value))}
+                                sx={{
+                                    minWidth: '100px',
+                                    '& .MuiSvgIcon-root': {
+                                        color: primaryBrown,
                                     }
                                 }}
+                            >
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                                    <MenuItem key={num} value={num}>{num}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
 
-                                disablePast
-                            />
-                            <DatePicker
-                                label={t('checkOut')}
-                                value={endDate}
-                                onChange={setEndDate}
-                                slotProps={{
-                                    textField: {
-                                        size: 'small',
-                                        fullWidth: true
-                                    }
-                                }}
-
-                                minDate={startDate || undefined}
-                                disablePast
-                            />
-                        </Stack>
-                    </LocalizationProvider>
-                </div>
-
-                <FormControl size="small" >
-                    <InputLabel id="capacity-label" sx={{
-                        color: 'text.primary',
-                        '&.Mui-focused': {
-                            color: primaryBrown
-                        }
-                    }}>{t('personCount')}</InputLabel>
-                    <Select
-                        labelId="capacity-label"
-                        value={capacity}
-                        label={t('personCount')}
-                        onChange={e => setCapacity(Number(e.target.value))}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                                color: primaryBrown,
-                            }
-                        }}
-                    >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                            <MenuItem key={num} value={num}>{num}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <IconButton
-                    type="submit"
-                    sx={{
-                        p: '15px',
-                        '&:hover': {
-                            backgroundColor: `${secondaryBrown}40`  // 40 dodaje przezroczystość
-                        }
-                    }}
-                    aria-label={t('searchButton')}
-                    color="primary"
-                    title={t('searchButton')}
-                >
-                    <SearchIcon sx={{ fontSize: 30, color: primaryBrown }} />
-                </IconButton>
+                    <Box sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' }, width: { xs: '100%', md: 'auto' } }}>
+                        <IconButton
+                            type="submit"
+                            sx={{
+                                p: '15px',
+                                '&:hover': {
+                                    backgroundColor: `${secondaryBrown}40`  // 40 dodaje przezroczystość
+                                }
+                            }}
+                            aria-label={t('searchButton')}
+                            color="primary"
+                            title={t('searchButton')}
+                        >
+                            <SearchIcon sx={{ fontSize: 30, color: primaryBrown }} />
+                        </IconButton>
+                    </Box>
+                </Box>
             </Paper>
         </div>
     );
