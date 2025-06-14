@@ -15,6 +15,8 @@ import {
     Pagination,
     CircularProgress
 } from '@mui/material';
+import Rating from '@mui/material/Rating';
+import StarIcon from '@mui/icons-material/Star';
 import {useTranslations} from 'next-intl';
 import {useLocale} from 'use-intl';
 import dayjs from 'dayjs';
@@ -24,12 +26,10 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SearchBar from '@/app/[locale]/components/SearchBar';
 import Image from 'next/image';
 import {Hotel, Page} from '@/app/[locale]/lib/types';
-import {auto} from "@popperjs/core";
 
 
 // Włączamy plugin do niestandardowego formatu parsowania
 dayjs.extend(customParseFormat);
-
 
 
 // Pozostała część kodu
@@ -56,7 +56,7 @@ export default function SearchResultsPage() {
     const checkIn = searchParams.get('checkIn');
     const checkOut = searchParams.get('checkOut');
     const capacityStr = searchParams.get('capacity');
-    const capacity = capacityStr ? parseInt(capacityStr, 10) : undefined;
+    const capacity = capacityStr ? parseInt(capacityStr, 10) : 1;
 
     // Formatowanie dat do wyświetlenia z użyciem strict parsing
     const dateFormat = 'DD/MM/YYYY';
@@ -118,7 +118,7 @@ export default function SearchResultsPage() {
                 const pageResponse: Page = {
                     content: paginatedContent,
                     pageable: {
-                        page:{
+                        page: {
                             size: size,
                             number: page,
                             totalElements: totalItems,
@@ -218,26 +218,81 @@ export default function SearchResultsPage() {
                     <>
                         <Grid container spacing={4} justifyContent="center">
                             {hotelsPage.content.map((hotel) => (
-                                <Grid key={hotel.id}>
-                                    <Card sx={{ display: 'flex', minHeight: 260, borderRadius: 4, boxShadow: 4 }}>
-                                        <Box sx={{ width: 350, minHeight: 260, position: 'relative', flexShrink: 0 }}>
+                                <Grid item xs={12} sm={10} md={8} key={hotel.id}>
+                                    <Card
+                                        sx={{
+                                            display: 'flex',
+                                            width: 750,
+                                            height: 260,
+                                            minWidth: 750,
+                                            minHeight: 260,
+                                            maxWidth: 750,
+                                            maxHeight: 260,
+                                            borderRadius: 4,
+                                            boxShadow: 4,
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 350,
+                                                height: 260,
+                                                minWidth: 350,
+                                                minHeight: 260,
+                                                maxWidth: 350,
+                                                maxHeight: 260,
+                                                position: 'relative',
+                                                flexShrink: 0,
+                                            }}
+                                        >
                                             <Image
                                                 src={hotel.mainImageUrl ? hotel.mainImageUrl : '/images/hotels/default.jpg'}
                                                 alt={hotel.name}
                                                 fill
-                                                style={{ objectFit: 'cover', borderTopLeftRadius: 16, borderBottomLeftRadius: 16 }}
-                                                onError={(e) => { (e.target as HTMLImageElement).src = '/images/hotels/default.jpg'; }}
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    borderTopLeftRadius: 16,
+                                                    borderBottomLeftRadius: 16,
+                                                }}
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = '/images/hotels/default.jpg';
+                                                }}
                                             />
                                         </Box>
-                                        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', p: 4 }}>
+                                        <CardContent
+                                            sx={{
+                                                flex: 1,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                p: 4,
+                                                height: '100%',
+                                            }}
+                                        >
                                             <Typography variant="h5" gutterBottom>
                                                 {hotel.name}
                                             </Typography>
                                             <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                                                {t('rating')}: {hotel.rating}
+                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                                                    <Rating
+                                                        name="Hotel Rating"
+                                                        value={hotel.rating}
+                                                        readOnly
+                                                        precision={0.5}
+                                                        size="medium"
+                                                        sx={{ ml: 1 }}
+                                                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                                    />
+                                                    <Box component="span" sx={{ fontWeight: 'bold', color: 'primary.main', ml: 1 }}>
+                                                        {hotel.rating}
+                                                    </Box>
+                                                </Box>
                                             </Typography>
-                                            <Typography variant="h6" color="primary">
-                                                {hotel.oneNightPrice} PLN
+
+                                            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                                                1 {t("night")} / {capacity} {capacity > 1 ? t("people") : t("person")}  &nbsp;<br/>
+                                                <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: '1.2em' }}>
+                                                    {hotel.oneNightPrice} PLN
+                                                </Box>
                                             </Typography>
                                         </CardContent>
                                     </Card>
