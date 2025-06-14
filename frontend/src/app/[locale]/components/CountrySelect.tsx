@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Image from 'next/image';
 import {useTranslations} from "next-intl";
+import { primaryBrown } from '../lib/theme';
 
 export interface CountryType {
     code: string;
@@ -22,7 +23,23 @@ export default function CountrySelect({ value, onChange }: CountrySelectProps) {
     return (
         <Autocomplete
             id="country-select"
-            sx={{ width: 300 }}
+            sx={{
+                width: { xs: '100%', md: 200 },
+                '& .MuiInputBase-root': {
+                    fontSize: '0.875rem',
+                    height: '40px',
+                },
+                '& .MuiOutlinedInput-root': {
+                    padding: '0px 9px',
+                },
+                '& .MuiAutocomplete-endAdornment': {
+                    right: '9px',
+                },
+                '& .MuiSvgIcon-root': {
+                    color: primaryBrown,
+                    fontSize: '1.2rem',
+                }
+            }}
             options={countries}
             autoHighlight
             getOptionLabel={(option) => option.label}
@@ -34,7 +51,10 @@ export default function CountrySelect({ value, onChange }: CountrySelectProps) {
                     <Box
                         key={key}
                         component="li"
-                        sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                        sx={{
+                            '& > img': { mr: 2, flexShrink: 0 },
+                            fontSize: '0.875rem',
+                        }}
                         {...optionProps}
                     >
                         <Image
@@ -52,11 +72,31 @@ export default function CountrySelect({ value, onChange }: CountrySelectProps) {
                 <TextField
                     {...params}
                     label={t("chooseCountry")}
-                    slotProps={{
-                        htmlInput: {
-                            ...params.inputProps,
-                            autoComplete: 'new-password', // disable autocomplete and autofill
+                    size="small"
+                    inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                    sx={{
+                        '& .MuiInputLabel-root': {
+                            fontSize: '0.875rem',
+                            transform: 'translate(14px, 11px) scale(1)',
+                            '&.MuiInputLabel-shrink': {
+                                transform: 'translate(14px, -9px) scale(0.75)',
+                            },
+                            '&.Mui-focused': {
+                                color: primaryBrown
+                            }
                         },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(0, 0, 0, 0.23)',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(0, 0, 0, 0.87)',
+                        },
+                        '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: `${primaryBrown} !important`,
+                        }
                     }}
                 />
             )}
