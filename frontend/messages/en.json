@@ -19,6 +19,10 @@
     "day": "day",
     "days": "days",
     "resultsTitle": "Search Results",
+    "rating": "Rating",
+    "night": "night",
+    "people": "people",
+    "person": "person",
     "noResults": "No results found for your search criteria"
   },
   "countries": {

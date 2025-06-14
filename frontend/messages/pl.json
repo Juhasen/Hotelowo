@@ -19,6 +19,10 @@
     "day": "dzień",
     "days": "dni",
     "resultsTitle": "Wyniki wyszukiwania",
+    "rating": "Ocena",
+    "night": "noc",
+    "people": "osoby",
+    "person": "osoba",
     "noResults": "Brak wyników dla podanych kryteriów wyszukiwania"
   },
   "countries": {
