@@ -102,7 +102,6 @@ export default function SearchResultsPage() {
             }
 
             const data = await response.json();
-            console.log('Received hotel data:', data);
 
             // Sprawdź czy dane są tablicą (bez paginacji) i przekształć je do formatu PageResponse
             if (Array.isArray(data)) {
@@ -135,9 +134,9 @@ export default function SearchResultsPage() {
                     pageable: {
                         page: {
                             size: data.page.size,
-                            number: data.page.number || 0,
+                            number: data.page.number,
                             totalElements: data.page.totalElements,
-                            totalPages: data.page.totalPages,
+                            totalPages: data.page.totalPages
                         }
                     }
                 };
@@ -259,6 +258,8 @@ export default function SearchResultsPage() {
                                             src={hotel.mainImageUrl ? hotel.mainImageUrl : '/images/hotels/default.jpg'}
                                             alt={hotel.name}
                                             fill
+                                            priority={true}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             style={{
                                                 objectFit: 'cover',
                                                 borderTopLeftRadius: 16,
@@ -323,7 +324,8 @@ export default function SearchResultsPage() {
                                 count={hotelsPage?.pageable?.page?.totalPages || 1}
                                 page={page + 1}
                                 onChange={handlePageChange}
-                                color="primary"
+                                className="bg-lightBrown px-2 py-1 rounded-3xl shadow-md"
+                                color="secondary"
                             />
                         </Box>
                     </>
