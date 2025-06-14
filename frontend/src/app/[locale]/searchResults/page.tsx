@@ -11,7 +11,6 @@ import {
     Chip,
     Grid,
     Card,
-    CardMedia,
     CardContent,
     Pagination,
     CircularProgress
@@ -23,54 +22,15 @@ import 'dayjs/locale/pl';
 import 'dayjs/locale/en';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SearchBar from '@/app/[locale]/components/SearchBar';
+import Image from 'next/image';
+import {Hotel, Page} from '@/app/[locale]/lib/types';
+import {auto} from "@popperjs/core";
+
 
 // Włączamy plugin do niestandardowego formatu parsowania
 dayjs.extend(customParseFormat);
 
-// Interfejs dla hotelu
-interface Hotel {
-    id: number;
-    name: string;
-    description: string;
-    stars: number;
-    address: {
-        street: string;
-        city: string;
-        zipCode: string;
-        country: string;
-    };
-    mainImageUrl?: string;
-}
 
-// Interfejs dla paginacji
-interface PageResponse {
-    content: Hotel[];
-    pageable: {
-        pageNumber: number;
-        pageSize: number;
-        sort: {
-            sorted: boolean;
-            unsorted: boolean;
-            empty: boolean;
-        };
-        offset: number;
-        paged: boolean;
-        unpaged: boolean;
-    };
-    last: boolean;
-    totalElements: number;
-    totalPages: number;
-    size: number;
-    number: number;
-    sort: {
-        sorted: boolean;
-        unsorted: boolean;
-        empty: boolean;
-    };
-    first: boolean;
-    numberOfElements: number;
-    empty: boolean;
-}
 
 // Pozostała część kodu
 export default function SearchResultsPage() {
@@ -82,7 +42,7 @@ export default function SearchResultsPage() {
     // Stany dla paginacji i danych
     const [page, setPage] = useState<number>(0);
     const [size] = useState<number>(6); // domyślny rozmiar strony
-    const [hotelsPage, setHotelsPage] = useState<PageResponse | null>(null);
+    const [hotelsPage, setHotelsPage] = useState<Page | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -121,7 +81,7 @@ export default function SearchResultsPage() {
 
         try {
             // Budowanie URL z parametrami wyszukiwania
-            const searchUrl = new URL(`/api/hotels/search`, window.location.origin);
+            const searchUrl = new URL(`/${locale}/api/hotel/`, window.location.origin);
 
             // Dodawanie parametrów, jeśli są dostępne
             if (country) searchUrl.searchParams.append('country', country);
@@ -133,7 +93,7 @@ export default function SearchResultsPage() {
             searchUrl.searchParams.append('page', page.toString());
             searchUrl.searchParams.append('size', size.toString());
 
-            console.log('Fetching hotels from:', searchUrl.toString());
+            console.log('Fetching hotel from:', searchUrl.toString());
 
             const response = await fetch(searchUrl);
 
@@ -142,7 +102,7 @@ export default function SearchResultsPage() {
             }
 
             const data = await response.json();
-            console.log('Received hotels data:', data);
+            console.log('Received hotel data:', data);
 
             // Sprawdź czy dane są tablicą (bez paginacji) i przekształć je do formatu PageResponse
             if (Array.isArray(data)) {
@@ -152,28 +112,19 @@ export default function SearchResultsPage() {
                 // Oblicz, które elementy należą do bieżącej strony
                 const start = page * size;
                 const end = Math.min(start + size, totalItems);
-                const paginatedContent = data.slice(start, end);
+                const paginatedContent: Hotel[] = data.slice(start, end);
 
                 // Utwórz obiekt zgodny z interfejsem PageResponse
-                const pageResponse: PageResponse = {
+                const pageResponse: Page = {
                     content: paginatedContent,
                     pageable: {
-                        pageNumber: page,
-                        pageSize: size,
-                        sort: {sorted: false, empty: true, unsorted: true},
-                        offset: page * size,
-                        paged: true,
-                        unpaged: false
+                        page:{
+                            size: size,
+                            number: page,
+                            totalElements: totalItems,
+                            totalPages: totalPages,
+                        }
                     },
-                    last: page >= totalPages - 1,
-                    totalElements: totalItems,
-                    totalPages: totalPages,
-                    size: size,
-                    number: page,
-                    sort: {sorted: false, empty: true, unsorted: true},
-                    first: page === 0,
-                    numberOfElements: paginatedContent.length,
-                    empty: paginatedContent.length === 0
                 };
 
                 setHotelsPage(pageResponse);
@@ -265,32 +216,37 @@ export default function SearchResultsPage() {
                     </Typography>
                 ) : hotelsPage && hotelsPage.content.length > 0 ? (
                     <>
-                        <Grid container spacing={4}>
+                        <Grid container spacing={4} justifyContent="center">
                             {hotelsPage.content.map((hotel) => (
-                                <Card key={hotel.id}>
-                                    {hotel.mainImageUrl && (
-                                        <CardMedia
-                                            component="img"
-                                            height="140"
-                                            image={hotel.mainImageUrl}
-                                            alt={hotel.name}
-                                        />
-                                    )}
-                                    <CardContent>
-                                        <Typography variant="h6" gutterBottom>
-                                            {hotel.name}
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary">
-                                            {hotel.description}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-
+                                <Grid key={hotel.id}>
+                                    <Card sx={{ display: 'flex', minHeight: 260, borderRadius: 4, boxShadow: 4 }}>
+                                        <Box sx={{ width: 350, minHeight: 260, position: 'relative', flexShrink: 0 }}>
+                                            <Image
+                                                src={hotel.mainImageUrl ? hotel.mainImageUrl : '/images/hotels/default.jpg'}
+                                                alt={hotel.name}
+                                                fill
+                                                style={{ objectFit: 'cover', borderTopLeftRadius: 16, borderBottomLeftRadius: 16 }}
+                                                onError={(e) => { (e.target as HTMLImageElement).src = '/images/hotels/default.jpg'; }}
+                                            />
+                                        </Box>
+                                        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', p: 4 }}>
+                                            <Typography variant="h5" gutterBottom>
+                                                {hotel.name}
+                                            </Typography>
+                                            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                                                {t('rating')}: {hotel.rating}
+                                            </Typography>
+                                            <Typography variant="h6" color="primary">
+                                                {hotel.oneNightPrice} PLN
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
                             ))}
                         </Grid>
                         <Box sx={{mt: 4, display: 'flex', justifyContent: 'center'}}>
                             <Pagination
-                                count={hotelsPage.totalPages}
+                                count={hotelsPage?.pageable?.page?.totalPages || 1}
                                 page={page + 1}
                                 onChange={handlePageChange}
                                 color="primary"
