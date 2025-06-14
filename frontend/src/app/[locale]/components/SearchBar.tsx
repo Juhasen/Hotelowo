@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Paper, IconButton, MenuItem, Select, FormControl, InputLabel, Stack, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import {primaryBrown, secondaryBrown, lightBrown} from '../lib/theme';
@@ -13,23 +13,60 @@ import { useRouter } from 'next/navigation';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/pl';
 import 'dayjs/locale/en';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-export default function SearchBar() {
+// Włączamy plugin do niestandardowego formatu parsowania
+dayjs.extend(customParseFormat);
+
+interface SearchBarProps {
+    initialCountry?: string;
+    initialCheckIn?: string;
+    initialCheckOut?: string;
+    initialCapacity?: number;
+}
+
+export default function SearchBar({
+    initialCountry,
+    initialCheckIn,
+    initialCheckOut,
+    initialCapacity = 1
+}: SearchBarProps = {}) {
     const locale = useLocale();
+    const tc = useTranslations('countries');
     const t = useTranslations('SearchBar');
     const router = useRouter();
     const [country, setCountry] = useState<CountryType | null>(null);
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
-    const [capacity, setCapacity] = useState(1);
-
-    // Ustawienie lokalnego formatowania dat
-    React.useEffect(() => {
-        dayjs.locale(locale);
-    }, [locale]);
+    const [capacity, setCapacity] = useState(initialCapacity);
 
     // Format daty DD/MM/YYYY
     const dateFormat = 'DD/MM/YYYY';
+
+    // Ustawienie lokalnego formatowania dat i wczytywanie początkowych wartości
+    useEffect(() => {
+        dayjs.locale(locale);
+
+        // Ustawienie kraju
+        if (initialCountry) {
+            const selectedCountry = { code: initialCountry, label: tc(initialCountry) };
+            setCountry(selectedCountry);
+        }
+
+        // Ustawienie dat
+        if (initialCheckIn && dayjs(initialCheckIn, dateFormat, true).isValid()) {
+            setStartDate(dayjs(initialCheckIn, dateFormat, true));
+        }
+
+        if (initialCheckOut && dayjs(initialCheckOut, dateFormat, true).isValid()) {
+            setEndDate(dayjs(initialCheckOut, dateFormat, true));
+        }
+
+        // Ustawienie liczby osób
+        if (initialCapacity) {
+            setCapacity(initialCapacity);
+        }
+    }, [locale, initialCountry, initialCheckIn, initialCheckOut, initialCapacity, tc]);
 
     // Konwersja zakresu dat do natywnych obiektów Date dla API
     const handleSubmit = (e: React.FormEvent) => {

@@ -29,7 +29,8 @@ export default function SearchResultsPage() {
     const country = searchParams.get('country');
     const checkIn = searchParams.get('checkIn');
     const checkOut = searchParams.get('checkOut');
-    const capacity = searchParams.get('capacity');
+    const capacityStr = searchParams.get('capacity');
+    const capacity = capacityStr ? parseInt(capacityStr, 10) : undefined;
 
     // Formatowanie dat do wyświetlenia z użyciem strict parsing
     const dateFormat = 'DD/MM/YYYY';
@@ -45,9 +46,14 @@ export default function SearchResultsPage() {
 
     return (
         <Container maxWidth="lg" sx={{ pt: 10, pb: 8 }}>
-            {/* Pasek wyszukiwania na górze strony wyników */}
+            {/* Pasek wyszukiwania na górze strony wyników z przekazanymi początkowymi wartościami */}
             <Box sx={{ mb: 4 }}>
-                <SearchBar />
+                <SearchBar
+                    initialCountry={country || undefined}
+                    initialCheckIn={checkIn || undefined}
+                    initialCheckOut={checkOut || undefined}
+                    initialCapacity={capacity}
+                />
             </Box>
 
             <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
