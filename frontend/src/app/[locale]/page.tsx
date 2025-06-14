@@ -26,7 +26,7 @@ export default function Home() {
                 {/* Search Bar Placeholder */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
                     <div className="flex flex-col gap-8 p-7 rounded-4xl shadow-2xl">
-                        <Typography variant="h1" className="text-white text-4xl font-bold mb-4">
+                        <Typography variant="h2" className="text-white text-center font-bold mb-4 drop-shadow-lg">
                             {t('title')}
                         </Typography>
                         <SearchBar/>

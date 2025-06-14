@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Paper, IconButton, MenuItem, Select, FormControl, InputLabel, Stack, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import {primaryBrown, secondaryBrown} from '../lib/theme';
+import {primaryBrown, secondaryBrown, lightBrown} from '../lib/theme';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -53,16 +53,18 @@ export default function SearchBar() {
         <div className="w-full mx-auto z-20">
             <Paper
                 component="form"
-                elevation={5}
+                elevation={20}
                 sx={{
-                    p: '16px',
+                    px: '8px',
+                    py: '16px',
                     display: 'flex',
                     alignItems: 'center',
                     borderRadius: { xs:'10px', md: '9999px'},
                     width: '100%',
-                    border: `1px solid ${secondaryBrown}`,
+                    backgroundColor: lightBrown,
+                    border: `4px solid ${secondaryBrown}`,
                     flexDirection: { xs: 'column', md: 'row' }, // Kolumna na małych ekranach, wiersz na średnich i większych
-                    gap: 2
+                    gap: '16px',
                 }}
                 onSubmit={handleSubmit}
             >
@@ -149,7 +151,7 @@ export default function SearchBar() {
                         <IconButton
                             type="submit"
                             sx={{
-                                p: '15px',
+                                p: '2px',
                                 '&:hover': {
                                     backgroundColor: `${secondaryBrown}40`  // 40 dodaje przezroczystość
                                 }
