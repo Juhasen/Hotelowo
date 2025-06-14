@@ -17,6 +17,11 @@ import {
 } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
+import PublicIcon from '@mui/icons-material/Public';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import PeopleIcon from '@mui/icons-material/People';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {useTranslations} from 'next-intl';
 import {useLocale} from 'use-intl';
 import dayjs from 'dayjs';
@@ -26,6 +31,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SearchBar from '@/app/[locale]/components/SearchBar';
 import Image from 'next/image';
 import {Hotel, Page} from '@/app/[locale]/lib/types';
+import {lightBrown} from "@/app/[locale]/lib/theme";
 
 
 // Włączamy plugin do niestandardowego formatu parsowania
@@ -167,18 +173,19 @@ export default function SearchResultsPage() {
                 />
             </Box>
 
-            <Paper elevation={3} sx={{p: 3, mb: 4}}>
+            <Paper elevation={8} sx={{px: 2, py: 1, mb: 4, backgroundColor: lightBrown}}>
                 <Typography variant="h5" gutterBottom>
                     {t('searchParams')}
                 </Typography>
                 <Divider sx={{mb: 2}}/>
 
-                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2}}>
+                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2, justifyContent: 'space-around'}}>
                     {country && (
                         <Chip
                             label={`${t('country')}: ${tc(country)}`}
                             variant="outlined"
                             color="primary"
+                            icon={<PublicIcon />}
                         />
                     )}
                     {formattedCheckIn && (
@@ -186,6 +193,7 @@ export default function SearchResultsPage() {
                             label={`${t('checkIn')}: ${formattedCheckIn}`}
                             variant="outlined"
                             color="primary"
+                            icon={<CalendarTodayIcon />}
                         />
                     )}
                     {formattedCheckOut && (
@@ -193,6 +201,7 @@ export default function SearchResultsPage() {
                             label={`${t('checkOut')}: ${formattedCheckOut}`}
                             variant="outlined"
                             color="primary"
+                            icon={<ExitToAppIcon />}
                         />
                     )}
                     {capacity && (
@@ -200,6 +209,7 @@ export default function SearchResultsPage() {
                             label={`${t('guests')}: ${capacity}`}
                             variant="outlined"
                             color="primary"
+                            icon={<PeopleIcon />}
                         />
                     )}
                     {stayDuration !== null && stayDuration >= 0 && (
@@ -207,6 +217,7 @@ export default function SearchResultsPage() {
                             label={`${t('stayDuration')}: ${stayDuration} ${stayDuration === 1 ? t('day') : t('days')}`}
                             variant="outlined"
                             color="primary"
+                            icon={<AccessTimeIcon />}
                         />
                     )}
                 </Box>
@@ -238,7 +249,7 @@ export default function SearchResultsPage() {
                                         minHeight: 260,
                                         maxWidth: 750,
                                         maxHeight: 260,
-                                        borderRadius: 4,
+                                        borderRadius: 6,
                                         boxShadow: 4,
                                     }}
                                 >
@@ -262,8 +273,8 @@ export default function SearchResultsPage() {
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             style={{
                                                 objectFit: 'cover',
-                                                borderTopLeftRadius: 16,
-                                                borderBottomLeftRadius: 16,
+                                                borderTopLeftRadius: 6,
+                                                borderBottomLeftRadius: 6,
                                             }}
                                             onError={(e) => {
                                                 (e.target as HTMLImageElement).src = '/images/hotels/default.jpg';
