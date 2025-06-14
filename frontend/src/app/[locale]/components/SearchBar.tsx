@@ -13,30 +13,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/pl';
 import 'dayjs/locale/en';
 
-// Wspólne style dla DatePicker
-const datePickerStyle = {
-    '& .MuiInputBase-root': {
-        borderRadius: '8px',
-        backgroundColor: 'white',
-        height: '40px',
-    },
-    '& .MuiInputBase-input': {
-        padding: '10px 14px',
-    },
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderWidth: '1px',
-    },
-};
-
-// Style dla selektora
-const selectStyle = {
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderWidth: '1px',
-    },
-    backgroundColor: 'white',
-    borderRadius: 2
-};
-
 export default function SearchBar() {
     const locale = useLocale();
     const tc = useTranslations('countries');
@@ -85,6 +61,7 @@ export default function SearchBar() {
                     flexWrap: 'wrap',
                     border: `1px solid ${secondaryBrown}` // Dodanie obramowania do całego formularza
                 }}
+                className="flex flex-row gap-x-2 w-full"
                 onSubmit={handleSubmit}
             >
                 <CountrySelect value={country} onChange={setCountry} />
@@ -102,7 +79,7 @@ export default function SearchBar() {
                                         fullWidth: true
                                     }
                                 }}
-                                sx={datePickerStyle}
+
                                 disablePast
                             />
                             <DatePicker
@@ -115,7 +92,7 @@ export default function SearchBar() {
                                         fullWidth: true
                                     }
                                 }}
-                                sx={datePickerStyle}
+
                                 minDate={startDate || undefined}
                                 disablePast
                             />
@@ -123,7 +100,7 @@ export default function SearchBar() {
                     </LocalizationProvider>
                 </div>
 
-                <FormControl size="small" sx={selectStyle}>
+                <FormControl size="small" >
                     <InputLabel id="capacity-label" sx={{
                         color: 'text.primary',
                         '&.Mui-focused': {
