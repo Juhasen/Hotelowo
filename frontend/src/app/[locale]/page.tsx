@@ -32,7 +32,6 @@ export default function Home() {
                         <SearchBar/>
                     </div>
                 </div>
-
             </div>
             <CategoriesSection />
         </div>

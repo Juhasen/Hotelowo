@@ -9,14 +9,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CountrySelect, { CountryType } from "@/app/[locale]/components/CountrySelect";
 import { useTranslations } from 'next-intl';
 import { useLocale } from "use-intl";
+import { useRouter } from 'next/navigation';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/pl';
 import 'dayjs/locale/en';
 
 export default function SearchBar() {
     const locale = useLocale();
-    const tc = useTranslations('countries');
     const t = useTranslations('SearchBar');
+    const router = useRouter();
     const [country, setCountry] = useState<CountryType | null>(null);
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -31,22 +32,31 @@ export default function SearchBar() {
     const dateFormat = 'DD/MM/YYYY';
 
     // Konwersja zakresu dat do natywnych obiektów Date dla API
-    const getNativeDateRange = () => {
-        if (!startDate || !endDate) return null;
-        return [startDate.toDate(), endDate.toDate()];
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // obsługa wyszukiwania
-        const selectedCountry = country ? tc(country.code) : null;
-        const nativeDateRange = getNativeDateRange();
-        console.log({
-            country: country,
-            countryName: selectedCountry,
-            dateRange: nativeDateRange,
-            capacity
-        });
+
+        // Przygotowanie parametrów zapytania
+        const params = new URLSearchParams();
+
+        // Dodajemy kraj tylko jeśli został wybrany
+        if (country) {
+            params.append('country', country.code);
+        }
+
+        // Dodajemy daty tylko jeśli zostały wybrane
+        if (startDate) {
+            params.append('checkIn', startDate.format(dateFormat));
+        }
+
+        if (endDate) {
+            params.append('checkOut', endDate.format(dateFormat));
+        }
+
+        // Zawsze dodajemy liczę osób
+        params.append('capacity', capacity.toString());
+
+        // Przekierowanie do strony wyników wyszukiwania z parametrami
+        router.push(`/${locale}/searchResults?${params.toString()}`);
     };
 
     return (
