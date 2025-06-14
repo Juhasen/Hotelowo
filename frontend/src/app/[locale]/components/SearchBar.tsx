@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Paper, IconButton, MenuItem, Select, FormControl, InputLabel, Stack, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import {primaryBrown, secondaryBrown, lightBrown} from '../lib/theme';
@@ -9,44 +9,91 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CountrySelect, { CountryType } from "@/app/[locale]/components/CountrySelect";
 import { useTranslations } from 'next-intl';
 import { useLocale } from "use-intl";
+import { useRouter } from 'next/navigation';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/pl';
 import 'dayjs/locale/en';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-export default function SearchBar() {
+// Włączamy plugin do niestandardowego formatu parsowania
+dayjs.extend(customParseFormat);
+
+interface SearchBarProps {
+    initialCountry?: string;
+    initialCheckIn?: string;
+    initialCheckOut?: string;
+    initialCapacity?: number;
+}
+
+export default function SearchBar({
+    initialCountry,
+    initialCheckIn,
+    initialCheckOut,
+    initialCapacity = 1
+}: SearchBarProps = {}) {
     const locale = useLocale();
     const tc = useTranslations('countries');
     const t = useTranslations('SearchBar');
+    const router = useRouter();
     const [country, setCountry] = useState<CountryType | null>(null);
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
-    const [capacity, setCapacity] = useState(1);
-
-    // Ustawienie lokalnego formatowania dat
-    React.useEffect(() => {
-        dayjs.locale(locale);
-    }, [locale]);
+    const [capacity, setCapacity] = useState(initialCapacity);
 
     // Format daty DD/MM/YYYY
     const dateFormat = 'DD/MM/YYYY';
 
-    // Konwersja zakresu dat do natywnych obiektów Date dla API
-    const getNativeDateRange = () => {
-        if (!startDate || !endDate) return null;
-        return [startDate.toDate(), endDate.toDate()];
-    };
+    // Ustawienie lokalnego formatowania dat i wczytywanie początkowych wartości
+    useEffect(() => {
+        dayjs.locale(locale);
 
+        // Ustawienie kraju
+        if (initialCountry) {
+            const selectedCountry = { code: initialCountry, label: tc(initialCountry) };
+            setCountry(selectedCountry);
+        }
+
+        // Ustawienie dat
+        if (initialCheckIn && dayjs(initialCheckIn, dateFormat, true).isValid()) {
+            setStartDate(dayjs(initialCheckIn, dateFormat, true));
+        }
+
+        if (initialCheckOut && dayjs(initialCheckOut, dateFormat, true).isValid()) {
+            setEndDate(dayjs(initialCheckOut, dateFormat, true));
+        }
+
+        // Ustawienie liczby osób
+        if (initialCapacity) {
+            setCapacity(initialCapacity);
+        }
+    }, [locale, initialCountry, initialCheckIn, initialCheckOut, initialCapacity, tc]);
+
+    // Konwersja zakresu dat do natywnych obiektów Date dla API
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // obsługa wyszukiwania
-        const selectedCountry = country ? tc(country.code) : null;
-        const nativeDateRange = getNativeDateRange();
-        console.log({
-            country: country,
-            countryName: selectedCountry,
-            dateRange: nativeDateRange,
-            capacity
-        });
+
+        // Przygotowanie parametrów zapytania
+        const params = new URLSearchParams();
+
+        // Dodajemy kraj tylko jeśli został wybrany
+        if (country) {
+            params.append('country', country.code);
+        }
+
+        // Dodajemy daty tylko jeśli zostały wybrane
+        if (startDate) {
+            params.append('checkIn', startDate.format(dateFormat));
+        }
+
+        if (endDate) {
+            params.append('checkOut', endDate.format(dateFormat));
+        }
+
+        // Zawsze dodajemy liczę osób
+        params.append('capacity', capacity.toString());
+
+        // Przekierowanie do strony wyników wyszukiwania z parametrami
+        router.push(`/${locale}/searchResults?${params.toString()}`);
     };
 
     return (

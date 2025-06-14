@@ -1,6 +1,8 @@
 package pl.juhas.backend.hotel;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.address.Address;
@@ -8,11 +10,17 @@ import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressRepository;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
+import pl.juhas.backend.hotel.dto.HotelRequest;
+import pl.juhas.backend.hotel.dto.HotelResponse;
+import pl.juhas.backend.hotel.dto.HotelSearchRequest;
+import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.hotelImage.HotelImage;
-import pl.juhas.backend.hotelImage.HotelImageDTO;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
 import pl.juhas.backend.hotelImage.HotelImageRequest;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 
@@ -29,16 +37,94 @@ public class HotelService {
     private final HotelImageRepository hotelImageRepository;
 
     @Transactional(readOnly = true)
-    public List<HotelResponse> getAllHotels(String locale) {
-        List<Hotel> hotels = hotelRepository.findAll();
-
-        if (hotels.isEmpty() || (!locale.equals("pl") && !locale.equals("en"))) {
-            return List.of();
+    public Page<HotelSearchResponse> getHotels(String locale, HotelSearchRequest hotelRequest, Pageable pageable) {
+        if (!locale.equals("pl") && !locale.equals("en")) {
+            System.out.println("Unsupported locale: " + locale);
+            return Page.empty(pageable);
         }
 
-        return hotels.stream()
-                .map(hotel -> HotelMapper.toResponse(hotel, locale))
-                .toList();
+        try {
+            LocalDate checkInDate = null;
+            LocalDate checkOutDate = null;
+
+            // Tablice formatów dat, które będziemy próbować parsować
+            DateTimeFormatter[] formatters = {
+                    DateTimeFormatter.ISO_LOCAL_DATE,                // YYYY-MM-DD
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy"),       // DD/MM/YYYY
+                    DateTimeFormatter.ofPattern("MM/dd/yyyy"),       // MM/DD/YYYY
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy"),       // DD-MM-YYYY
+                    DateTimeFormatter.ofPattern("dd.MM.yyyy")        // DD.MM.YYYY
+            };
+
+            // Próba parsowania daty zameldowania
+            if (hotelRequest.checkInDate() != null && !hotelRequest.checkInDate().isEmpty()) {
+                checkInDate = parseDate(hotelRequest.checkInDate(), formatters);
+                if (checkInDate == null) {
+                    System.out.println("Invalid check-in date format: " + hotelRequest.checkInDate());
+                    return Page.empty(pageable);
+                }
+            }
+
+            // Próba parsowania daty wymeldowania
+            if (hotelRequest.checkOutDate() != null && !hotelRequest.checkOutDate().isEmpty()) {
+                checkOutDate = parseDate(hotelRequest.checkOutDate(), formatters);
+                if (checkOutDate == null) {
+                    System.out.println("Invalid check-out date format: " + hotelRequest.checkOutDate());
+                    return Page.empty(pageable);
+                }
+            }
+
+            // Jeśli nie podano dat, zwracamy pustą stronę
+            if (checkInDate == null || checkOutDate == null) {
+                System.out.println("Empty check-in or check-out date");
+                return Page.empty(pageable);
+            }
+
+            // Walidacja dat
+            if (checkInDate.isAfter(checkOutDate)) {
+                System.out.println("Wrong data: check-in date is after check-out date");
+                return Page.empty(pageable);
+            }
+
+            Integer guestCount = hotelRequest.numberOfGuests() != null ? hotelRequest.numberOfGuests() : 1;
+
+            System.out.println("Searching for hotels in country: " + hotelRequest.country() +
+                    ", check-in: " + checkInDate +
+                    ", check-out: " + checkOutDate +
+                    ", guests: " + guestCount +
+                    ", pageable: " + pageable);
+
+            return hotelRepository.findAvailableHotels(
+                    hotelRequest.country(),
+                    checkInDate.atStartOfDay(), // konwersja LocalDate na LocalDateTime (godz. 00:00)
+                    checkOutDate.atTime(23, 59, 59), // konwersja na koniec dnia
+                    guestCount,
+                    pageable
+            );
+
+        } catch (Exception e) {
+            System.out.println("Error while searching for hotels: " + e.getMessage());
+            e.printStackTrace();
+            return Page.empty(pageable);
+        }
+    }
+
+    /**
+     * Próbuje sparsować datę używając różnych formatów
+     *
+     * @param dateStr    Ciąg znaków z datą
+     * @param formatters Tablica formatów do przetestowania
+     * @return LocalDate lub null jeśli parsowanie się nie udało
+     */
+    private LocalDate parseDate(String dateStr, DateTimeFormatter[] formatters) {
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(dateStr, formatter);
+            } catch (DateTimeParseException e) {
+                // Próbuj kolejnego formatu
+            }
+        }
+        return null; // Żaden format nie pasuje
     }
 
     public HotelResponse getHotelById(String locale, Long id) {

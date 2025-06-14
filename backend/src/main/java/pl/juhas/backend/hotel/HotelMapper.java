@@ -2,6 +2,7 @@ package pl.juhas.backend.hotel;
 
 import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressMapper;
+import pl.juhas.backend.hotel.dto.HotelResponse;
 import pl.juhas.backend.hotelImage.HotelImageMapper;
 import pl.juhas.backend.hotelImage.HotelImageRequest;
 

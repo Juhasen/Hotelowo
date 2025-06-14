@@ -9,6 +9,18 @@
     "searchButton": "Search",
     "chooseCountry": "Choose a country"
   },
+  "SearchResults": {
+    "searchParams": "Search Parameters",
+    "country": "Country",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "Guests",
+    "stayDuration": "Stay Duration",
+    "day": "day",
+    "days": "days",
+    "resultsTitle": "Search Results",
+    "noResults": "No results found for your search criteria"
+  },
   "countries": {
     "AD": "Andorra",
     "AE": "United Arab Emirates",

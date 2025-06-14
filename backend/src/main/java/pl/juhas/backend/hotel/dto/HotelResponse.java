@@ -1,4 +1,4 @@
-package pl.juhas.backend.hotel;
+package pl.juhas.backend.hotel.dto;
 
 import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.amenity.Amenity;
