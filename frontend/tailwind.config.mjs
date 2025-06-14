@@ -6,6 +6,7 @@ const tailwindConfig = {
       colors: {
         primaryBrown: "#8D6E63",  // odpowiednik brown[400]
         secondaryBrown: "#6D4C41", // odpowiednik brown[600]
+        lightBrown: "#EFEBE9", // odpowiednik brown[50]
       }
     }
   },
