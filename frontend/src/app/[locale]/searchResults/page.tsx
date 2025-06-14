@@ -1,10 +1,23 @@
 ﻿'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Typography, Container, Box, Paper, Divider, Chip, Grid, Card, CardMedia, CardContent, Button, Pagination, CircularProgress } from '@mui/material';
-import { useTranslations } from 'next-intl';
-import { useLocale } from 'use-intl';
+import React, {useEffect, useState} from 'react';
+import {useSearchParams} from 'next/navigation';
+import {
+    Typography,
+    Container,
+    Box,
+    Paper,
+    Divider,
+    Chip,
+    Grid,
+    Card,
+    CardMedia,
+    CardContent,
+    Pagination,
+    CircularProgress
+} from '@mui/material';
+import {useTranslations} from 'next-intl';
+import {useLocale} from 'use-intl';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pl';
 import 'dayjs/locale/en';
@@ -16,47 +29,47 @@ dayjs.extend(customParseFormat);
 
 // Interfejs dla hotelu
 interface Hotel {
-  id: number;
-  name: string;
-  description: string;
-  stars: number;
-  address: {
-    street: string;
-    city: string;
-    zipCode: string;
-    country: string;
-  };
-  mainImageUrl?: string;
+    id: number;
+    name: string;
+    description: string;
+    stars: number;
+    address: {
+        street: string;
+        city: string;
+        zipCode: string;
+        country: string;
+    };
+    mainImageUrl?: string;
 }
 
 // Interfejs dla paginacji
 interface PageResponse {
-  content: Hotel[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-    sort: {
-      sorted: boolean;
-      unsorted: boolean;
-      empty: boolean;
+    content: Hotel[];
+    pageable: {
+        pageNumber: number;
+        pageSize: number;
+        sort: {
+            sorted: boolean;
+            unsorted: boolean;
+            empty: boolean;
+        };
+        offset: number;
+        paged: boolean;
+        unpaged: boolean;
     };
-    offset: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  last: boolean;
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  sort: {
-    sorted: boolean;
-      unsorted: boolean;
-      empty: boolean;
-  };
-  first: boolean;
-  numberOfElements: number;
-  empty: boolean;
+    last: boolean;
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+    sort: {
+        sorted: boolean;
+        unsorted: boolean;
+        empty: boolean;
+    };
+    first: boolean;
+    numberOfElements: number;
+    empty: boolean;
 }
 
 // Pozostała część kodu
@@ -68,7 +81,7 @@ export default function SearchResultsPage() {
 
     // Stany dla paginacji i danych
     const [page, setPage] = useState<number>(0);
-    const [size, setSize] = useState<number>(6); // domyślny rozmiar strony
+    const [size] = useState<number>(6); // domyślny rozmiar strony
     const [hotelsPage, setHotelsPage] = useState<PageResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -119,7 +132,7 @@ export default function SearchResultsPage() {
             // Dodawanie parametrów paginacji
             searchUrl.searchParams.append('page', page.toString());
             searchUrl.searchParams.append('size', size.toString());
-            
+
             console.log('Fetching hotels from:', searchUrl.toString());
 
             const response = await fetch(searchUrl);
@@ -147,7 +160,7 @@ export default function SearchResultsPage() {
                     pageable: {
                         pageNumber: page,
                         pageSize: size,
-                        sort: { sorted: false, empty: true, unsorted: true },
+                        sort: {sorted: false, empty: true, unsorted: true},
                         offset: page * size,
                         paged: true,
                         unpaged: false
@@ -157,7 +170,7 @@ export default function SearchResultsPage() {
                     totalPages: totalPages,
                     size: size,
                     number: page,
-                    sort: { sorted: false, empty: true, unsorted: true },
+                    sort: {sorted: false, empty: true, unsorted: true},
                     first: page === 0,
                     numberOfElements: paginatedContent.length,
                     empty: paginatedContent.length === 0
@@ -182,9 +195,9 @@ export default function SearchResultsPage() {
     }, [page, size, country, checkIn, checkOut, capacity]);
 
     return (
-        <Container maxWidth="lg" sx={{ pt: 10, pb: 8 }}>
+        <Container maxWidth="lg" sx={{pt: 10, pb: 8}}>
             {/* Pasek wyszukiwania na górze strony wyników z przekazanymi początkowymi wartościami */}
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{mb: 4}}>
                 <SearchBar
                     initialCountry={country || undefined}
                     initialCheckIn={checkIn || undefined}
@@ -193,13 +206,13 @@ export default function SearchResultsPage() {
                 />
             </Box>
 
-            <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+            <Paper elevation={3} sx={{p: 3, mb: 4}}>
                 <Typography variant="h5" gutterBottom>
                     {t('searchParams')}
                 </Typography>
-                <Divider sx={{ mb: 2 }} />
+                <Divider sx={{mb: 2}}/>
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2}}>
                     {country && (
                         <Chip
                             label={`${t('country')}: ${tc(country)}`}
@@ -238,14 +251,14 @@ export default function SearchResultsPage() {
                 </Box>
             </Paper>
 
-            <Typography variant="h4" sx={{ mb: 4 }}>
+            <Typography variant="h4" sx={{mb: 4}}>
                 {t('resultsTitle')}
             </Typography>
 
             {/* Tutaj będzie lista wyników wyszukiwania hoteli */}
-            <Box sx={{ p: 4, textAlign: 'center' }}>
+            <Box sx={{p: 4, textAlign: 'center'}}>
                 {loading ? (
-                    <CircularProgress />
+                    <CircularProgress/>
                 ) : error ? (
                     <Typography variant="body1" color="error">
                         {error}
@@ -254,29 +267,28 @@ export default function SearchResultsPage() {
                     <>
                         <Grid container spacing={4}>
                             {hotelsPage.content.map((hotel) => (
-                                <Grid item xs={12} sm={6} md={4} key={hotel.id}>
-                                    <Card>
-                                        {hotel.mainImageUrl && (
-                                            <CardMedia
-                                                component="img"
-                                                height="140"
-                                                image={hotel.mainImageUrl}
-                                                alt={hotel.name}
-                                            />
-                                        )}
-                                        <CardContent>
-                                            <Typography variant="h6" gutterBottom>
-                                                {hotel.name}
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary">
-                                                {hotel.description}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
+                                <Card key={hotel.id}>
+                                    {hotel.mainImageUrl && (
+                                        <CardMedia
+                                            component="img"
+                                            height="140"
+                                            image={hotel.mainImageUrl}
+                                            alt={hotel.name}
+                                        />
+                                    )}
+                                    <CardContent>
+                                        <Typography variant="h6" gutterBottom>
+                                            {hotel.name}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {hotel.description}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+
                             ))}
                         </Grid>
-                        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{mt: 4, display: 'flex', justifyContent: 'center'}}>
                             <Pagination
                                 count={hotelsPage.totalPages}
                                 page={page + 1}
