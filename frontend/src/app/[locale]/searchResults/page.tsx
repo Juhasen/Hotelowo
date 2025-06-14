@@ -31,40 +31,34 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SearchBar from '@/app/[locale]/components/SearchBar';
 import Image from 'next/image';
 import {Hotel, Page} from '@/app/[locale]/lib/types';
-import {lightBrown} from "@/app/[locale]/lib/theme";
+import {lightBrown, secondaryBrown} from "@/app/[locale]/lib/theme";
+import {Link} from '@/i18n/navigation';
+import {ArrowRightIcon} from "@mui/x-date-pickers";
 
-
-// Włączamy plugin do niestandardowego formatu parsowania
 dayjs.extend(customParseFormat);
 
-
-// Pozostała część kodu
 export default function SearchResultsPage() {
     const searchParams = useSearchParams();
     const t = useTranslations('SearchResults');
     const tc = useTranslations('countries');
     const locale = useLocale();
 
-    // Stany dla paginacji i danych
     const [page, setPage] = useState<number>(0);
-    const [size] = useState<number>(6); // domyślny rozmiar strony
+    const [size] = useState<number>(6);
     const [hotelsPage, setHotelsPage] = useState<Page | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Ustawienie lokalnego formatowania dat
     useEffect(() => {
         dayjs.locale(locale);
     }, [locale]);
 
-    // Pobieranie parametrów wyszukiwania z URL
     const country = searchParams.get('country');
     const checkIn = searchParams.get('checkIn');
     const checkOut = searchParams.get('checkOut');
     const capacityStr = searchParams.get('capacity');
     const capacity = capacityStr ? parseInt(capacityStr, 10) : 1;
 
-    // Formatowanie dat do wyświetlenia z użyciem strict parsing
     const dateFormat = 'DD/MM/YYYY';
     const formattedCheckIn = checkIn ? (dayjs(checkIn, dateFormat, true).isValid() ?
         dayjs(checkIn, dateFormat, true).format(dateFormat) : null) : null;
@@ -72,13 +66,11 @@ export default function SearchResultsPage() {
     const formattedCheckOut = checkOut ? (dayjs(checkOut, dateFormat, true).isValid() ?
         dayjs(checkOut, dateFormat, true).format(dateFormat) : null) : null;
 
-    // Obliczanie liczby dni pobytu tylko gdy obie daty są poprawne
     const stayDuration = formattedCheckIn && formattedCheckOut ?
         dayjs(checkOut, dateFormat, true).diff(dayjs(checkIn, dateFormat, true), 'day') : null;
 
-    // Funkcja obsługująca zmianę strony
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value - 1); // MUI Pagination używa numerów stron od 1, a API od 0
+        setPage(value - 1);
     };
 
     const fetchSearchResults = async () => {
@@ -86,16 +78,13 @@ export default function SearchResultsPage() {
         setError(null);
 
         try {
-            // Budowanie URL z parametrami wyszukiwania
             const searchUrl = new URL(`/${locale}/api/hotel/`, window.location.origin);
 
-            // Dodawanie parametrów, jeśli są dostępne
             if (country) searchUrl.searchParams.append('country', country);
             if (checkIn) searchUrl.searchParams.append('checkIn', checkIn);
             if (checkOut) searchUrl.searchParams.append('checkOut', checkOut);
             if (capacity) searchUrl.searchParams.append('capacity', capacity.toString());
 
-            // Dodawanie parametrów paginacji
             searchUrl.searchParams.append('page', page.toString());
             searchUrl.searchParams.append('size', size.toString());
 
@@ -109,17 +98,14 @@ export default function SearchResultsPage() {
 
             const data = await response.json();
 
-            // Sprawdź czy dane są tablicą (bez paginacji) i przekształć je do formatu PageResponse
             if (Array.isArray(data)) {
                 const totalItems = data.length;
                 const totalPages = Math.ceil(totalItems / size);
 
-                // Oblicz, które elementy należą do bieżącej strony
                 const start = page * size;
                 const end = Math.min(start + size, totalItems);
                 const paginatedContent: Hotel[] = data.slice(start, end);
 
-                // Utwórz obiekt zgodny z interfejsem PageResponse
                 const pageResponse: Page = {
                     content: paginatedContent,
                     pageable: {
@@ -134,7 +120,6 @@ export default function SearchResultsPage() {
 
                 setHotelsPage(pageResponse);
             } else {
-                // Jeśli dane są już w formacie odpowiedzi z backendu (content + page)
                 const pageResponse: Page = {
                     content: data.content,
                     pageable: {
@@ -156,14 +141,12 @@ export default function SearchResultsPage() {
         }
     };
 
-    // Wywołanie fetchSearchResults przy ładowaniu komponentu i przy zmianie parametrów
     useEffect(() => {
         fetchSearchResults();
     }, [page, size, country, checkIn, checkOut, capacity]);
 
     return (
         <Container maxWidth="lg" sx={{pt: 10, pb: 8}}>
-            {/* Pasek wyszukiwania na górze strony wyników z przekazanymi początkowymi wartościami */}
             <Box sx={{mb: 4}}>
                 <SearchBar
                     initialCountry={country || undefined}
@@ -185,7 +168,7 @@ export default function SearchResultsPage() {
                             label={`${t('country')}: ${tc(country)}`}
                             variant="outlined"
                             color="primary"
-                            icon={<PublicIcon />}
+                            icon={<PublicIcon/>}
                         />
                     )}
                     {formattedCheckIn && (
@@ -193,7 +176,7 @@ export default function SearchResultsPage() {
                             label={`${t('checkIn')}: ${formattedCheckIn}`}
                             variant="outlined"
                             color="primary"
-                            icon={<CalendarTodayIcon />}
+                            icon={<CalendarTodayIcon/>}
                         />
                     )}
                     {formattedCheckOut && (
@@ -201,7 +184,7 @@ export default function SearchResultsPage() {
                             label={`${t('checkOut')}: ${formattedCheckOut}`}
                             variant="outlined"
                             color="primary"
-                            icon={<ExitToAppIcon />}
+                            icon={<ExitToAppIcon/>}
                         />
                     )}
                     {capacity && (
@@ -209,7 +192,7 @@ export default function SearchResultsPage() {
                             label={`${t('guests')}: ${capacity}`}
                             variant="outlined"
                             color="primary"
-                            icon={<PeopleIcon />}
+                            icon={<PeopleIcon/>}
                         />
                     )}
                     {stayDuration !== null && stayDuration >= 0 && (
@@ -217,7 +200,7 @@ export default function SearchResultsPage() {
                             label={`${t('stayDuration')}: ${stayDuration} ${stayDuration === 1 ? t('day') : t('days')}`}
                             variant="outlined"
                             color="primary"
-                            icon={<AccessTimeIcon />}
+                            icon={<AccessTimeIcon/>}
                         />
                     )}
                 </Box>
@@ -227,7 +210,6 @@ export default function SearchResultsPage() {
                 {t('resultsTitle')}
             </Typography>
 
-            {/* Tutaj będzie lista wyników wyszukiwania hoteli */}
             <Box sx={{p: 4, textAlign: 'center'}}>
                 {loading ? (
                     <CircularProgress/>
@@ -295,7 +277,6 @@ export default function SearchResultsPage() {
                                             {hotel.name}
                                         </Typography>
 
-                                        {/* Zmiana struktury - usunięcie Typography wokół Box z oceną */}
                                         <Box sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -314,7 +295,6 @@ export default function SearchResultsPage() {
                                             />
                                         </Box>
 
-                                        {/* Podobnie naprawiam strukturę dla ceny */}
                                         <Box sx={{color: 'text.secondary', mb: 2}}>
                                             <span>1 {t("night")} / {capacity} {capacity > 1 ? t("people") : t("person")}</span>
                                             <br/>
@@ -325,6 +305,33 @@ export default function SearchResultsPage() {
                                             }}>
                                                 {hotel.oneNightPrice} PLN
                                             </Box>
+                                        </Box>
+
+                                        {/* Box do wyrównywania przycisku do prawej */}
+                                        <Box sx={{
+                                            display: 'flex',
+                                            justifyContent: 'flex-end',
+                                            width: '100%',
+                                        }}>
+                                            <Link
+                                                href={`/hotel/${hotel.id}`}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: secondaryBrown,
+                                                    color: 'white',
+                                                    padding: '6px',
+                                                    borderRadius: '50%',
+                                                    textDecoration: 'none',
+                                                    transition: 'all 0.3s ease',
+                                                    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+                                                    width: '40px',
+                                                    height: '40px',
+                                                }}
+                                            >
+                                                <ArrowRightIcon />
+                                            </Link>
                                         </Box>
                                     </CardContent>
                                 </Card>
