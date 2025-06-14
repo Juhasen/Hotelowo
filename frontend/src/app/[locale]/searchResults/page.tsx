@@ -9,11 +9,11 @@ import {
     Paper,
     Divider,
     Chip,
-    Grid,
     Card,
     CardContent,
     Pagination,
-    CircularProgress
+    CircularProgress,
+    Stack
 } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
@@ -129,8 +129,19 @@ export default function SearchResultsPage() {
 
                 setHotelsPage(pageResponse);
             } else {
-                // Jeśli dane są już w formacie PageResponse
-                setHotelsPage(data);
+                // Jeśli dane są już w formacie odpowiedzi z backendu (content + page)
+                const pageResponse: Page = {
+                    content: data.content,
+                    pageable: {
+                        page: {
+                            size: data.page.size,
+                            number: data.page.number || 0,
+                            totalElements: data.page.totalElements,
+                            totalPages: data.page.totalPages,
+                        }
+                    }
+                };
+                setHotelsPage(pageResponse);
             }
         } catch (err) {
             console.error('Błąd pobierania hoteli:', err);
@@ -216,89 +227,97 @@ export default function SearchResultsPage() {
                     </Typography>
                 ) : hotelsPage && hotelsPage.content.length > 0 ? (
                     <>
-                        <Grid container spacing={4} justifyContent="center">
+                        <Stack spacing={4} justifyContent="center">
                             {hotelsPage.content.map((hotel) => (
-                                <Grid item xs={12} sm={10} md={8} key={hotel.id}>
-                                    <Card
+                                <Card
+                                    key={hotel.id}
+                                    sx={{
+                                        display: 'flex',
+                                        width: 750,
+                                        height: 260,
+                                        minWidth: 750,
+                                        minHeight: 260,
+                                        maxWidth: 750,
+                                        maxHeight: 260,
+                                        borderRadius: 4,
+                                        boxShadow: 4,
+                                    }}
+                                >
+                                    <Box
                                         sx={{
-                                            display: 'flex',
-                                            width: 750,
+                                            width: 350,
                                             height: 260,
-                                            minWidth: 750,
+                                            minWidth: 350,
                                             minHeight: 260,
-                                            maxWidth: 750,
+                                            maxWidth: 350,
                                             maxHeight: 260,
-                                            borderRadius: 4,
-                                            boxShadow: 4,
+                                            position: 'relative',
+                                            flexShrink: 0,
                                         }}
                                     >
-                                        <Box
-                                            sx={{
-                                                width: 350,
-                                                height: 260,
-                                                minWidth: 350,
-                                                minHeight: 260,
-                                                maxWidth: 350,
-                                                maxHeight: 260,
-                                                position: 'relative',
-                                                flexShrink: 0,
+                                        <Image
+                                            src={hotel.mainImageUrl ? hotel.mainImageUrl : '/images/hotels/default.jpg'}
+                                            alt={hotel.name}
+                                            fill
+                                            style={{
+                                                objectFit: 'cover',
+                                                borderTopLeftRadius: 16,
+                                                borderBottomLeftRadius: 16,
                                             }}
-                                        >
-                                            <Image
-                                                src={hotel.mainImageUrl ? hotel.mainImageUrl : '/images/hotels/default.jpg'}
-                                                alt={hotel.name}
-                                                fill
-                                                style={{
-                                                    objectFit: 'cover',
-                                                    borderTopLeftRadius: 16,
-                                                    borderBottomLeftRadius: 16,
-                                                }}
-                                                onError={(e) => {
-                                                    (e.target as HTMLImageElement).src = '/images/hotels/default.jpg';
-                                                }}
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = '/images/hotels/default.jpg';
+                                            }}
+                                        />
+                                    </Box>
+                                    <CardContent
+                                        sx={{
+                                            flex: 1,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            p: 4,
+                                            height: '100%',
+                                        }}
+                                    >
+                                        <Typography variant="h5" gutterBottom>
+                                            {hotel.name}
+                                        </Typography>
+
+                                        {/* Zmiana struktury - usunięcie Typography wokół Box z oceną */}
+                                        <Box sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: 1,
+                                            mb: 2
+                                        }}>
+                                            <Rating
+                                                name="Hotel Rating"
+                                                value={hotel.rating}
+                                                readOnly
+                                                precision={0.5}
+                                                size="medium"
+                                                sx={{ml: 1}}
+                                                emptyIcon={<StarIcon style={{opacity: 0.55}} fontSize="inherit"/>}
                                             />
                                         </Box>
-                                        <CardContent
-                                            sx={{
-                                                flex: 1,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'center',
-                                                p: 4,
-                                                height: '100%',
-                                            }}
-                                        >
-                                            <Typography variant="h5" gutterBottom>
-                                                {hotel.name}
-                                            </Typography>
-                                            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                                                    <Rating
-                                                        name="Hotel Rating"
-                                                        value={hotel.rating}
-                                                        readOnly
-                                                        precision={0.5}
-                                                        size="medium"
-                                                        sx={{ ml: 1 }}
-                                                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                                                    />
-                                                    <Box component="span" sx={{ fontWeight: 'bold', color: 'primary.main', ml: 1 }}>
-                                                        {hotel.rating}
-                                                    </Box>
-                                                </Box>
-                                            </Typography>
 
-                                            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                                                1 {t("night")} / {capacity} {capacity > 1 ? t("people") : t("person")}  &nbsp;<br/>
-                                                <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: '1.2em' }}>
-                                                    {hotel.oneNightPrice} PLN
-                                                </Box>
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
+                                        {/* Podobnie naprawiam strukturę dla ceny */}
+                                        <Box sx={{color: 'text.secondary', mb: 2}}>
+                                            <span>1 {t("night")} / {capacity} {capacity > 1 ? t("people") : t("person")}</span>
+                                            <br/>
+                                            <Box component="span" sx={{
+                                                color: 'primary.main',
+                                                fontWeight: 'bold',
+                                                fontSize: '1.2em'
+                                            }}>
+                                                {hotel.oneNightPrice} PLN
+                                            </Box>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
                             ))}
-                        </Grid>
+                        </Stack>
                         <Box sx={{mt: 4, display: 'flex', justifyContent: 'center'}}>
                             <Pagination
                                 count={hotelsPage?.pageable?.page?.totalPages || 1}
