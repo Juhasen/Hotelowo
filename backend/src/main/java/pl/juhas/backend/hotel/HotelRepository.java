@@ -22,7 +22,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             )
             FROM Hotel h
             WHERE h.isAvailableSearch = true
-            AND (:country IS NULL OR h.address.city = :country)
+            AND (:country IS NULL OR h.address.country = :country)
             AND EXISTS (
                 SELECT r2 FROM Room r2
                 WHERE r2.hotel = h

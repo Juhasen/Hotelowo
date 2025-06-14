@@ -19,6 +19,8 @@ import pl.juhas.backend.hotelImage.HotelImageRepository;
 import pl.juhas.backend.hotelImage.HotelImageRequest;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 
@@ -37,6 +39,7 @@ public class HotelService {
     @Transactional(readOnly = true)
     public Page<HotelSearchResponse> getHotels(String locale, HotelSearchRequest hotelRequest, Pageable pageable) {
         if (!locale.equals("pl") && !locale.equals("en")) {
+            System.out.println("Unsupported locale: " + locale);
             return Page.empty(pageable);
         }
 
@@ -44,25 +47,51 @@ public class HotelService {
             LocalDate checkInDate = null;
             LocalDate checkOutDate = null;
 
+            // Tablice formatów dat, które będziemy próbować parsować
+            DateTimeFormatter[] formatters = {
+                DateTimeFormatter.ISO_LOCAL_DATE,                // YYYY-MM-DD
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),       // DD/MM/YYYY
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"),       // MM/DD/YYYY
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),       // DD-MM-YYYY
+                DateTimeFormatter.ofPattern("dd.MM.yyyy")        // DD.MM.YYYY
+            };
+
+            // Próba parsowania daty zameldowania
             if (hotelRequest.checkInDate() != null && !hotelRequest.checkInDate().isEmpty()) {
-                checkInDate = LocalDate.parse(hotelRequest.checkInDate());
+                checkInDate = parseDate(hotelRequest.checkInDate(), formatters);
+                if (checkInDate == null) {
+                    System.out.println("Invalid check-in date format: " + hotelRequest.checkInDate());
+                    return Page.empty(pageable);
+                }
             }
 
+            // Próba parsowania daty wymeldowania
             if (hotelRequest.checkOutDate() != null && !hotelRequest.checkOutDate().isEmpty()) {
-                checkOutDate = LocalDate.parse(hotelRequest.checkOutDate());
+                checkOutDate = parseDate(hotelRequest.checkOutDate(), formatters);
+                if (checkOutDate == null) {
+                    System.out.println("Invalid check-out date format: " + hotelRequest.checkOutDate());
+                    return Page.empty(pageable);
+                }
             }
 
             // Jeśli nie podano dat, zwracamy pustą stronę
             if (checkInDate == null || checkOutDate == null) {
+                System.out.println("Empty check-in or check-out date");
                 return Page.empty(pageable);
             }
 
             // Walidacja dat
             if (checkInDate.isAfter(checkOutDate)) {
+                System.out.println("Wrong data: check-in date is after check-out date");
                 return Page.empty(pageable);
             }
 
             Integer guestCount = hotelRequest.numberOfGuests() != null ? hotelRequest.numberOfGuests() : 1;
+
+            System.out.println("Searching for hotels in country: " + hotelRequest.country() +
+                    ", check-in: " + checkInDate +
+                    ", check-out: " + checkOutDate +
+                    ", guests: " + guestCount);
 
             return hotelRepository.findAvailableHotels(
                 hotelRequest.country(),
@@ -73,8 +102,27 @@ public class HotelService {
             );
 
         } catch (Exception e) {
+            System.out.println("Error while searching for hotels: " + e.getMessage());
+            e.printStackTrace();
             return Page.empty(pageable);
         }
+    }
+
+    /**
+     * Próbuje sparsować datę używając różnych formatów
+     * @param dateStr Ciąg znaków z datą
+     * @param formatters Tablica formatów do przetestowania
+     * @return LocalDate lub null jeśli parsowanie się nie udało
+     */
+    private LocalDate parseDate(String dateStr, DateTimeFormatter[] formatters) {
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(dateStr, formatter);
+            } catch (DateTimeParseException e) {
+                // Próbuj kolejnego formatu
+            }
+        }
+        return null; // Żaden format nie pasuje
     }
 
     public HotelResponse getHotelById(String locale, Long id) {
