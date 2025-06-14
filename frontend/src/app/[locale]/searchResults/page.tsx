@@ -1,8 +1,8 @@
 ﻿'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Typography, Container, Box, Paper, Divider, Chip } from '@mui/material';
+import { Typography, Container, Box, Paper, Divider, Chip, Grid, Card, CardMedia, CardContent, Button, Pagination, CircularProgress } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'use-intl';
 import dayjs from 'dayjs';
@@ -14,11 +14,64 @@ import SearchBar from '@/app/[locale]/components/SearchBar';
 // Włączamy plugin do niestandardowego formatu parsowania
 dayjs.extend(customParseFormat);
 
+// Interfejs dla hotelu
+interface Hotel {
+  id: number;
+  name: string;
+  description: string;
+  stars: number;
+  address: {
+    street: string;
+    city: string;
+    zipCode: string;
+    country: string;
+  };
+  mainImageUrl?: string;
+}
+
+// Interfejs dla paginacji
+interface PageResponse {
+  content: Hotel[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      sorted: boolean;
+      unsorted: boolean;
+      empty: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  last: boolean;
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  sort: {
+    sorted: boolean;
+      unsorted: boolean;
+      empty: boolean;
+  };
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
+// Pozostała część kodu
 export default function SearchResultsPage() {
     const searchParams = useSearchParams();
     const t = useTranslations('SearchResults');
     const tc = useTranslations('countries');
     const locale = useLocale();
+
+    // Stany dla paginacji i danych
+    const [page, setPage] = useState<number>(0);
+    const [size, setSize] = useState<number>(6); // domyślny rozmiar strony
+    const [hotelsPage, setHotelsPage] = useState<PageResponse | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     // Ustawienie lokalnego formatowania dat
     useEffect(() => {
@@ -43,6 +96,90 @@ export default function SearchResultsPage() {
     // Obliczanie liczby dni pobytu tylko gdy obie daty są poprawne
     const stayDuration = formattedCheckIn && formattedCheckOut ?
         dayjs(checkOut, dateFormat, true).diff(dayjs(checkIn, dateFormat, true), 'day') : null;
+
+    // Funkcja obsługująca zmianę strony
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value - 1); // MUI Pagination używa numerów stron od 1, a API od 0
+    };
+
+    const fetchSearchResults = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            // Budowanie URL z parametrami wyszukiwania
+            const searchUrl = new URL(`/api/hotels/search`, window.location.origin);
+
+            // Dodawanie parametrów, jeśli są dostępne
+            if (country) searchUrl.searchParams.append('country', country);
+            if (checkIn) searchUrl.searchParams.append('checkIn', checkIn);
+            if (checkOut) searchUrl.searchParams.append('checkOut', checkOut);
+            if (capacity) searchUrl.searchParams.append('capacity', capacity.toString());
+
+            // Dodawanie parametrów paginacji
+            searchUrl.searchParams.append('page', page.toString());
+            searchUrl.searchParams.append('size', size.toString());
+            
+            console.log('Fetching hotels from:', searchUrl.toString());
+
+            const response = await fetch(searchUrl);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Received hotels data:', data);
+
+            // Sprawdź czy dane są tablicą (bez paginacji) i przekształć je do formatu PageResponse
+            if (Array.isArray(data)) {
+                const totalItems = data.length;
+                const totalPages = Math.ceil(totalItems / size);
+
+                // Oblicz, które elementy należą do bieżącej strony
+                const start = page * size;
+                const end = Math.min(start + size, totalItems);
+                const paginatedContent = data.slice(start, end);
+
+                // Utwórz obiekt zgodny z interfejsem PageResponse
+                const pageResponse: PageResponse = {
+                    content: paginatedContent,
+                    pageable: {
+                        pageNumber: page,
+                        pageSize: size,
+                        sort: { sorted: false, empty: true, unsorted: true },
+                        offset: page * size,
+                        paged: true,
+                        unpaged: false
+                    },
+                    last: page >= totalPages - 1,
+                    totalElements: totalItems,
+                    totalPages: totalPages,
+                    size: size,
+                    number: page,
+                    sort: { sorted: false, empty: true, unsorted: true },
+                    first: page === 0,
+                    numberOfElements: paginatedContent.length,
+                    empty: paginatedContent.length === 0
+                };
+
+                setHotelsPage(pageResponse);
+            } else {
+                // Jeśli dane są już w formacie PageResponse
+                setHotelsPage(data);
+            }
+        } catch (err) {
+            console.error('Błąd pobierania hoteli:', err);
+            setError(err instanceof Error ? err.message : 'Wystąpił nieznany błąd podczas pobierania danych');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Wywołanie fetchSearchResults przy ładowaniu komponentu i przy zmianie parametrów
+    useEffect(() => {
+        fetchSearchResults();
+    }, [page, size, country, checkIn, checkOut, capacity]);
 
     return (
         <Container maxWidth="lg" sx={{ pt: 10, pb: 8 }}>
@@ -95,7 +232,7 @@ export default function SearchResultsPage() {
                         <Chip
                             label={`${t('stayDuration')}: ${stayDuration} ${stayDuration === 1 ? t('day') : t('days')}`}
                             variant="outlined"
-                            color="secondary"
+                            color="primary"
                         />
                     )}
                 </Box>
@@ -107,9 +244,52 @@ export default function SearchResultsPage() {
 
             {/* Tutaj będzie lista wyników wyszukiwania hoteli */}
             <Box sx={{ p: 4, textAlign: 'center' }}>
-                <Typography variant="body1">
-                    {t('noResults')}
-                </Typography>
+                {loading ? (
+                    <CircularProgress />
+                ) : error ? (
+                    <Typography variant="body1" color="error">
+                        {error}
+                    </Typography>
+                ) : hotelsPage && hotelsPage.content.length > 0 ? (
+                    <>
+                        <Grid container spacing={4}>
+                            {hotelsPage.content.map((hotel) => (
+                                <Grid item xs={12} sm={6} md={4} key={hotel.id}>
+                                    <Card>
+                                        {hotel.mainImageUrl && (
+                                            <CardMedia
+                                                component="img"
+                                                height="140"
+                                                image={hotel.mainImageUrl}
+                                                alt={hotel.name}
+                                            />
+                                        )}
+                                        <CardContent>
+                                            <Typography variant="h6" gutterBottom>
+                                                {hotel.name}
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary">
+                                                {hotel.description}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            ))}
+                        </Grid>
+                        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+                            <Pagination
+                                count={hotelsPage.totalPages}
+                                page={page + 1}
+                                onChange={handlePageChange}
+                                color="primary"
+                            />
+                        </Box>
+                    </>
+                ) : (
+                    <Typography variant="body1">
+                        {t('noResults')}
+                    </Typography>
+                )}
             </Box>
         </Container>
     );
