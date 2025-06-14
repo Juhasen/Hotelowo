@@ -1,13 +1,13 @@
-## Frontend - Next.js
+## 🌐 Frontend - Next.js
 
 This is the frontend for the hotel application, built with [Next.js](https://nextjs.org), React, and TypeScript.
 
-### Requirements
+### 📦 Requirements
 
-* Node.js >= 18.x
-* npm >= 9.x
+* 🟢 Node.js >= 18.x
+* 📦 npm >= 9.x
 
-### Installation
+### ⚙️ Installation
 
 1. Install dependencies:
 
@@ -17,7 +17,7 @@ This is the frontend for the hotel application, built with [Next.js](https://nex
 
 2. Configure the `.env.local` file.
 
-### Running in Development Mode
+### 🚀 Running in Development Mode
 
 ```bash
 npm run dev
@@ -25,7 +25,7 @@ npm run dev
 
 The application will be available at: [http://localhost:3000](http://localhost:3000)
 
-### Building and Running in Production
+### 🏗️ Building and Running in Production
 
 1. Build the application:
 
@@ -39,22 +39,15 @@ The application will be available at: [http://localhost:3000](http://localhost:3
    npm start
    ```
 
-### Project Structure
+### 🗂️ Project Structure
 
-* `components/` – reusable components
-* `public/` – static assets (e.g., images)
-* `api/` – API routes
-* `lib/` – utility functions and types
+* `components/` – 🔁 reusable components
+* `public/` – 🖼️ static assets (e.g., images)
+* `api/` – 🌐 API routes
+* `lib/` – ⚙️ utility functions and types
 
-### Testing
 
-Run unit tests (if available):
-
-```bash
-npm test
-```
-
-### Linting
+### 🧹 Linting
 
 To check the code for stylistic errors:
 
@@ -62,10 +55,10 @@ To check the code for stylistic errors:
 npm run lint
 ```
 
-### Technologies
+### 🛠️ Technologies
 
-* Next.js
-* React
-* TypeScript
-* Material UI
-* next-i18next (for internationalization)
+* ⚛️ Next.js
+* ⚛️ React
+* 🗭 TypeScript
+* 🎨 Material UI
+* 🌍 next-i18next (for internationalization)
