@@ -7,6 +7,7 @@ public class AddressMapper {
             return null;
         }
         return new AddressRequest(
+            address.getCountry(),
             address.getStreet(),
             address.getCity(),
             address.getPostalCode(),

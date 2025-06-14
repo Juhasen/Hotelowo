@@ -17,6 +17,8 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    private String country;
+
     private String street;
 
     private String city;
@@ -26,5 +28,6 @@ public class Address {
     private Double latitude;
 
     private Double longitude;
+
 }
 

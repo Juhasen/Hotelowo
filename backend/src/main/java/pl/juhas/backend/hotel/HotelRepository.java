@@ -18,8 +18,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
                 COALESCE((SELECT img.filePath FROM HotelImage img WHERE img.hotel = h AND img.isPrimary = true),\s
                          (SELECT img2.filePath FROM HotelImage img2 WHERE img2.hotel = h ORDER BY img2.id ASC LIMIT 1)),\s
                 CAST(h.rating AS string),\s
-                CAST((SELECT MIN(r3.pricePerNight) FROM Room r3 WHERE r3.hotel = h AND r3.capacity >= :guestCount) AS string),
-                CAST(:guestCount AS string)
+                CAST((SELECT MIN(r3.pricePerNight) FROM Room r3 WHERE r3.hotel = h AND r3.capacity >= :guestCount) AS string)
             )
             FROM Hotel h
             WHERE h.isAvailableSearch = true

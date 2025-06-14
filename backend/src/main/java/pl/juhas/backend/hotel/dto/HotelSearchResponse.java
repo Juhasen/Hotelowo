@@ -5,7 +5,6 @@ public record HotelSearchResponse(
         String name,
         String mainImageUrl,
         String rating,
-        String oneNightPrice,
-        String numberOfGuests
+        String oneNightPrice
 ) {
 }
