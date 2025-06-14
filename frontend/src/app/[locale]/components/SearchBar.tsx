@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Paper, IconButton, MenuItem, Select, FormControl, InputLabel, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import {primaryBrown, secondaryBrown} from '../lib/themeColors';
+import {primaryBrown, secondaryBrown} from '../lib/theme';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -20,35 +20,17 @@ const datePickerStyle = {
         backgroundColor: 'white',
         height: '40px',
     },
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: secondaryBrown,
-    },
-    '& .MuiSvgIcon-root': {
-        color: primaryBrown,
-    },
     '& .MuiInputBase-input': {
         padding: '10px 14px',
     },
-    // Dodanie koloru obramowania przy fokusie
-    '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: primaryBrown,
-    },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: primaryBrown,
         borderWidth: '1px',
     },
 };
 
 // Style dla selektora
 const selectStyle = {
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: secondaryBrown,
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: primaryBrown,
-    },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: primaryBrown,
         borderWidth: '1px',
     },
     backgroundColor: 'white',

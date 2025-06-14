@@ -6,12 +6,7 @@ import Header from "./components/Header";
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
-
-const RobotoMono = Roboto({
-    subsets: ["latin"],
-    variable: "--font-roboto-mono",
-    display: "swap",
-});
+import ThemeRegistry from './lib/ThemeRegistry';
 
 export const metadata: Metadata = {
     title: "Hotelowo",
@@ -33,13 +28,13 @@ export default async function RootLayout({
     return (
         <html lang={locale}>
 
-        <body
-            className={`${RobotoMono.variable}} antialiased`}
-        >
-        <NextIntlClientProvider>
-            <Header/>
-            {children}
-        </NextIntlClientProvider>
+        <body>
+            <NextIntlClientProvider>
+                <ThemeRegistry>
+                    <Header/>
+                    {children}
+                </ThemeRegistry>
+            </NextIntlClientProvider>
         </body>
         </html>
     );
