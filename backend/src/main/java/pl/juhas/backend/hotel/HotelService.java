@@ -49,11 +49,11 @@ public class HotelService {
 
             // Tablice formatów dat, które będziemy próbować parsować
             DateTimeFormatter[] formatters = {
-                DateTimeFormatter.ISO_LOCAL_DATE,                // YYYY-MM-DD
-                DateTimeFormatter.ofPattern("dd/MM/yyyy"),       // DD/MM/YYYY
-                DateTimeFormatter.ofPattern("MM/dd/yyyy"),       // MM/DD/YYYY
-                DateTimeFormatter.ofPattern("dd-MM-yyyy"),       // DD-MM-YYYY
-                DateTimeFormatter.ofPattern("dd.MM.yyyy")        // DD.MM.YYYY
+                    DateTimeFormatter.ISO_LOCAL_DATE,                // YYYY-MM-DD
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy"),       // DD/MM/YYYY
+                    DateTimeFormatter.ofPattern("MM/dd/yyyy"),       // MM/DD/YYYY
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy"),       // DD-MM-YYYY
+                    DateTimeFormatter.ofPattern("dd.MM.yyyy")        // DD.MM.YYYY
             };
 
             // Próba parsowania daty zameldowania
@@ -91,14 +91,15 @@ public class HotelService {
             System.out.println("Searching for hotels in country: " + hotelRequest.country() +
                     ", check-in: " + checkInDate +
                     ", check-out: " + checkOutDate +
-                    ", guests: " + guestCount);
+                    ", guests: " + guestCount +
+                    ", pageable: " + pageable);
 
             return hotelRepository.findAvailableHotels(
-                hotelRequest.country(),
-                checkInDate,
-                checkOutDate,
-                guestCount,
-                pageable
+                    hotelRequest.country(),
+                    checkInDate.atStartOfDay(), // konwersja LocalDate na LocalDateTime (godz. 00:00)
+                    checkOutDate.atTime(23, 59, 59), // konwersja na koniec dnia
+                    guestCount,
+                    pageable
             );
 
         } catch (Exception e) {
@@ -110,7 +111,8 @@ public class HotelService {
 
     /**
      * Próbuje sparsować datę używając różnych formatów
-     * @param dateStr Ciąg znaków z datą
+     *
+     * @param dateStr    Ciąg znaków z datą
      * @param formatters Tablica formatów do przetestowania
      * @return LocalDate lub null jeśli parsowanie się nie udało
      */

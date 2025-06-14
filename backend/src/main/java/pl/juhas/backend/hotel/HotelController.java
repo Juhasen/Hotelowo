@@ -3,6 +3,9 @@ package pl.juhas.backend.hotel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +13,6 @@ import pl.juhas.backend.hotel.dto.HotelRequest;
 import pl.juhas.backend.hotel.dto.HotelResponse;
 import pl.juhas.backend.hotel.dto.HotelSearchRequest;
 import pl.juhas.backend.hotel.dto.HotelSearchResponse;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/hotel")
@@ -24,8 +25,14 @@ public class HotelController {
     public ResponseEntity<Page<HotelSearchResponse>> getHotels(
             @PathVariable LocaleType locale,
             HotelSearchRequest hotelRequest,
-            Pageable pageable
+            @PageableDefault(
+                    size = 10,
+                    page = 0,
+                    sort = "name",
+                    direction = Sort.Direction.ASC
+            ) Pageable pageable
     ) {
+
         return ResponseEntity.ok(
                 service.getHotels(locale.name(), hotelRequest, pageable)
         );
