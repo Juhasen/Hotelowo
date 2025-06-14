@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.juhas.backend.address.Address;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.hotelImage.HotelImage;
+import pl.juhas.backend.room.Room;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,6 +43,9 @@ public class Hotel {
 
     @OneToOne
     private Address address;
+
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms;
 
     @Column(length = 20)
     private String phone;

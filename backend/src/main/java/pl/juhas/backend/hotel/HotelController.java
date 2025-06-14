@@ -1,9 +1,15 @@
 package pl.juhas.backend.hotel;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.juhas.backend.hotel.dto.HotelRequest;
+import pl.juhas.backend.hotel.dto.HotelResponse;
+import pl.juhas.backend.hotel.dto.HotelSearchRequest;
+import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 
 import java.util.List;
 
@@ -15,8 +21,14 @@ public class HotelController {
     private final HotelService service;
 
     @GetMapping("/{locale}")
-    public ResponseEntity<List<HotelResponse>> getAllHotels(@PathVariable LocaleType locale) {
-        return ResponseEntity.ok(service.getAllHotels(locale.name()));
+    public ResponseEntity<Page<HotelSearchResponse>> getHotels(
+            @PathVariable LocaleType locale,
+            HotelSearchRequest hotelRequest,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                service.getHotels(locale.name(), hotelRequest, pageable)
+        );
     }
 
     @GetMapping("/{locale}/{id}")
@@ -60,3 +72,4 @@ public class HotelController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
+

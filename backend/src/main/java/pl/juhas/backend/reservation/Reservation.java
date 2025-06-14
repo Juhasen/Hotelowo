@@ -32,10 +32,10 @@ public class Reservation {
     private Room room;
 
     @Column(nullable = false)
-    private LocalDateTime checkIn;
+    private LocalDateTime checkInDate;
 
     @Column(nullable = false)
-    private LocalDateTime checkOut;
+    private LocalDateTime checkOutDate;
 
     @Enumerated(value = EnumType.STRING)
     private Status status;

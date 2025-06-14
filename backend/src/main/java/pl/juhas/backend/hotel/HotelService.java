@@ -1,6 +1,8 @@
 package pl.juhas.backend.hotel;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.address.Address;
@@ -8,11 +10,15 @@ import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressRepository;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
+import pl.juhas.backend.hotel.dto.HotelRequest;
+import pl.juhas.backend.hotel.dto.HotelResponse;
+import pl.juhas.backend.hotel.dto.HotelSearchRequest;
+import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.hotelImage.HotelImage;
-import pl.juhas.backend.hotelImage.HotelImageDTO;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
 import pl.juhas.backend.hotelImage.HotelImageRequest;
 
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -29,16 +35,46 @@ public class HotelService {
     private final HotelImageRepository hotelImageRepository;
 
     @Transactional(readOnly = true)
-    public List<HotelResponse> getAllHotels(String locale) {
-        List<Hotel> hotels = hotelRepository.findAll();
-
-        if (hotels.isEmpty() || (!locale.equals("pl") && !locale.equals("en"))) {
-            return List.of();
+    public Page<HotelSearchResponse> getHotels(String locale, HotelSearchRequest hotelRequest, Pageable pageable) {
+        if (!locale.equals("pl") && !locale.equals("en")) {
+            return Page.empty(pageable);
         }
 
-        return hotels.stream()
-                .map(hotel -> HotelMapper.toResponse(hotel, locale))
-                .toList();
+        try {
+            LocalDate checkInDate = null;
+            LocalDate checkOutDate = null;
+
+            if (hotelRequest.checkInDate() != null && !hotelRequest.checkInDate().isEmpty()) {
+                checkInDate = LocalDate.parse(hotelRequest.checkInDate());
+            }
+
+            if (hotelRequest.checkOutDate() != null && !hotelRequest.checkOutDate().isEmpty()) {
+                checkOutDate = LocalDate.parse(hotelRequest.checkOutDate());
+            }
+
+            // Jeśli nie podano dat, zwracamy pustą stronę
+            if (checkInDate == null || checkOutDate == null) {
+                return Page.empty(pageable);
+            }
+
+            // Walidacja dat
+            if (checkInDate.isAfter(checkOutDate)) {
+                return Page.empty(pageable);
+            }
+
+            Integer guestCount = hotelRequest.numberOfGuests() != null ? hotelRequest.numberOfGuests() : 1;
+
+            return hotelRepository.findAvailableHotels(
+                hotelRequest.country(),
+                checkInDate,
+                checkOutDate,
+                guestCount,
+                pageable
+            );
+
+        } catch (Exception e) {
+            return Page.empty(pageable);
+        }
     }
 
     public HotelResponse getHotelById(String locale, Long id) {
