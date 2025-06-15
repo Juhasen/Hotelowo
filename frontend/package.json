@@ -11,12 +11,17 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@heroui/date-picker": "^2.3.21",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
+    "@mui/x-date-pickers": "^8.5.2",
+    "@mui/x-date-pickers-pro": "^8.5.2",
+    "dayjs": "^1.11.13",
     "next": "15.2.3",
     "next-intl": "^4.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "rsuite": "^5.82.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
