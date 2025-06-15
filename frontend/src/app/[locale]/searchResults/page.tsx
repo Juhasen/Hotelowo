@@ -313,8 +313,9 @@ export default function SearchResultsPage() {
                                         }}>
                                             <Link
                                                 href={{
-                                                    pathname: `/hotel/${hotel.id}`,
+                                                    pathname: `/hotel/${hotel.name}`,
                                                     query: {
+                                                        id: hotel.id,
                                                         checkIn,
                                                         checkOut,
                                                         capacity
