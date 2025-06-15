@@ -1,5 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import {getLocale} from "next-intl/server";
+import {BASE_API_URL} from "@/app/[locale]/lib/utils";
 
 export async function GET(request: Request) {
   try {
@@ -18,7 +19,7 @@ export async function GET(request: Request) {
     const sizeStr = searchParams.get('size') || '6';
 
     // Budowanie URL do backendu
-    const backendUrl = new URL(process.env.BACKEND_API_URL || `http://localhost:8080/api/v1/hotel/${locale}`);
+    const backendUrl = new URL(`${BASE_API_URL}/hotel/${locale}`);
 
     // Dodawanie parametrów wyszukiwania do backendu
     if (country) backendUrl.searchParams.append('country', country);
