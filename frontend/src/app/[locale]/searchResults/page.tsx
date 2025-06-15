@@ -220,19 +220,19 @@ export default function SearchResultsPage() {
                 ) : hotelsPage && hotelsPage.content.length > 0 ? (
                     <>
                         <Stack
-                            spacing={{ xs: 2, sm: 3, md: 4 }}
+                            spacing={{xs: 2, sm: 3, md: 4}}
                             justifyContent="center"
-                            sx={{ width: '100%' }}
+                            sx={{width: '100%'}}
                         >
                             {hotelsPage.content.map((hotel) => (
                                 <Card
                                     key={hotel.id}
                                     sx={{
                                         display: 'flex',
-                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        flexDirection: {xs: 'column', sm: 'row'},
                                         width: '100%',
                                         backgroundColor: lightBrown,
-                                        height: { xs: 'auto', sm: '260px' },
+                                        height: {xs: 'auto', sm: '260px'},
                                         maxWidth: '100%',
                                         borderRadius: 6,
                                         boxShadow: 4,
@@ -240,8 +240,8 @@ export default function SearchResultsPage() {
                                 >
                                     <Box
                                         sx={{
-                                            width: { xs: '100%', sm: '40%', md: '350px' },
-                                            height: { xs: '200px', sm: '100%' },
+                                            width: {xs: '100%', sm: '40%', md: '350px'},
+                                            height: {xs: '200px', sm: '100%'},
                                             position: 'relative',
                                             flexShrink: 0,
                                         }}
@@ -267,7 +267,7 @@ export default function SearchResultsPage() {
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'space-between',
-                                            p: { xs: 2, sm: 3, md: 4 },
+                                            p: {xs: 2, sm: 3, md: 4},
                                             height: '100%',
                                         }}
                                     >
@@ -312,7 +312,14 @@ export default function SearchResultsPage() {
                                             width: '100%',
                                         }}>
                                             <Link
-                                                href={`/hotel/${hotel.id}`}
+                                                href={{
+                                                    pathname: `/hotel/${hotel.id}`,
+                                                    query: {
+                                                        checkIn,
+                                                        checkOut,
+                                                        capacity
+                                                    }
+                                                }}
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -328,7 +335,7 @@ export default function SearchResultsPage() {
                                                     height: '40px',
                                                 }}
                                             >
-                                                <ArrowRightIcon />
+                                                <ArrowRightIcon/>
                                             </Link>
                                         </Box>
                                     </CardContent>
