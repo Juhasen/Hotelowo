@@ -231,6 +231,7 @@ export default function SearchResultsPage() {
                                         display: 'flex',
                                         flexDirection: { xs: 'column', sm: 'row' },
                                         width: '100%',
+                                        backgroundColor: lightBrown,
                                         height: { xs: 'auto', sm: '260px' },
                                         maxWidth: '100%',
                                         borderRadius: 6,
