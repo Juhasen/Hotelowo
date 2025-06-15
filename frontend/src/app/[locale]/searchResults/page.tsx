@@ -34,7 +34,6 @@ import {Hotel, Page} from '@/app/[locale]/lib/types';
 import {lightBrown, secondaryBrown} from "@/app/[locale]/lib/theme";
 import {Link} from '@/i18n/navigation';
 import {ArrowRightIcon} from "@mui/x-date-pickers";
-import {px} from "motion-dom";
 
 dayjs.extend(customParseFormat);
 
