@@ -33,8 +33,6 @@ export async function GET(request: Request) {
     backendUrl.searchParams.append('sort', '');
 
 
-    // Wykonanie zapytania do backendu
-    console.log(`Calling backend API: ${backendUrl.toString()}`);
     const response = await fetch(backendUrl.toString(), {
       method: 'GET',
       headers: {
@@ -50,7 +48,6 @@ export async function GET(request: Request) {
 
     // Przetwarzanie odpowiedzi
     const data = await response.json();
-    console.log('Backend search response:', data);
 
     // Zwracamy dane w formatowaniu zgodnym z oczekiwaniami frontendu
     return NextResponse.json(data);
