@@ -64,6 +64,22 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                                 ))}
                             </ImageList>
                         </Box>
+                        <Box sx={{my: 2}}>
+                            <Typography variant="body1">
+                                <b>Lokalizacja na mapie:</b>
+                            </Typography>
+                            <Box sx={{mt: 1, borderRadius: 2, overflow: "hidden", boxShadow: 2}}>
+                                <iframe
+                                    title="Mapa hotelu"
+                                    width="100%"
+                                    height="220"
+                                    style={{border: 0, borderRadius: 8}}
+                                    loading="lazy"
+                                    allowFullScreen
+                                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.address.longitude - 0.01},${hotel.address.latitude - 0.01},${hotel.address.longitude + 0.01},${hotel.address.latitude + 0.01}&layer=mapnik&marker=${hotel.address.latitude},${hotel.address.longitude}`}
+                                />
+                            </Box>
+                        </Box>
                     </Grid>
                     <Grid size={{xs: 12, md: 5}}>
                         <Typography variant="h3" gutterBottom sx={{fontWeight: 700}}>
@@ -112,22 +128,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                                 </Typography>
                             )}
                         </Box>
-                        <Box sx={{my: 2}}>
-                            <Typography variant="body1">
-                                <b>Lokalizacja na mapie:</b>
-                            </Typography>
-                            <Box sx={{mt: 1, borderRadius: 2, overflow: "hidden", boxShadow: 2}}>
-                                <iframe
-                                    title="Mapa hotelu"
-                                    width="100%"
-                                    height="220"
-                                    style={{border: 0, borderRadius: 8}}
-                                    loading="lazy"
-                                    allowFullScreen
-                                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.address.longitude - 0.01},${hotel.address.latitude - 0.01},${hotel.address.longitude + 0.01},${hotel.address.latitude + 0.01}&layer=mapnik&marker=${hotel.address.latitude},${hotel.address.longitude}`}
-                                />
-                            </Box>
-                        </Box>
+
                     </Grid>
                 </Grid>
             </Paper>
