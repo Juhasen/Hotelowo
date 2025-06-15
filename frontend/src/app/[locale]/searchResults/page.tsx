@@ -34,6 +34,7 @@ import {Hotel, Page} from '@/app/[locale]/lib/types';
 import {lightBrown, secondaryBrown} from "@/app/[locale]/lib/theme";
 import {Link} from '@/i18n/navigation';
 import {ArrowRightIcon} from "@mui/x-date-pickers";
+import {px} from "motion-dom";
 
 dayjs.extend(customParseFormat);
 
@@ -219,30 +220,28 @@ export default function SearchResultsPage() {
                     </Typography>
                 ) : hotelsPage && hotelsPage.content.length > 0 ? (
                     <>
-                        <Stack spacing={4} justifyContent="center">
+                        <Stack
+                            spacing={{ xs: 2, sm: 3, md: 4 }}
+                            justifyContent="center"
+                            sx={{ width: '100%' }}
+                        >
                             {hotelsPage.content.map((hotel) => (
                                 <Card
                                     key={hotel.id}
                                     sx={{
                                         display: 'flex',
-                                        width: 750,
-                                        height: 260,
-                                        minWidth: 750,
-                                        minHeight: 260,
-                                        maxWidth: 750,
-                                        maxHeight: 260,
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        width: '100%',
+                                        height: { xs: 'auto', sm: '260px' },
+                                        maxWidth: '100%',
                                         borderRadius: 6,
                                         boxShadow: 4,
                                     }}
                                 >
                                     <Box
                                         sx={{
-                                            width: 350,
-                                            height: 260,
-                                            minWidth: 350,
-                                            minHeight: 260,
-                                            maxWidth: 350,
-                                            maxHeight: 260,
+                                            width: { xs: '100%', sm: '40%', md: '350px' },
+                                            height: { xs: '200px', sm: '100%' },
                                             position: 'relative',
                                             flexShrink: 0,
                                         }}
@@ -252,11 +251,10 @@ export default function SearchResultsPage() {
                                             alt={hotel.name}
                                             fill
                                             priority={true}
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
                                             style={{
                                                 objectFit: 'cover',
-                                                borderTopLeftRadius: 6,
-                                                borderBottomLeftRadius: 6,
+                                                borderRadius: 6
                                             }}
                                             onError={(e) => {
                                                 (e.target as HTMLImageElement).src = '/images/hotels/default.jpg';
@@ -268,8 +266,8 @@ export default function SearchResultsPage() {
                                             flex: 1,
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            p: 4,
+                                            justifyContent: 'space-between',
+                                            p: { xs: 2, sm: 3, md: 4 },
                                             height: '100%',
                                         }}
                                     >
