@@ -1,43 +1,70 @@
 ﻿"use client";
 
-import { useSearchParams, useParams } from 'next/navigation';
+import React, {useEffect, useState} from "react";
+import {
+    Box,
+    Typography,
+    CircularProgress, Container,
+} from "@mui/material";
+import {useSearchParams, useParams} from "next/navigation";
+import {HotelDetail} from "@/app/[locale]/lib/types";
+import HotelDetails from "../components/HotelDetails";
+import AvailableRooms from "@/app/[locale]/hotel/components/AvailableRooms";
 
 export default function HotelPage() {
-    const params = useParams();
     const searchParams = useSearchParams();
+    const params = useParams();
 
-    const id = params?.id; // pobiera id z /hotel/[id]
-    const checkIn = searchParams.get('checkIn');
-    const checkOut = searchParams.get('checkOut');
-    const capacity = searchParams.get('capacity');
+    const id = searchParams.get("id");
+    const checkIn = searchParams.get("checkIn");
+    const checkOut = searchParams.get("checkOut");
+    const capacity = searchParams.get("capacity");
+    const locale = params?.locale || "en";
 
-    const locale = params?.locale || 'en'; // pobiera locale z /[locale]/hotel/[id]
+    const [hotel, setHotel] = useState<HotelDetail | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const fetchHotelDetails = async () => {
-        const searchUrl = new URL(`/${locale}/api/hotel/${id}`, window.location.origin);
+    useEffect(() => {
+        const fetchHotelDetails = async () => {
+            try {
+                const searchUrl = new URL(`/${locale}/api/hotel/${id}`, window.location.origin);
+                if (checkIn) searchUrl.searchParams.append("checkIn", checkIn);
+                if (checkOut) searchUrl.searchParams.append("checkOut", checkOut);
+                if (capacity) searchUrl.searchParams.append("capacity", capacity.toString());
 
-        if (checkIn) searchUrl.searchParams.append('checkIn', checkIn);
-        if (checkOut) searchUrl.searchParams.append('checkOut', checkOut);
-        if (capacity) searchUrl.searchParams.append('capacity', capacity.toString());
+                const response = await fetch(searchUrl.toString());
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                setHotel(data);
+            } catch (e) {
+                setHotel(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchHotelDetails();
+    }, [id, checkIn, checkOut, capacity, locale]);
 
-        console.log('Fetching hotel from:', searchUrl.toString());
-
-        const response = await fetch(searchUrl);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Hotel data:', data);
+    if (loading) {
+        return (
+            <Box sx={{display: "flex", justifyContent: "center", mt: 8}}>
+                <CircularProgress/>
+            </Box>
+        );
+    }
+    if (!hotel) {
+        return (
+            <Typography variant="h6" color="error" sx={{mt: 8, textAlign: "center"}}>
+                Nie znaleziono hotelu.
+            </Typography>
+        );
     }
 
-    fetchHotelDetails();
-
     return (
-        <div>
-        <h1>Hotel Page</h1>
-        <p>Welcome to the hotel page!</p>
-        </div>
+        <Container maxWidth="lg" sx={{pt: 10, pb: 8}}>
+            <HotelDetails hotel={hotel} />
+            <AvailableRooms />
+        </Container>
     );
 }
+

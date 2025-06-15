@@ -17,3 +17,30 @@ export interface Page {
         }
     }
 }
+
+export type Address = {
+    country: string;
+    street: string;
+    city: string;
+    postalCode: string;
+    latitude: number;
+    longitude: number;
+};
+
+export type ImageType = {
+    filePath: string;
+    altText: string;
+    isPrimary: boolean;
+};
+
+export type HotelDetail = {
+    name: string;
+    description: string;
+    phone: string;
+    email: string;
+    website: string;
+    address: Address;
+    isAvailableSearch: boolean;
+    amenities: string[];
+    images: ImageType[];
+};

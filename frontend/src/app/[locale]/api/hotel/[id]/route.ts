@@ -5,13 +5,26 @@ import {BASE_API_URL} from "@/app/[locale]/lib/utils";
 export async function GET(request: Request) {
     try {
         const locale =  await getLocale();
+        // Pobieranie parametrów z URLa
+        const url = new URL(request.url);
+        const id = url.pathname.split('/').pop(); // Pobieranie ID z końca ścieżki
+        if (!id) {
+            console.error('Hotel ID is missing in the request URL');
+            return NextResponse.json({ error: 'Hotel ID is required' }, { status: 400 });
+        }
+        // Pobieranie dodatkowych parametrów z query string
+        const checkIn = url.searchParams.get('checkIn');
+        const checkOut = url.searchParams.get('checkOut');
+        const capacity = url.searchParams.get('capacity');
 
-        const { searchParams } = new URL(request.url);
-
-        const id = searchParams.get('id');
 
         // Budowanie URL do backendu
         const backendUrl = new URL(`${BASE_API_URL}/hotel/${locale}/${id}`);
+
+        if (checkIn) backendUrl.searchParams.append('checkIn', checkIn);
+        if (checkOut) backendUrl.searchParams.append('checkOut', checkOut);
+        if (capacity) backendUrl.searchParams.append('capacity', capacity);
+
 
         console.log(`Calling backend API: ${backendUrl.toString()}`);
         const response = await fetch(backendUrl.toString(), {
