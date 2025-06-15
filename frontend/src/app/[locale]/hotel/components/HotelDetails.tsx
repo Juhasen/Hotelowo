@@ -27,7 +27,7 @@ interface HotelDetailsProps {
 
 const HotelDetails: React.FC<HotelDetailsProps> = ({ hotel }) => {
     return (
-        <Container maxWidth="lg" sx={{ pt: 10, pb: 8 }}>
+        <Container maxWidth="lg" sx={{pb: 8 }}>
             <Paper
                 elevation={8}
                 sx={{
