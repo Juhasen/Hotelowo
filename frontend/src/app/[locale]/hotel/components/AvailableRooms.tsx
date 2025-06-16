@@ -1,8 +1,12 @@
 ﻿import {Box, Typography} from "@mui/material";
 
-export default function AvailableRooms() {
+interface AvailableRoomsProps {
+    id?: string
+}
+
+export default function AvailableRooms({id}: AvailableRoomsProps) {
     return (
-        <Box sx={{ mt: 4 }}>
+        <Box id={id} sx={{mt: 4}}>
             <Typography variant="h5" gutterBottom>
                 Dostępne pokoje
             </Typography>

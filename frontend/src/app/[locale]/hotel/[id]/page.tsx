@@ -63,7 +63,7 @@ export default function HotelPage() {
     return (
         <Container maxWidth="lg" sx={{pt: 10, pb: 8}}>
             <HotelDetails hotel={hotel} />
-            <AvailableRooms />
+            <AvailableRooms id="available-rooms" />
         </Container>
     );
 }

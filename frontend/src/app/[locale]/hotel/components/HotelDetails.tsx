@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Box,
     Typography,
@@ -8,24 +8,28 @@ import {
     Container,
     ImageList,
     ImageListItem,
+    Dialog
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import Image from "next/image";
 import {HotelDetail} from "@/app/[locale]/lib/types";
 
-// Funkcja pomocnicza do srcset (dla <img>)
-function srcset(image: string, size: number, rows = 1, cols = 1) {
-    return {
-        src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-        srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x`,
-    };
-}
 
 interface HotelDetailsProps {
     hotel: HotelDetail;
 }
 
 const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
+
+    const [open, setOpen] = useState(false);
+    const [selectedImg, setSelectedImg] = useState<{src: string, alt: string} | null>(null);
+
+    const handleImgClick = (img: {filePath: string, altText: string}) => {
+        setSelectedImg({src: img.filePath, alt: img.altText});
+        setOpen(true);
+    };
+
+    const handleClose = () => setOpen(false);
+
     return (
         <Container maxWidth="lg" sx={{pb: 8}}>
             <Paper
@@ -37,57 +41,77 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                     background: "linear-gradient(135deg, #f5f5f5 60%, #e0c3a3 100%)",
                 }}
             >
-                <Grid container spacing={4}>
-                    <Grid size={{xs: 12, md: 5}}>
-                        <Box sx={{mb: 2, borderRadius: 3, overflow: "hidden", boxShadow: 3}}>
-                            <ImageList
-                                sx={{width: "100%", maxWidth: 500, height: 450, borderRadius: 2, background: "#fff"}}
-                                variant="quilted"
-                                cols={4}
-                                rowHeight={121}
-                            >
+                {/* Pasek górny */}
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 3
+                }}>
+                    <Typography variant="h3" sx={{fontWeight: 700}}>
+                        {hotel.name}
+                    </Typography>
+                    <a href="#available-rooms" style={{textDecoration: "none"}}>
+                        <Box
+                            component="button"
+                            sx={{
+                                px: 3,
+                                py: 1,
+                                backgroundColor: "primary.main",
+                                color: "white",
+                                border: "none",
+                                borderRadius: 3,
+                                fontWeight: 600,
+                                fontSize: "1.1rem",
+                                cursor: "pointer",
+                                boxShadow: 2,
+                                transition: "background 0.2s",
+                                scrollBehavior: "smooth",
+                                "&:hover": {backgroundColor: "primary.dark"}
+                            }}
+                        >
+                            Rezerwuj
+                        </Box>
+                    </a>
+                </Box>
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: {xs: "column", md: "row"},
+                    gap: 6,
+                    alignItems: "flex-start"
+                }}>
+                    <Box sx={{width: "100%", mb: 3}}>
+                        <Box sx={{borderRadius: 6, boxShadow: 6, width: "100%", height: 450, overflow: "hidden", mb: 3}}>
+                            <ImageList cols={3} rowHeight={300} sx={{width: "100%", height: "100%"}}>
                                 {hotel.images.map((img) => (
-                                    <ImageListItem
-                                        key={img.filePath}
-                                        cols={img.isPrimary ? 2 : 1}
-                                        rows={img.isPrimary ? 2 : 1}
-                                    >
-                                        <Image
-                                            {...srcset(img.filePath, 121, img.isPrimary ? 2 : 1, img.isPrimary ? 2 : 1)}
+                                    <ImageListItem key={img.filePath}>
+                                        <img
+                                            srcSet={`${img.filePath}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                            src={`${img.filePath}?w=164&h=164&fit=crop&auto=format`}
                                             alt={img.altText}
                                             loading="lazy"
-                                            width={100}
-                                            height={100}
                                             style={{objectFit: "cover", width: "100%", height: "100%", borderRadius: 8}}
+                                            onClick={() => handleImgClick(img)}
                                         />
                                     </ImageListItem>
                                 ))}
                             </ImageList>
                         </Box>
-                        <Box sx={{my: 2}}>
-                            <Typography variant="body1">
-                                <b>Lokalizacja na mapie:</b>
-                            </Typography>
-                            <Box sx={{mt: 1, borderRadius: 2, overflow: "hidden", boxShadow: 2}}>
-                                <iframe
-                                    title="Mapa hotelu"
-                                    width="100%"
-                                    height="220"
-                                    style={{border: 0, borderRadius: 8}}
-                                    loading="lazy"
-                                    allowFullScreen
-                                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.address.longitude - 0.01},${hotel.address.latitude - 0.01},${hotel.address.longitude + 0.01},${hotel.address.latitude + 0.01}&layer=mapnik&marker=${hotel.address.latitude},${hotel.address.longitude}`}
-                                />
-                            </Box>
-                        </Box>
-                    </Grid>
-                    <Grid size={{xs: 12, md: 5}}>
-                        <Typography variant="h3" gutterBottom sx={{fontWeight: 700}}>
-                            {hotel.name}
-                        </Typography>
-                        <Typography variant="subtitle1" color="text.secondary" gutterBottom sx={{mb: 2}}>
-                            {hotel.description}
-                        </Typography>
+
+                        {hotel.description
+                            .split('\n\n')
+                            .map((paragraph, idx) => (
+                                <Typography
+                                    key={idx}
+                                    variant="subtitle1"
+                                    color="text.secondary"
+                                    gutterBottom
+                                    sx={{ mb: 2, textAlign: "justify" }}
+                                >
+                                    {paragraph}
+                                </Typography>
+                            ))
+                        }
                         <Box sx={{my: 2}}>
                             <Typography variant="body1">
                                 <b>Telefon:</b> {hotel.phone}
@@ -128,10 +152,38 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                                 </Typography>
                             )}
                         </Box>
-
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
+                {/* Mapa pod całością */}
+                <Box sx={{mt: 4}}>
+                    <Typography variant="body1">
+                        <b>Lokalizacja na mapie:</b>
+                    </Typography>
+                    <Box sx={{mt: 1, borderRadius: 2, overflow: "hidden", boxShadow: 2}}>
+                        <iframe
+                            title="Mapa hotelu"
+                            width="100%"
+                            height="220"
+                            style={{border: 0, borderRadius: 8}}
+                            loading="lazy"
+                            allowFullScreen
+                            src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.address.longitude - 0.01},${hotel.address.latitude - 0.01},${hotel.address.longitude + 0.01},${hotel.address.latitude + 0.01}&layer=mapnik&marker=${hotel.address.latitude},${hotel.address.longitude}`}
+                        />
+                    </Box>
+                </Box>
             </Paper>
+            {/* Modal z powiększonym zdjęciem */}
+            <Dialog open={open} onClose={handleClose} maxWidth="xl">
+                {selectedImg && (
+                    <Box sx={{p: 2, display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <img
+                            src={selectedImg.src}
+                            alt={selectedImg.alt}
+                            style={{maxWidth: "90vw", maxHeight: "80vh", borderRadius: 12}}
+                        />
+                    </Box>
+                )}
+            </Dialog>
         </Container>
     );
 };
