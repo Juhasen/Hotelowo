@@ -32,11 +32,14 @@ public class Hotel {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "description_pl", nullable = false)
+    @Column(name = "description_pl", nullable = false, columnDefinition = "TEXT")
     private String description_pl;
 
-    @Column(name = "description_en", nullable = false)
+    @Column(name = "description_en", nullable = false, columnDefinition = "TEXT")
     private String description_en;
+
+    @Column(name="stars", nullable = false)
+    private Integer stars;
 
     @Column(precision = 2, scale = 1)
     private BigDecimal rating;

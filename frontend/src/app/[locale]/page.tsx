@@ -3,7 +3,6 @@
 import {useTranslations} from 'next-intl';
 import Image from 'next/image';
 import SearchBar from '@/app/[locale]/components/SearchBar';
-import CategoriesSection from '@/app/[locale]/components/CategoriesSection';
 import {Typography} from "@mui/material";
 
 
@@ -32,7 +31,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <CategoriesSection />
         </div>
     );
 }

@@ -13,14 +13,14 @@ import {
     CardContent,
     Pagination,
     CircularProgress,
-    Stack
+    Stack, Tooltip
 } from '@mui/material';
-import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import PublicIcon from '@mui/icons-material/Public';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PeopleIcon from '@mui/icons-material/People';
+import MapIcon from '@mui/icons-material/Map';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {useTranslations} from 'next-intl';
 import {useLocale} from 'use-intl';
@@ -31,7 +31,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SearchBar from '@/app/[locale]/components/SearchBar';
 import Image from 'next/image';
 import {Hotel, Page} from '@/app/[locale]/lib/types';
-import {lightBrown, secondaryBrown} from "@/app/[locale]/lib/theme";
+import {lightBrown, secondaryBrown, starColor} from "@/app/[locale]/lib/theme";
 import {Link} from '@/i18n/navigation';
 import {ArrowRightIcon} from "@mui/x-date-pickers";
 
@@ -210,7 +210,7 @@ export default function SearchResultsPage() {
                 {t('resultsTitle')}
             </Typography>
 
-            <Box sx={{p: 4, textAlign: 'center'}}>
+            <Box sx={{p: 4, textAlign: 'left'}}>
                 {loading ? (
                     <CircularProgress/>
                 ) : error ? (
@@ -228,6 +228,7 @@ export default function SearchResultsPage() {
                                 <Card
                                     key={hotel.id}
                                     sx={{
+                                        position: 'relative',
                                         display: 'flex',
                                         flexDirection: {xs: 'column', sm: 'row'},
                                         width: '100%',
@@ -238,6 +239,29 @@ export default function SearchResultsPage() {
                                         boxShadow: 4,
                                     }}
                                 >
+                                    {/* Box z oceną w prawym górnym rogu */}
+                                    <Tooltip title={t("ratingTooltip")}>
+                                        <Box
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 16,
+                                                right: 16,
+                                                backgroundColor: 'secondary.main',
+                                                color: 'white',
+                                                px: 2,
+                                                py: 0.5,
+                                                borderRadius: 2,
+                                                fontWeight: 700,
+                                                fontSize: '1.1rem',
+                                                boxShadow: 2,
+                                                minWidth: 48,
+                                                textAlign: 'center',
+                                                zIndex: 2,
+                                            }}
+                                        >
+                                            {Number(hotel.rating).toFixed(1)}
+                                        </Box>
+                                    </Tooltip>
                                     <Box
                                         sx={{
                                             width: {xs: '100%', sm: '40%', md: '350px'},
@@ -269,31 +293,53 @@ export default function SearchResultsPage() {
                                             justifyContent: 'space-between',
                                             p: {xs: 2, sm: 3, md: 4},
                                             height: '100%',
+                                            textAlign: 'center'
                                         }}
                                     >
-                                        <Typography variant="h5" gutterBottom>
-                                            {hotel.name}
-                                        </Typography>
-
-                                        <Box sx={{
+                                        <Typography variant="h5" gutterBottom sx={{
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center',
                                             gap: 1,
-                                            mb: 2
+                                            textAlign: 'left'
                                         }}>
-                                            <Rating
-                                                name="Hotel Rating"
-                                                value={hotel.rating}
-                                                readOnly
-                                                precision={0.5}
-                                                size="medium"
-                                                sx={{ml: 1}}
-                                                emptyIcon={<StarIcon style={{opacity: 0.55}} fontSize="inherit"/>}
-                                            />
-                                        </Box>
-
-                                        <Box sx={{color: 'text.secondary', mb: 2}}>
+                                            {hotel.name}
+                                            {hotel.stars > 0 && (
+                                                <Box sx={{display: 'flex', alignItems: 'center', ml: 1}}>
+                                                    {Array.from({length: hotel.stars}).map((_, i) => (
+                                                        <StarIcon
+                                                            key={i}
+                                                            sx={{color: starColor, fontSize: '0.9em'}}
+                                                        />
+                                                    ))}
+                                                </Box>
+                                            )}
+                                        </Typography>
+                                        <a
+                                            href={`https://www.google.com/maps/search/?api=1&query=${hotel.latitude},${hotel.longitude}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{textDecoration: 'none'}}
+                                        >
+                                            <Typography
+                                                variant="body1"
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                    color: 'primary.main',
+                                                    fontWeight: 600,
+                                                    cursor: 'pointer',
+                                                    '&:hover': {
+                                                        textDecoration: 'underline',
+                                                        color: 'secondary.main',
+                                                    },
+                                                }}
+                                            >
+                                                <MapIcon sx={{fontSize: 20, mr: 0.5}}/>
+                                                {t('mapLocation')}
+                                            </Typography>
+                                        </a>
+                                        <Box sx={{color: 'text.secondary', mb: 2, textAlign: 'center'}}>
                                             <span>1 {t("night")} / {capacity} {capacity > 1 ? t("people") : t("person")}</span>
                                             <br/>
                                             <Box component="span" sx={{
@@ -303,7 +349,10 @@ export default function SearchResultsPage() {
                                             }}>
                                                 {hotel.oneNightPrice} PLN
                                             </Box>
+                                            <br/>
+                                            <span className="text-sm">{t("priceInclude")}</span>
                                         </Box>
+
 
                                         {/* Box do wyrównywania przycisku do prawej */}
                                         <Box sx={{
@@ -362,4 +411,3 @@ export default function SearchResultsPage() {
         </Container>
     );
 }
-

@@ -2,6 +2,7 @@ package pl.juhas.backend.hotel;
 
 import pl.juhas.backend.address.AddressRequest;
 import pl.juhas.backend.address.AddressMapper;
+import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.dto.HotelResponse;
 import pl.juhas.backend.hotelImage.HotelImageMapper;
 import pl.juhas.backend.hotelImage.HotelImageRequest;
@@ -19,8 +20,22 @@ public class HotelMapper {
         }
 
         AddressRequest addressDTO = AddressMapper.mapToAddressDTO(hotel.getAddress());
+
         List<HotelImageRequest> images = hotel.getImages().stream()
                 .map(HotelImageMapper::mapToHotelImageRequest)
+                .toList();
+
+
+        List<AmenityResponse> amenities = hotel.getAmenities().stream()
+                .map(amenity -> {
+                    String amenityName = locale.equals("pl") ?
+                            amenity.getName_pl() :
+                            amenity.getName_en();
+                    return new AmenityResponse(
+                            amenityName,
+                            amenity.getIcon()
+                    );
+                })
                 .toList();
 
         return new HotelResponse(
@@ -31,8 +46,10 @@ public class HotelMapper {
                 hotel.getWebsite(),
                 addressDTO,
                 hotel.getIsAvailableSearch(),
-                hotel.getAmenities(),
-                images
+                amenities,
+                images,
+                hotel.getRating() != null ? hotel.getRating().toString() : null,
+                hotel.getStars() != null ? hotel.getStars().toString() : null
         );
     }
 }

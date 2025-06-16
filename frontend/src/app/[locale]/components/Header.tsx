@@ -36,14 +36,19 @@ export default function Header() {
         const pathWithoutLocale = getPathWithoutLocale();
         // Zamykamy menu
         handleClose();
-        // Przekierowujemy do tej samej ścieżki, ale z nowym locale
-        const newPath = `/${locale}${pathWithoutLocale}`;
+
+        // Wyodrębnij adres URL i parametry zapytania
+        const url = new URL(window.location.href);
+        const searchParams = url.search; // zawiera ?id=6&checkIn=17%2F06%2F2025&checkOut=20%2F06%2F2025&capacity=1
+
+        // Przekierowujemy do tej samej ścieżki, ale z nowym locale, zachowując parametry URL
+        const newPath = `/${locale}${pathWithoutLocale}${searchParams}`;
         router.push(newPath);
     };
 
     return (
         <header
-            className="w-full px-6 py-4 flex justify-between items-center bg-transparent text-white fixed top-0 left-0 z-50">
+            className="w-full px-6 py-4 flex justify-between items-center bg-transparent text-white top-0 left-0 z-50">
             <Link href={`/${currentLocale}`} className="hover:opacity-80 transition">
                 <h1 className="text-3xl font-bold text-lightBrown">Hotelowo</h1>
             </Link>

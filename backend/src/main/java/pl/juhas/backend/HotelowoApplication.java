@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import pl.juhas.backend.address.Address;
 import pl.juhas.backend.address.AddressRepository;
+import pl.juhas.backend.amenity.Amenity;
+import pl.juhas.backend.amenity.AmenityRepository;
 import pl.juhas.backend.auth.AuthenticationService;
 import pl.juhas.backend.auth.RegisterRequest;
 import pl.juhas.backend.hotel.Hotel;
@@ -18,6 +20,7 @@ import pl.juhas.backend.room.RoomType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static pl.juhas.backend.user.Role.ADMIN;
@@ -35,7 +38,8 @@ public class HotelowoApplication {
             HotelRepository hotelRepository,
             RoomRepository roomRepository,
             AddressRepository addressRepository,
-            HotelImageRepository hotelImageRepository
+            HotelImageRepository hotelImageRepository,
+            AmenityRepository amenityRepository
     ) {
         return args -> {
             // Tworzenie administratora
@@ -49,12 +53,17 @@ public class HotelowoApplication {
             System.out.println("Admin token: " + service.register(admin).getAccessToken());
 
 
+            // Tworzenie udogodnień
+            createAmenities(amenityRepository);
+
             // Tworzenie przykładowego hotelu z 3 pokojami
             createSampleHotel(hotelRepository, roomRepository, addressRepository, hotelImageRepository);
 
             // Tworzenie dodatkowych hoteli w Polsce
             createMorePolishHotels(hotelRepository, roomRepository, addressRepository, hotelImageRepository);
 
+            // Przypisanie udogodnień do hoteli
+            addAmenitiesToHotels(hotelRepository, amenityRepository);
         };
     }
 
@@ -70,7 +79,15 @@ public class HotelowoApplication {
                 {"Baltic Resort & Spa", "Gdańsk", "ul. Nadmorska 22", "Nowoczesny hotel z dostępem do prywatnej plaży i centrum SPA.", 54.3520, 18.6466},
                 {"Hotel Victoria", "Wrocław", "ul. Rynek 12", "Butikowy hotel położony przy wrocławskim Rynku, łączący nowoczesność z klasyczną elegancją.", 51.1079, 17.0385},
                 {"Górski Azyl", "Zakopane", "ul. Krupówki 45", "Tradycyjny hotel w stylu góralskim z niesamowitym widokiem na Tatry.", 49.2992, 19.9496},
-                {"Aparthotel Centrum", "Poznań", "ul. Półwiejska 3", "Nowoczesny hotel apartamentowy w centrum Poznania, idealny dla biznesu i turystyki.", 52.4064, 16.9252},
+                {"Aparthotel Centrum", "Poznań", "ul. Półwiejska 3", "Aparthotel Centrum położony jest w samym sercu miasta, oferując komfortowy pobyt zarówno dla turystów, jak i osób podróżujących służbowo. Do dyspozycji Gości oddajemy ogród oraz bezpłatny prywatny parking, co stanowi wyjątkowy atut w centrum. Goście mogą również korzystać z bezpłatnego Wi-Fi dostępnego na terenie całego obiektu.\n" +
+                        "\n\n" +
+                        "W pobliżu znajdują się liczne atrakcje, takie jak Centrum handlowe Manufaktura (800 m), PKP Łódź Kaliska (2 km) oraz Hala Atlas Arena (2,5 km). Doskonała lokalizacja umożliwia łatwy dostęp do komunikacji miejskiej, restauracji, muzeów oraz terenów rekreacyjnych.\n" +
+                        "\n\n" +
+                        "Każda opcja zakwaterowania wyposażona jest w ekspres do kawy, prywatną łazienkę z prysznicem i suszarką do włosów, a wybrane apartamenty posiadają również aneks kuchenny z płytą grzewczą. W cenie pobytu zapewniona jest pościel oraz ręczniki.\n" +
+                        "\n\n" +
+                        "Recepcja czynna jest codziennie, a personel posługujący się językiem polskim, angielskim i rosyjskim chętnie udzieli wszelkich informacji oraz pomoże zaplanować pobyt.\n" +
+                        "\n\n" +
+                        "Odległość od dworca Łódź Fabryczna wynosi 2,5 km, natomiast Port Lotniczy im. Władysława Reymonta oddalony jest o 7 km.", 52.4064, 16.9252},
                 {"Royal Palace", "Łódź", "ul. Piotrkowska 100", "Prestiżowy hotel w sercu Łodzi z dostępem do centrum wellness i restauracją.", 51.7592, 19.4560},
                 {"Seaside Resort", "Sopot", "ul. Bohaterów Monte Cassino 5", "Ekskluzywny kurort z widokiem na morze i bezpośrednim dostępem do plaży.", 54.4454, 18.5682},
                 {"Hotel Metalurg", "Katowice", "ul. Mariackia 15", "Stylowy hotel biznesowy z nowoczesnymi udogodnieniami i świetną lokalizacją.", 50.2599, 19.0200},
@@ -116,6 +133,7 @@ public class HotelowoApplication {
                     .withWebsite("www." + name.toLowerCase().replace(" ", "") + ".pl")
                     .withIsAvailableSearch(true)
                     .withRating(new BigDecimal(String.format("%.2f", 3.5 + Math.random() * 1.5).replace(',', '.')))
+                    .withStars(1 + (int)(Math.random() * 5))
                     .withRooms(new ArrayList<>())
                     .withImages(new ArrayList<>())
                     .withAmenities(new ArrayList<>());
@@ -123,21 +141,27 @@ public class HotelowoApplication {
             hotelRepository.save(hotel);
 
             // 3. Utworzenie obrazów hotelu
-            HotelImage mainImage = new HotelImage()
+            List<HotelImage> images = new ArrayList<>();
+
+            // Główny obraz
+            images.add(new HotelImage()
                     .withHotel(hotel)
                     .withFilePath("/images/hotels/" + name.toLowerCase().replace(" ", "-") + "-main.jpg")
                     .withAltText(name + " - widok główny")
-                    .withIsPrimary(true);
+                    .withIsPrimary(true));
 
-            HotelImage secondImage = new HotelImage()
-                    .withHotel(hotel)
-                    .withFilePath("/images/hotels/" + name.toLowerCase().replace(" ", "-") + "-room.jpg")
-                    .withAltText(name + " - pokój")
-                    .withIsPrimary(false);
+            // Dodatkowe obrazy (4 różne typy)
+            String[] imageTypes = {"-room", "-bathroom", "-restaurant", "-exterior", "-lobby"};
+            for (int i = 0; i < 4; i++) {
+                String imageType = imageTypes[i];
+                images.add(new HotelImage()
+                        .withHotel(hotel)
+                        .withFilePath("/images/hotels/" + name.toLowerCase().replace(" ", "-") + imageType + ".jpg")
+                        .withAltText(name + imageType.replace("-", " "))
+                        .withIsPrimary(false));
+            }
 
-            List<HotelImage> images = List.of(mainImage, secondImage);
             hotelImageRepository.saveAll(images);
-
             hotel.setImages(images);
             hotelRepository.save(hotel);
 
@@ -225,6 +249,7 @@ public class HotelowoApplication {
                 .withWebsite("www.grandhotelwarszawa.pl")
                 .withIsAvailableSearch(true)
                 .withRating(new BigDecimal("4.7"))
+                .withStars(1 + (int)(Math.random() * 5))
                 .withRooms(new ArrayList<>())
                 .withImages(new ArrayList<>())
                 .withAmenities(new ArrayList<>());
@@ -279,5 +304,72 @@ public class HotelowoApplication {
         hotelRepository.save(hotel);
 
         System.out.println("Utworzono przykładowy hotel \"Grand Hotel Warszawa\" z 3 pokojami.");
+    }
+
+    private void createAmenities(AmenityRepository amenityRepository) {
+        // Sprawdzenie czy udogodnienia już istnieją
+        if (!amenityRepository.findAll().isEmpty()) {
+            System.out.println("Udogodnienia już istnieją w bazie danych.");
+            return;
+        }
+
+        // Tablica danych udogodnień [nazwa_pl, nazwa_en, ikona]
+        Object[][] amenityData = {
+                {"Darmowe Wi-Fi", "Free Wi-Fi", "wifi"},
+                {"Parking", "Parking", "parking"},
+                {"Pokoje dla niepalących", "Non-smoking rooms", "no-smoking"},
+                {"Ekspres do kawy", "Coffee machine", "coffee"},
+                {"Klimatyzacja", "Air conditioning", "air-conditioning"},
+                {"Śniadanie w cenie", "Breakfast included", "breakfast"},
+                {"Centrum fitness", "Fitness center", "fitness"},
+                {"Basen", "Swimming pool", "pool"},
+                {"Sauna", "Sauna", "sauna"},
+                {"Zwierzęta dozwolone", "Pets allowed", "pets"}
+        };
+
+        List<Amenity> amenities = new ArrayList<>();
+
+        for (Object[] data : amenityData) {
+            Amenity amenity = new Amenity()
+                    .withName_pl((String) data[0])
+                    .withName_en((String) data[1])
+                    .withIcon((String) data[2])
+                    .withHotels(new ArrayList<>());
+
+            amenities.add(amenity);
+        }
+
+        amenityRepository.saveAll(amenities);
+        System.out.println("Utworzono " + amenities.size() + " przykładowych udogodnień.");
+    }
+
+    private void addAmenitiesToHotels(
+            HotelRepository hotelRepository,
+            AmenityRepository amenityRepository
+    ) {
+        List<Hotel> hotels = hotelRepository.findAll();
+        List<Amenity> allAmenities = amenityRepository.findAll();
+
+        if (hotels.isEmpty() || allAmenities.isEmpty()) {
+            System.out.println("Brak hoteli lub udogodnień do powiązania.");
+            return;
+        }
+
+        for (Hotel hotel : hotels) {
+            // Wybieramy losową liczbę udogodnień (od 3 do 8) dla każdego hotelu
+            int amenityCount = 3 + (int) (Math.random() * 6);
+
+            // Mieszamy listę wszystkich udogodnień, aby za każdym razem wybierać inne
+            Collections.shuffle(allAmenities);
+
+            // Wybieramy podzbiór udogodnień
+            List<Amenity> selectedAmenities = allAmenities.subList(0, Math.min(amenityCount, allAmenities.size()));
+
+            // Przypisujemy wybrane udogodnienia do hotelu
+            hotel.setAmenities(new ArrayList<>(selectedAmenities));
+            hotelRepository.save(hotel);
+
+            System.out.println("Dodano " + selectedAmenities.size() + " udogodnień do hotelu: " + hotel.getName());
+        }
     }
 }

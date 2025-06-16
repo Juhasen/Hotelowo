@@ -26,4 +26,6 @@ const theme = createTheme({
   },
 });
 
+export const starColor = '#f8ae00';
+
 export default theme;
