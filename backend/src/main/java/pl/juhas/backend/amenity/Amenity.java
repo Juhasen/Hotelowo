@@ -26,11 +26,8 @@ public class Amenity {
     @Column(name = "name_en", nullable = false, unique = true)
     private String name_en;
 
-    @Column(name = "description_pl")
-    private String description_pl;
-
-    @Column(name = "description_en")
-    private String description_en;
+    @Column(name="icon_url", nullable = false)
+    private String icon;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
