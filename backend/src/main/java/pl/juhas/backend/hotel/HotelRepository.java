@@ -25,7 +25,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
                                WHERE r3.hotel = h
                                  AND r3.capacity >= :guestCount),
                               0.0),
-                     h.stars
+                     h.stars,
+                     h.address.latitude,
+                     h.address.longitude
                 )
                 FROM Hotel h
                 WHERE h.isAvailableSearch = true

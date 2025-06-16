@@ -8,6 +8,9 @@ public record HotelSearchResponse(
         String mainImageUrl,
         BigDecimal rating,
         BigDecimal oneNightPrice,
-        Integer stars
+        Integer stars,
+        Double latitude,
+        Double longitude
+
 ) {
 }
