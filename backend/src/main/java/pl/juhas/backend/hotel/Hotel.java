@@ -38,6 +38,9 @@ public class Hotel {
     @Column(name = "description_en", nullable = false, columnDefinition = "TEXT")
     private String description_en;
 
+    @Column(name="stars", nullable = false)
+    private Integer stars;
+
     @Column(precision = 2, scale = 1)
     private BigDecimal rating;
 

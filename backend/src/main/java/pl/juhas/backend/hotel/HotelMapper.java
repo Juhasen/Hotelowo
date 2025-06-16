@@ -47,7 +47,9 @@ public class HotelMapper {
                 addressDTO,
                 hotel.getIsAvailableSearch(),
                 amenities,
-                images
+                images,
+                hotel.getRating() != null ? hotel.getRating().toString() : null,
+                hotel.getStars() != null ? hotel.getStars().toString() : null
         );
     }
 }

@@ -15,5 +15,7 @@ public record HotelResponse(
         AddressRequest address,
         Boolean isAvailableSearch,
         List<AmenityResponse> amenities,
-        List<HotelImageRequest> images
+        List<HotelImageRequest> images,
+        String rating,
+        String stars
 ) {}

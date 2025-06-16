@@ -133,6 +133,7 @@ public class HotelowoApplication {
                     .withWebsite("www." + name.toLowerCase().replace(" ", "") + ".pl")
                     .withIsAvailableSearch(true)
                     .withRating(new BigDecimal(String.format("%.2f", 3.5 + Math.random() * 1.5).replace(',', '.')))
+                    .withStars(1 + (int)(Math.random() * 5))
                     .withRooms(new ArrayList<>())
                     .withImages(new ArrayList<>())
                     .withAmenities(new ArrayList<>());
@@ -248,6 +249,7 @@ public class HotelowoApplication {
                 .withWebsite("www.grandhotelwarszawa.pl")
                 .withIsAvailableSearch(true)
                 .withRating(new BigDecimal("4.7"))
+                .withStars(1 + (int)(Math.random() * 5))
                 .withRooms(new ArrayList<>())
                 .withImages(new ArrayList<>())
                 .withAmenities(new ArrayList<>());

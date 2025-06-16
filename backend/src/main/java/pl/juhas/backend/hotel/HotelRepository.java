@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
@@ -25,7 +24,8 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
                                FROM Room r3
                                WHERE r3.hotel = h
                                  AND r3.capacity >= :guestCount),
-                              0.0)
+                              0.0),
+                     h.stars
                 )
                 FROM Hotel h
                 WHERE h.isAvailableSearch = true
