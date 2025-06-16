@@ -331,7 +331,7 @@ public class HotelowoApplication {
             Amenity amenity = new Amenity()
                     .withName_pl((String) data[0])
                     .withName_en((String) data[1])
-                    .withIcon("amenity-" + data[2] + ".svg")
+                    .withIcon((String) data[2])
                     .withHotels(new ArrayList<>());
 
             amenities.add(amenity);
