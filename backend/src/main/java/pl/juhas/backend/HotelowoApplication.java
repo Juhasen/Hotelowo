@@ -123,21 +123,27 @@ public class HotelowoApplication {
             hotelRepository.save(hotel);
 
             // 3. Utworzenie obrazów hotelu
-            HotelImage mainImage = new HotelImage()
+            List<HotelImage> images = new ArrayList<>();
+
+            // Główny obraz
+            images.add(new HotelImage()
                     .withHotel(hotel)
                     .withFilePath("/images/hotels/" + name.toLowerCase().replace(" ", "-") + "-main.jpg")
                     .withAltText(name + " - widok główny")
-                    .withIsPrimary(true);
+                    .withIsPrimary(true));
 
-            HotelImage secondImage = new HotelImage()
-                    .withHotel(hotel)
-                    .withFilePath("/images/hotels/" + name.toLowerCase().replace(" ", "-") + "-room.jpg")
-                    .withAltText(name + " - pokój")
-                    .withIsPrimary(false);
+            // Dodatkowe obrazy (4 różne typy)
+            String[] imageTypes = {"-room", "-bathroom", "-restaurant", "-exterior", "-lobby"};
+            for (int i = 0; i < 4; i++) {
+                String imageType = imageTypes[i];
+                images.add(new HotelImage()
+                        .withHotel(hotel)
+                        .withFilePath("/images/hotels/" + name.toLowerCase().replace(" ", "-") + imageType + ".jpg")
+                        .withAltText(name + imageType.replace("-", " "))
+                        .withIsPrimary(false));
+            }
 
-            List<HotelImage> images = List.of(mainImage, secondImage);
             hotelImageRepository.saveAll(images);
-
             hotel.setImages(images);
             hotelRepository.save(hotel);
 
