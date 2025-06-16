@@ -43,7 +43,7 @@ export default function Header() {
 
     return (
         <header
-            className="w-full px-6 py-4 flex justify-between items-center bg-transparent text-white fixed top-0 left-0 z-50">
+            className="w-full px-6 py-4 flex justify-between items-center bg-transparent text-white top-0 left-0 z-50">
             <Link href={`/${currentLocale}`} className="hover:opacity-80 transition">
                 <h1 className="text-3xl font-bold text-lightBrown">Hotelowo</h1>
             </Link>

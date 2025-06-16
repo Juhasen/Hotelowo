@@ -62,7 +62,8 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                     flexDirection: {xs: "column", sm: "row"},
                     gap: 2
                 }}>
-                    <Typography variant={isXs ? "h5" : "h3"} sx={{fontWeight: 700, textAlign: {xs: "center", sm: "left"}}}>
+                    <Typography variant={isXs ? "h5" : "h3"}
+                                sx={{fontWeight: 700, textAlign: {xs: "center", sm: "left"}}}>
                         {hotel.name}
                     </Typography>
                     <a href="#available-rooms" style={{textDecoration: "none", width: isXs ? "100%" : "auto"}}>
@@ -99,7 +100,8 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                             overflow: "hidden",
                             mb: 3
                         }}>
-                        <ImageList cols={imageCols} rowHeight={isXs ? 120 : isSm ? 180 : 300} sx={{width: "100%", height: "100%"}}>
+                        <ImageList cols={imageCols} rowHeight={isXs ? 120 : isSm ? 180 : 300}
+                                   sx={{width: "100%", height: "100%"}}>
                             {hotel.images.map((img) => (
                                 <ImageListItem key={img.filePath}>
                                     <img
@@ -107,7 +109,13 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                                         src={`${img.filePath}?w=164&h=164&fit=crop&auto=format`}
                                         alt={img.altText}
                                         loading="lazy"
-                                        style={{objectFit: "cover", width: "100%", height: "100%", borderRadius: 8, cursor: "pointer"}}
+                                        style={{
+                                            objectFit: "cover",
+                                            width: "100%",
+                                            height: "100%",
+                                            borderRadius: 8,
+                                            cursor: "pointer"
+                                        }}
                                         onClick={() => handleImgClick(img)}
                                     />
                                 </ImageListItem>
@@ -136,8 +144,19 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                         <Divider sx={{mb: 2, backgroundColor: primaryBrown}}/>
                         {hotel.amenities.length > 0 ? (
                             <Box sx={{display: "flex", flexWrap: "wrap", gap: 1, mt: 1}}>
-                                {hotel.amenities.map((a: string) => (
-                                    <Chip key={a} label={a} color="primary"/>
+                                {hotel.amenities.map((amenity, index) => (
+                                    <Chip
+                                        key={index}
+                                        label={amenity.name}
+                                        color="primary"
+                                        icon={
+                                            <img
+                                                src={`/icons/${amenity.icon}.png`}
+                                                alt={amenity.name}
+                                                style={{ width: 20, height: 20, marginLeft: 10 }}
+                                            />
+                                        }
+                                    />
                                 ))}
                             </Box>
                         ) : (
