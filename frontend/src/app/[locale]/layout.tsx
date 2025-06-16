@@ -1,5 +1,4 @@
 import type {Metadata} from "next";
-import {Roboto} from "next/font/google";
 import "./globals.css";
 import React from "react";
 import Header from "./components/Header";
@@ -27,7 +26,9 @@ export default async function RootLayout({
     }
     return (
         <html lang={locale}>
-
+        <head>
+            <link rel="icon" href="/favicon.ico" />
+        </head>
         <body>
             <NextIntlClientProvider>
                 <ThemeRegistry>
