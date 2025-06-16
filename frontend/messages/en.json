@@ -40,6 +40,9 @@
     "night": "night",
     "people": "people",
     "person": "person",
+    "priceInclude": "Includes fees and taxes",
+    "ratingTooltip": "Users rating",
+    "mapLocation": "Show on map",
     "noResults": "No results found for your search criteria"
   },
   "countries": {

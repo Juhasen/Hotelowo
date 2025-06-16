@@ -40,6 +40,9 @@
     "night": "noc",
     "people": "osoby",
     "person": "osoba",
+    "priceInclude": "Zawiera opłaty i podatki",
+    "ratingTooltip": "Ocena użytkowników",
+    "mapLocation": "Pokaż na mapie",
     "noResults": "Brak wyników dla podanych kryteriów wyszukiwania"
   },
   "countries": {

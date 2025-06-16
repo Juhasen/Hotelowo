@@ -5,6 +5,8 @@
     rating: number;
     oneNightPrice: number;
     stars: number;
+    latitude: number;
+    longitude: number;
 }
 
 export interface Page {
