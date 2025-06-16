@@ -10,11 +10,14 @@ import {
     ImageListItem,
     Dialog,
     Divider,
-    useMediaQuery
+    useMediaQuery,
+    Tooltip
 } from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {HotelDetail} from "@/app/[locale]/lib/types";
-import {primaryBrown} from "@/app/[locale]/lib/theme";
+import {primaryBrown, starColor} from "@/app/[locale]/lib/theme";
+import StarIcon from '@mui/icons-material/Star';
+import Rating from "@mui/material/Rating";
 
 interface HotelDetailsProps {
     hotel: HotelDetail;
@@ -40,6 +43,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
         setOpen(true);
     };
 
+    console.log("Hotel Details:", hotel);
     const handleClose = () => setOpen(false);
 
     return (
@@ -63,8 +67,18 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                     gap: 2
                 }}>
                     <Typography variant={isXs ? "h5" : "h3"}
-                                sx={{fontWeight: 700, textAlign: {xs: "center", sm: "left"}}}>
+                                sx={{fontWeight: 700, textAlign: {xs: "center", sm: "left"}, display: "flex", alignItems: "center", gap: 1}}>
                         {hotel.name}
+                        <Tooltip title="Liczba gwiazdek jest przekazywana Booking.com przez obiekt. Zwykle jest ona określana przez oficjalną organizację hotelarską lub inną stronę trzecią.">
+                            <Box sx={{display: "flex", alignItems: "center", ml: 2}}>
+                                {Array.from({ length: hotel.stars }).map((_, i) => (
+                                    <StarIcon
+                                        key={i}
+                                        sx={{ color: starColor, fontSize: isXs ? 22 : 28 }}
+                                    />
+                                ))}
+                            </Box>
+                        </Tooltip>
                     </Typography>
                     <a href="#available-rooms" style={{textDecoration: "none", width: isXs ? "100%" : "auto"}}>
                         <Box
@@ -210,6 +224,29 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                             allowFullScreen
                             src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.address.longitude - 0.01},${hotel.address.latitude - 0.01},${hotel.address.longitude + 0.01},${hotel.address.latitude + 0.01}&layer=mapnik&marker=${hotel.address.latitude},${hotel.address.longitude}`}
                         />
+                    </Box>
+                </Box>
+                <Box sx={{ mt: 4 }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
+                        <b>Opinie</b>
+                    </Typography>
+                    <Divider sx={{ mb: 2, backgroundColor: primaryBrown }} />
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Rating
+                            name="Hotel Rating"
+                            value={hotel.rating}
+                            readOnly
+                            precision={0.5}
+                            size="large"
+                            sx={{ ml: 1 }}
+                            emptyIcon={<StarIcon style={{ opacity: 0.4 }} fontSize="inherit" />}
+                        />
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: starColor }}>
+                            {Number(hotel.rating).toFixed(1)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            ({Math.round(hotel.rating * 20)}%)
+                        </Typography>
                     </Box>
                 </Box>
             </Paper>

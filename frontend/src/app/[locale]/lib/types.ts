@@ -4,6 +4,7 @@
     mainImageUrl?: string;
     rating: number;
     oneNightPrice: number;
+    stars: number;
 }
 
 export interface Page {
@@ -48,4 +49,6 @@ export type HotelDetail = {
     isAvailableSearch: boolean;
     amenities: Amenity[];
     images: ImageType[];
+    rating: number;
+    stars: number;
 };
