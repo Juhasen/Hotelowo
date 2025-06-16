@@ -18,6 +18,7 @@ import {HotelDetail} from "@/app/[locale]/lib/types";
 import {primaryBrown, starColor} from "@/app/[locale]/lib/theme";
 import StarIcon from '@mui/icons-material/Star';
 import Rating from "@mui/material/Rating";
+import {useTranslations} from "next-intl";
 
 interface HotelDetailsProps {
     hotel: HotelDetail;
@@ -26,6 +27,7 @@ interface HotelDetailsProps {
 const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
     const [open, setOpen] = useState(false);
     const [selectedImg, setSelectedImg] = useState<{ src: string, alt: string } | null>(null);
+    const t = useTranslations('HotelDetails');
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("sm"));
@@ -43,7 +45,6 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
         setOpen(true);
     };
 
-    console.log("Hotel Details:", hotel);
     const handleClose = () => setOpen(false);
 
     return (
@@ -69,7 +70,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                     <Typography variant={isXs ? "h5" : "h3"}
                                 sx={{fontWeight: 700, textAlign: {xs: "center", sm: "left"}, display: "flex", alignItems: "center", gap: 1}}>
                         {hotel.name}
-                        <Tooltip title="Liczba gwiazdek jest przekazywana Booking.com przez obiekt. Zwykle jest ona określana przez oficjalną organizację hotelarską lub inną stronę trzecią.">
+                        <Tooltip title={t('starsTooltip')}>
                             <Box sx={{display: "flex", alignItems: "center", ml: 2}}>
                                 {Array.from({ length: hotel.stars }).map((_, i) => (
                                     <StarIcon
@@ -100,7 +101,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                                 "&:hover": {backgroundColor: "primary.dark"}
                             }}
                         >
-                            Rezerwuj
+                            {t('bookButton')}
                         </Box>
                     </a>
                 </Box>
@@ -153,7 +154,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                     }
                     <Box sx={{my: 2}}>
                         <Typography variant="body1">
-                            <b>Udogodnienia</b>
+                            <b>{t('amenities')}</b>
                         </Typography>
                         <Divider sx={{mb: 2, backgroundColor: primaryBrown}}/>
                         {hotel.amenities.length > 0 ? (
@@ -175,34 +176,34 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                             </Box>
                         ) : (
                             <Typography variant="body2" color="text.secondary">
-                                Brak informacji o udogodnieniach.
+                                {t('noAmenities')}
                             </Typography>
                         )}
                     </Box>
                     <Box sx={{my: 2}}>
                         <Typography variant="body1">
-                            <b>Kontakt</b>
+                            <b>{t('contact')}</b>
                         </Typography>
                         <Divider sx={{mb: 2, backgroundColor: primaryBrown}}/>
 
                         <Typography variant="body1">
-                            <b>Telefon:</b> {hotel.phone}
+                            <b>{t('phone')}:</b> {hotel.phone}
                         </Typography>
                         <Typography variant="body1">
-                            <b>Email:</b>{" "}
+                            <b>{t('email')}:</b>{" "}
                             <MuiLink href={`mailto:${hotel.email}`} underline="hover">
                                 {hotel.email}
                             </MuiLink>
                         </Typography>
                         <Typography variant="body1">
-                            <b>Strona:</b>{" "}
+                            <b>{t('website')}:</b>{" "}
                             <MuiLink href={`https://${hotel.website}`} target="_blank" rel="noopener"
                                      underline="hover">
                                 {hotel.website}
                             </MuiLink>
                         </Typography>
                         <Typography variant="body1">
-                            <b>Adres:</b> {hotel.address.street}, {hotel.address.postalCode} {hotel.address.city},{" "}
+                            <b>{t('address')}:</b> {hotel.address.street}, {hotel.address.postalCode} {hotel.address.city},{" "}
                             {hotel.address.country}
                         </Typography>
                     </Box>
@@ -210,13 +211,13 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                 {/* Mapa pod całością */}
                 <Box sx={{mt: 4}}>
                     <Typography variant="body1">
-                        <b>Lokalizacja na mapie</b>
+                        <b>{t('mapLocation')}</b>
                     </Typography>
                     <Divider sx={{mb: 2, backgroundColor: primaryBrown}}/>
 
                     <Box sx={{mt: 1, borderRadius: 2, overflow: "hidden", boxShadow: 2}}>
                         <iframe
-                            title="Mapa hotelu"
+                            title={t('mapTitle')}
                             width="100%"
                             height={isXs ? 140 : 220}
                             style={{border: 0, borderRadius: 8}}
@@ -228,7 +229,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                 </Box>
                 <Box sx={{ mt: 4 }}>
                     <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
-                        <b>Opinie</b>
+                        <b>{t('reviews')}</b>
                     </Typography>
                     <Divider sx={{ mb: 2, backgroundColor: primaryBrown }} />
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>

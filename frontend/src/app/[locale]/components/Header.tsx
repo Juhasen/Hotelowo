@@ -36,8 +36,13 @@ export default function Header() {
         const pathWithoutLocale = getPathWithoutLocale();
         // Zamykamy menu
         handleClose();
-        // Przekierowujemy do tej samej ścieżki, ale z nowym locale
-        const newPath = `/${locale}${pathWithoutLocale}`;
+
+        // Wyodrębnij adres URL i parametry zapytania
+        const url = new URL(window.location.href);
+        const searchParams = url.search; // zawiera ?id=6&checkIn=17%2F06%2F2025&checkOut=20%2F06%2F2025&capacity=1
+
+        // Przekierowujemy do tej samej ścieżki, ale z nowym locale, zachowując parametry URL
+        const newPath = `/${locale}${pathWithoutLocale}${searchParams}`;
         router.push(newPath);
     };
 

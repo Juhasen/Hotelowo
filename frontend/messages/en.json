@@ -9,6 +9,23 @@
     "searchButton": "Search",
     "chooseCountry": "Choose a country"
   },
+  "HotelDetails": {
+    "book": "Book now",
+    "bookButton": "Book now",
+    "amenities": "Amenities",
+    "noAmenities": "No amenities information available.",
+    "contact": "Contact",
+    "phone": "Phone",
+    "email": "Email",
+    "website": "Website",
+    "address": "Address",
+    "locationOnMap": "Location on map",
+    "mapLocation": "Location on map",
+    "mapTitle": "Hotel map",
+    "reviews": "Reviews",
+    "noAmenitiesInfo": "No amenities information available.",
+    "starsTooltip": "Star rating is provided to Hotelowo.com by the property, and is usually determined by an official hotel organization or other third party."
+  },
   "SearchResults": {
     "searchParams": "Search Parameters",
     "country": "Country",
@@ -126,8 +143,7 @@
     "HT": "Haiti",
     "HU": "Hungary",
     "ID": "Indonesia",
-    "IE": "Ireland",
-    "IL": "Israel",
+    "IE": "Ireland","IL": "Israel",
     "IM": "Isle of Man",
     "IN": "India",
     "IO": "British Indian Ocean Territory",
@@ -276,4 +292,3 @@
     "ZW": "Zimbabwe"
   }
 }
-
