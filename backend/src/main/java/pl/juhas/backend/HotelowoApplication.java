@@ -71,13 +71,13 @@ public class HotelowoApplication {
                 {"Hotel Victoria", "Wrocław", "ul. Rynek 12", "Butikowy hotel położony przy wrocławskim Rynku, łączący nowoczesność z klasyczną elegancją.", 51.1079, 17.0385},
                 {"Górski Azyl", "Zakopane", "ul. Krupówki 45", "Tradycyjny hotel w stylu góralskim z niesamowitym widokiem na Tatry.", 49.2992, 19.9496},
                 {"Aparthotel Centrum", "Poznań", "ul. Półwiejska 3", "Aparthotel Centrum położony jest w samym sercu miasta, oferując komfortowy pobyt zarówno dla turystów, jak i osób podróżujących służbowo. Do dyspozycji Gości oddajemy ogród oraz bezpłatny prywatny parking, co stanowi wyjątkowy atut w centrum. Goście mogą również korzystać z bezpłatnego Wi-Fi dostępnego na terenie całego obiektu.\n" +
-                        "\n" +
+                        "\n\n" +
                         "W pobliżu znajdują się liczne atrakcje, takie jak Centrum handlowe Manufaktura (800 m), PKP Łódź Kaliska (2 km) oraz Hala Atlas Arena (2,5 km). Doskonała lokalizacja umożliwia łatwy dostęp do komunikacji miejskiej, restauracji, muzeów oraz terenów rekreacyjnych.\n" +
-                        "\n" +
+                        "\n\n" +
                         "Każda opcja zakwaterowania wyposażona jest w ekspres do kawy, prywatną łazienkę z prysznicem i suszarką do włosów, a wybrane apartamenty posiadają również aneks kuchenny z płytą grzewczą. W cenie pobytu zapewniona jest pościel oraz ręczniki.\n" +
-                        "\n" +
+                        "\n\n" +
                         "Recepcja czynna jest codziennie, a personel posługujący się językiem polskim, angielskim i rosyjskim chętnie udzieli wszelkich informacji oraz pomoże zaplanować pobyt.\n" +
-                        "\n" +
+                        "\n\n" +
                         "Odległość od dworca Łódź Fabryczna wynosi 2,5 km, natomiast Port Lotniczy im. Władysława Reymonta oddalony jest o 7 km.", 52.4064, 16.9252},
                 {"Royal Palace", "Łódź", "ul. Piotrkowska 100", "Prestiżowy hotel w sercu Łodzi z dostępem do centrum wellness i restauracją.", 51.7592, 19.4560},
                 {"Seaside Resort", "Sopot", "ul. Bohaterów Monte Cassino 5", "Ekskluzywny kurort z widokiem na morze i bezpośrednim dostępem do plaży.", 54.4454, 18.5682},
