@@ -36,6 +36,7 @@ export default function HotelPage() {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 setHotel(data);
+
             } catch (e) {
                 setHotel(null);
             } finally {
@@ -61,7 +62,7 @@ export default function HotelPage() {
     }
 
     return (
-        <Container maxWidth="lg" sx={{pb: 8}}>
+        <Container maxWidth="lg" sx={{pb: 8, pt: 6}}>
             <HotelDetails hotel={hotel} />
             <AvailableRooms id="available-rooms" />
         </Container>
