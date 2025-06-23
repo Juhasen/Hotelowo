@@ -31,7 +31,6 @@ public class RoomService {
         LocalDate parsedCheckInDate = checkInOutDates.getFirst();
         LocalDate parsedCheckOutDate = checkInOutDates.get(1);
 
-
         long daysDifference = parsedCheckInDate.until(parsedCheckOutDate).getDays();
 
         return repository.findAvailableRooms(hotelId, parsedCheckInDate, parsedCheckOutDate, capacity)

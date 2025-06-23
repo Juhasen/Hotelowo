@@ -53,6 +53,12 @@ public class DateParser {
             return List.of();
         }
 
+        //Validate if check-in date is not in the past
+        if (parsedCheckInDate.isBefore(LocalDate.now())) {
+            System.out.println("Check-in date cannot be in the past: " + parsedCheckInDate);
+            return List.of();
+        }
+
         return List.of(parsedCheckInDate, parsedCheckOutDate);
     }
 
