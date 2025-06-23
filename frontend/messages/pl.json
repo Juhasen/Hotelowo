@@ -24,7 +24,20 @@
     "mapTitle": "Mapa hotelu",
     "reviews": "Opinie",
     "noAmenitiesInfo": "Brak informacji o udogodnieniach.",
-    "starsTooltip": "Liczba gwiazdek została przekazana Hotelowo.com przez obiekt i zazwyczaj jest ustalana przez oficjalną organizację hotelową lub inną niezależną instytucję."
+    "starsTooltip": "Liczba gwiazdek została przekazana Hotelowo.com przez obiekt i zazwyczaj jest ustalana przez oficjalną organizację hotelową lub inną niezależną instytucję.",
+    "availableRooms": "Dostępne pokoje",
+    "noRoomsAvailable": "Brak dostępnych pokoi w wybranym terminie.",
+    "roomNumber": "Numer pokoju",
+    "capacity": "Pojemność",
+    "available": "Dostępny",
+    "perNight": "za noc",
+    "total": "Łącznie",
+    "priceInclude": "Zawiera opłaty i podatki"
+  },
+  "RoomType": {
+    "SINGLE": "Pokój jednoosobowy",
+    "DOUBLE": "Pokój dwuosobowy",
+    "SUITE": "Apartament"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",

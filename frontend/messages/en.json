@@ -24,7 +24,20 @@
     "mapTitle": "Hotel map",
     "reviews": "Reviews",
     "noAmenitiesInfo": "No amenities information available.",
-    "starsTooltip": "Star rating is provided to Hotelowo.com by the property, and is usually determined by an official hotel organization or other third party."
+    "starsTooltip": "Star rating is provided to Hotelowo.com by the property, and is usually determined by an official hotel organization or other third party.",
+    "availableRooms": "Available Rooms",
+    "noRoomsAvailable": "No rooms available for the selected dates.",
+    "roomNumber": "Room Number",
+    "capacity": "Capacity",
+    "available": "Available",
+    "perNight": "per night",
+    "total": "Total",
+    "priceInclude": "Includes fees and taxes"
+  },
+  "RoomType": {
+    "SINGLE": "Single Room",
+    "DOUBLE": "Double Room",
+    "SUITE": "Suite"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",
