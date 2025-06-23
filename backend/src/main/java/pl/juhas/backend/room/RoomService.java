@@ -6,6 +6,7 @@ import pl.juhas.backend.room.dto.RoomRequest;
 import pl.juhas.backend.room.dto.RoomResponse;
 import pl.juhas.backend.utils.DateParser;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,9 +29,11 @@ public class RoomService {
         LocalDate checkOutDate = checkInOutDates.get(1);
         Integer capacity = roomRequest.capacity();
 
+        long daysDifference = checkInDate.until(checkOutDate).getDays();
+
         return repository.findAvailableRooms(hotelId, checkInDate, checkOutDate, capacity)
                 .stream()
-                .map(RoomMapper::toResponse)
+                .map(RoomMapper.toResponse(daysDifference))
                 .toList();
     }
 }
