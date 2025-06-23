@@ -6,7 +6,6 @@ import pl.juhas.backend.room.dto.RoomRequest;
 import pl.juhas.backend.room.dto.RoomResponse;
 import pl.juhas.backend.utils.DateParser;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,22 +15,26 @@ public class RoomService {
     private final RoomRepository repository;
 
 
-    public List<RoomResponse> getRooms(RoomRequest roomRequest) {
+    public List<RoomResponse> getRooms(Long hotelId, String checkInDate, String checkOutDate, Integer capacity) {
 
-        List<LocalDate> checkInOutDates = DateParser.parseCheckDates(roomRequest.checkInDate(), roomRequest.checkOutDate());
+        if(hotelId == null || checkInDate == null || checkOutDate == null || capacity == null) {
+            System.out.println("Invalid input parameters");
+            return List.of();
+        }
+        
+        List<LocalDate> checkInOutDates = DateParser.parseCheckDates(checkInDate, checkOutDate);
         if (checkInOutDates.isEmpty()) {
             System.out.println("Invalid check-in or check-out date format");
             return List.of();
         }
 
-        Long hotelId = roomRequest.hotelId();
-        LocalDate checkInDate = checkInOutDates.getFirst();
-        LocalDate checkOutDate = checkInOutDates.get(1);
-        Integer capacity = roomRequest.capacity();
+        LocalDate parsedCheckInDate = checkInOutDates.getFirst();
+        LocalDate parsedCheckOutDate = checkInOutDates.get(1);
 
-        long daysDifference = checkInDate.until(checkOutDate).getDays();
 
-        return repository.findAvailableRooms(hotelId, checkInDate, checkOutDate, capacity)
+        long daysDifference = parsedCheckInDate.until(parsedCheckOutDate).getDays();
+
+        return repository.findAvailableRooms(hotelId, parsedCheckInDate, parsedCheckOutDate, capacity)
                 .stream()
                 .map(RoomMapper.toResponse(daysDifference))
                 .toList();
