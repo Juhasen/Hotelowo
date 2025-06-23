@@ -1,5 +1,7 @@
 package pl.juhas.backend.address;
 
+import pl.juhas.backend.address.dto.AddressRequest;
+
 public class AddressMapper {
 
     public static AddressRequest mapToAddressDTO(Address address) {

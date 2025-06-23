@@ -1,4 +1,4 @@
-package pl.juhas.backend.address;
+package pl.juhas.backend.address.dto;
 
 public record AddressRequest(
         String country,

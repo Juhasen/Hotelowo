@@ -54,3 +54,11 @@ export type HotelDetail = {
     rating: number;
     stars: number;
 };
+
+export type Room = {
+    number: string;
+    type: string;
+    capacity: number;
+    pricePerNight: number;
+    totalPrice: number;
+}

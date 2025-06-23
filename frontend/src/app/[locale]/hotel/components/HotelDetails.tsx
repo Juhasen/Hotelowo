@@ -19,6 +19,7 @@ import {primaryBrown, starColor} from "@/app/[locale]/lib/theme";
 import StarIcon from '@mui/icons-material/Star';
 import Rating from "@mui/material/Rating";
 import {useTranslations} from "next-intl";
+import Image from "next/image";
 
 interface HotelDetailsProps {
     hotel: HotelDetail;
@@ -165,10 +166,12 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                                         label={amenity.name}
                                         color="primary"
                                         icon={
-                                            <img
+                                            <Image
                                                 src={`/icons/${amenity.icon}.png`}
                                                 alt={amenity.name}
-                                                style={{ width: 20, height: 20, marginLeft: 10 }}
+                                                width={20}
+                                                height={20}
+                                                className="ml-3"
                                             />
                                         }
                                     />
@@ -220,7 +223,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                             title={t('mapTitle')}
                             width="100%"
                             height={isXs ? 140 : 220}
-                            style={{border: 0, borderRadius: 8}}
+                            className="border-2 border-r-8 border-brown"
                             loading="lazy"
                             allowFullScreen
                             src={`https://www.openstreetmap.org/export/embed.html?bbox=${hotel.address.longitude - 0.01},${hotel.address.latitude - 0.01},${hotel.address.longitude + 0.01},${hotel.address.latitude + 0.01}&layer=mapnik&marker=${hotel.address.latitude},${hotel.address.longitude}`}
@@ -255,10 +258,12 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
             <Dialog open={open} onClose={handleClose} maxWidth="xl">
                 {selectedImg && (
                     <Box sx={{p: 2, display: "flex", justifyContent: "center", alignItems: "center"}}>
-                        <img
+                        <Image
                             src={selectedImg.src}
                             alt={selectedImg.alt}
-                            style={{maxWidth: "90vw", maxHeight: "80vh", borderRadius: 12}}
+                            width={1920}
+                            height={720}
+                            className="max-w-[90vw] max-h-[80vh] border-r-8"
                         />
                     </Box>
                 )}

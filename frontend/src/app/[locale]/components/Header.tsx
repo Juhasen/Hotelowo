@@ -2,10 +2,10 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LanguageIcon from '@mui/icons-material/Language';
 import Link from 'next/link';
-import { Button, Menu, MenuItem } from '@mui/material';
-import { useState } from 'react';
-import { useLocale } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import {Button, Menu, MenuItem} from '@mui/material';
+import {useState} from 'react';
+import {useLocale} from 'next-intl';
+import {usePathname, useRouter} from 'next/navigation';
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -22,6 +22,11 @@ export default function Header() {
         const pathWithoutLocale = '/' + pathSegments.slice(2).join('/');
         return pathWithoutLocale === '/' ? '/' : pathWithoutLocale;
     };
+
+    const isHome =
+        pathname === '/' ||
+        pathname === `/${currentLocale}` ||
+        pathname === `/${currentLocale}/`;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -48,7 +53,9 @@ export default function Header() {
 
     return (
         <header
-            className="w-full px-6 py-4 flex justify-between items-center bg-transparent text-white top-0 left-0 z-50">
+            className={`w-full fixed left-0 top-0 z-[1000] px-6 py-4 flex justify-between items-center text-white transition-all duration-300
+                ${isHome ? 'bg-transparent' : 'backdrop-blur-sm'}`}
+        >
             <Link href={`/${currentLocale}`} className="hover:opacity-80 transition">
                 <h1 className="text-3xl font-bold text-lightBrown">Hotelowo</h1>
             </Link>
@@ -62,10 +69,10 @@ export default function Header() {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
-                        sx={{ color: 'white', minWidth: 0, padding: '8px' }}
+                        sx={{color: 'white', minWidth: 0, padding: '8px'}}
                         title="Zmień język"
                     >
-                        <LanguageIcon />
+                        <LanguageIcon/>
                         <span className="ml-1 text-xs font-bold">{currentLocale.toUpperCase()}</span>
                     </Button>
                     <Menu
