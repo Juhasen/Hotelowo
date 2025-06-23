@@ -17,7 +17,7 @@ public class RoomService {
 
     public List<RoomResponse> getRooms(Long hotelId, String checkInDate, String checkOutDate, Integer capacity) {
 
-        if(hotelId == null || checkInDate == null || checkOutDate == null || capacity == null) {
+        if (hotelId == null || checkInDate == null || checkOutDate == null || capacity == null) {
             System.out.println("Invalid input parameters");
             return List.of();
         }
@@ -33,7 +33,10 @@ public class RoomService {
 
         long daysDifference = parsedCheckInDate.until(parsedCheckOutDate).getDays();
 
-        return repository.findAvailableRooms(hotelId, parsedCheckInDate, parsedCheckOutDate, capacity)
+        return repository.findAvailableRooms(hotelId,
+                        parsedCheckInDate.atStartOfDay(),
+                        parsedCheckOutDate.atTime(23, 59, 59),
+                        capacity)
                 .stream()
                 .map(RoomMapper.toResponse(daysDifference))
                 .toList();

@@ -3,7 +3,7 @@ package pl.juhas.backend.room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
@@ -17,5 +17,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             )
             AND r.capacity >= :capacity
             """)
-    List<Room> findAvailableRooms(Long hotelId, LocalDate checkInDate, LocalDate checkOutDate, Integer capacity);
+    List<Room> findAvailableRooms(Long hotelId, LocalDateTime checkInDate, LocalDateTime checkOutDate, Integer capacity);
 }
