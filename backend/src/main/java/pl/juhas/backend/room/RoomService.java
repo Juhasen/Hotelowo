@@ -21,7 +21,7 @@ public class RoomService {
             System.out.println("Invalid input parameters");
             return List.of();
         }
-        
+
         List<LocalDate> checkInOutDates = DateParser.parseCheckDates(checkInDate, checkOutDate);
         if (checkInOutDates.isEmpty()) {
             System.out.println("Invalid check-in or check-out date format");

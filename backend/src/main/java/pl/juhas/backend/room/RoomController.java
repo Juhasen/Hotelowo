@@ -2,11 +2,7 @@ package pl.juhas.backend.room;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.juhas.backend.room.dto.RoomRequest;
+import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.room.dto.RoomResponse;
 
 import java.util.List;
@@ -18,9 +14,12 @@ public class RoomController {
     private final RoomService service;
 
 
-    @GetMapping()
-    public ResponseEntity<?> getRooms(@RequestBody RoomRequest roomRequest) {
-        List<RoomResponse> rooms = service.getRooms(roomRequest);
+    @GetMapping("/hotel/{hotelId}")
+    public ResponseEntity<?> getRooms(@PathVariable Long hotelId,
+                                      @RequestParam String checkInDate,
+                                      @RequestParam String checkOutDate,
+                                      @RequestParam Integer capacity) {
+        List<RoomResponse> rooms = service.getRooms(hotelId, checkInDate, checkOutDate, capacity);
         if (rooms.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
