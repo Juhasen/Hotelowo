@@ -44,13 +44,10 @@ export default function HotelPage() {
                 setLoading(false);
             }
         };
-        fetchHotelDetails();
-    }, [id, checkIn, checkOut, capacity, locale]);
 
-    useEffect(() => {
         const fetchRoomDetails = async () => {
             try {
-                const searchUrl = new URL(`/${locale}/api/hotel/${id}/rooms`, window.location.origin);
+                const searchUrl = new URL(`/${locale}/api/hotel/rooms/${id}`, window.location.origin);
                 if (checkIn) searchUrl.searchParams.append("checkIn", checkIn);
                 if (checkOut) searchUrl.searchParams.append("checkOut", checkOut);
                 if (capacity) searchUrl.searchParams.append("capacity", capacity.toString());
@@ -66,7 +63,14 @@ export default function HotelPage() {
                 setLoading(false);
             }
         };
+
+        fetchHotelDetails();
         fetchRoomDetails();
+    }, [id, checkIn, checkOut, capacity, locale]);
+
+
+    useEffect(() => {
+
     }, [id, checkIn, checkOut, capacity, locale]);
 
     if (loading) {
@@ -86,8 +90,8 @@ export default function HotelPage() {
 
     return (
         <Container maxWidth="lg" sx={{pb: 8, pt: 6}}>
-            <HotelDetails hotel={hotel} />
-            <AvailableRooms rooms={rooms} id="available-rooms" />
+            <HotelDetails hotel={hotel}/>
+            <AvailableRooms rooms={rooms} id="available-rooms"/>
         </Container>
     );
 }
