@@ -39,6 +39,15 @@
     "DOUBLE": "Pokój dwuosobowy",
     "SUITE": "Apartament"
   },
+  "Login": {
+    "signIn": "Zaloguj się",
+    "emailAddress": "Adres email",
+    "password": "Hasło",
+    "rememberMe": "Zapamiętaj mnie",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "noAccount": "Nie masz konta? Zarejestruj się",
+    "loginFailed": "Logowanie nie powiodło się"
+  },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",
     "country": "Kraj",
