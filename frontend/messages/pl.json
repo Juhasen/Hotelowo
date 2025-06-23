@@ -48,6 +48,47 @@
     "noAccount": "Nie masz konta? Zarejestruj się",
     "loginFailed": "Logowanie nie powiodło się"
   },
+
+  "RegisterPage": {
+    "title": "Rejestracja",
+    "welcomeMessage": "Dołącz do nas i korzystaj ze wszystkich funkcji",
+    "nameLabel": "Imię",
+    "surnameLabel": "Nazwisko",
+    "passwordLabel": "Hasło",
+    "confirmPasswordLabel": "Potwierdź hasło",
+    "passwordMismatch": "Hasła nie są identyczne",
+    "registerButton": "Zarejestruj się",
+    "alreadyHaveAccount": "Masz już konto?",
+    "loginButton": "Zaloguj się",
+    "registerFailed": "Rejestracja nie powiodła się. Spróbuj ponownie później.",
+    "firstnameRequired": "Imię jest wymagane",
+    "lastnameRequired": "Nazwisko jest wymagane",
+    "emailInvalid": "Podaj prawidłowy adres email",
+    "emailTaken": "Ten adres email jest już zarejestrowany",
+    "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+    "passwordLetterRequired": "Hasło musi zawierać przynajmniej jedną literę",
+    "passwordNumberRequired": "Hasło musi zawierać przynajmniej jedną cyfrę",
+    "passwordSpecialCharRequired": "Hasło musi zawierać przynajmniej jeden znak specjalny",
+    "passwordInvalid": "Podane hasło nie spełnia wymagań bezpieczeństwa",
+    "confirmPasswordRequired": "Potwierdzenie hasła jest wymagane",
+    "usernameTaken": "Ta nazwa użytkownika jest już zajęta",
+    "errorMessage": "Wystąpił błąd. Spróbuj ponownie później.",
+    "invalid_credentials": "Nieprawidłowy email lub hasło",
+    "account_blocked": "Konto zostało zablokowane",
+    "too_many_requests": "Zbyt wiele prób logowania. Spróbuj ponownie później.",
+    "unexpected_response": "Nieoczekiwana odpowiedź z serwera",
+    "invalid_response_format": "Nieprawidłowy format odpowiedzi z serwera",
+    "server_error": "Błąd serwera. Spróbuj ponownie później."
+  },
+  "API": {
+    "errors": {
+      "unauthorized": "Brak uprawnień. Zaloguj się ponownie.",
+      "serverError": "Błąd serwera",
+      "internalServerError": "Wewnętrzny błąd serwera",
+      "userNotFound": "Nie znaleziono użytkownika",
+      "backendUnavailable": "Serwer jest niedostępny"
+    }
+  },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",
     "country": "Kraj",
