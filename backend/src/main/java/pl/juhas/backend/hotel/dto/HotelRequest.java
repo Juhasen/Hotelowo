@@ -1,7 +1,7 @@
 package pl.juhas.backend.hotel.dto;
 
-import pl.juhas.backend.address.AddressRequest;
-import pl.juhas.backend.hotelImage.HotelImageRequest;
+import pl.juhas.backend.address.dto.AddressRequest;
+import pl.juhas.backend.hotelImage.dto.HotelImageRequest;
 
 import java.util.List;
 

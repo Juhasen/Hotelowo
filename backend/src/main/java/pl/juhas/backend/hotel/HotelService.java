@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.address.Address;
-import pl.juhas.backend.address.AddressRequest;
+import pl.juhas.backend.address.dto.AddressRequest;
 import pl.juhas.backend.address.AddressRepository;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
@@ -16,7 +16,7 @@ import pl.juhas.backend.hotel.dto.HotelSearchRequest;
 import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.hotelImage.HotelImage;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
-import pl.juhas.backend.hotelImage.HotelImageRequest;
+import pl.juhas.backend.hotelImage.dto.HotelImageRequest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
