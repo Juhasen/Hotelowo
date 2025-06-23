@@ -17,6 +17,7 @@ import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.hotelImage.HotelImage;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
 import pl.juhas.backend.hotelImage.dto.HotelImageRequest;
+import pl.juhas.backend.utils.DateParser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -44,60 +45,24 @@ public class HotelService {
         }
 
         try {
-            LocalDate checkInDate = null;
-            LocalDate checkOutDate = null;
-
-            // Tablice formatów dat, które będziemy próbować parsować
-            DateTimeFormatter[] formatters = {
-                    DateTimeFormatter.ISO_LOCAL_DATE,                // YYYY-MM-DD
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy"),       // DD/MM/YYYY
-                    DateTimeFormatter.ofPattern("MM/dd/yyyy"),       // MM/DD/YYYY
-                    DateTimeFormatter.ofPattern("dd-MM-yyyy"),       // DD-MM-YYYY
-                    DateTimeFormatter.ofPattern("dd.MM.yyyy")        // DD.MM.YYYY
-            };
-
-            // Próba parsowania daty zameldowania
-            if (hotelRequest.checkInDate() != null && !hotelRequest.checkInDate().isEmpty()) {
-                checkInDate = parseDate(hotelRequest.checkInDate(), formatters);
-                if (checkInDate == null) {
-                    System.out.println("Invalid check-in date format: " + hotelRequest.checkInDate());
-                    return Page.empty(pageable);
-                }
-            }
-
-            // Próba parsowania daty wymeldowania
-            if (hotelRequest.checkOutDate() != null && !hotelRequest.checkOutDate().isEmpty()) {
-                checkOutDate = parseDate(hotelRequest.checkOutDate(), formatters);
-                if (checkOutDate == null) {
-                    System.out.println("Invalid check-out date format: " + hotelRequest.checkOutDate());
-                    return Page.empty(pageable);
-                }
-            }
-
-            // Jeśli nie podano dat, zwracamy pustą stronę
-            if (checkInDate == null || checkOutDate == null) {
-                System.out.println("Empty check-in or check-out date");
-                return Page.empty(pageable);
-            }
-
-            // Walidacja dat
-            if (checkInDate.isAfter(checkOutDate)) {
-                System.out.println("Wrong data: check-in date is after check-out date");
+            List<LocalDate> checkInOutDates = DateParser.parseCheckDates(hotelRequest.checkInDate(), hotelRequest.checkOutDate());
+            if (checkInOutDates.isEmpty()) {
+                System.out.println("Invalid check-in or check-out date format");
                 return Page.empty(pageable);
             }
 
             Integer guestCount = hotelRequest.numberOfGuests() != null ? hotelRequest.numberOfGuests() : 1;
 
             System.out.println("Searching for hotels in country: " + hotelRequest.country() +
-                    ", check-in: " + checkInDate +
-                    ", check-out: " + checkOutDate +
+                    ", check-in: " + checkInOutDates.getFirst().toString() +
+                    ", check-out: " + checkInOutDates.get(1).toString() +
                     ", guests: " + guestCount +
                     ", pageable: " + pageable);
 
             return hotelRepository.findAvailableHotels(
                     hotelRequest.country(),
-                    checkInDate.atStartOfDay(), // konwersja LocalDate na LocalDateTime (godz. 00:00)
-                    checkOutDate.atTime(23, 59, 59), // konwersja na koniec dnia
+                    checkInOutDates.getFirst().atStartOfDay(), // konwersja LocalDate na LocalDateTime (godz. 00:00)
+                    checkInOutDates.get(1).atTime(23, 59, 59), // konwersja na koniec dnia
                     guestCount,
                     pageable
             );
