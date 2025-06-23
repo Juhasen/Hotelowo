@@ -7,7 +7,7 @@ import {
     CircularProgress, Container,
 } from "@mui/material";
 import {useSearchParams, useParams} from "next/navigation";
-import {HotelDetail} from "@/app/[locale]/lib/types";
+import {HotelDetail, Room} from "@/app/[locale]/lib/types";
 import HotelDetails from "../components/HotelDetails";
 import AvailableRooms from "@/app/[locale]/hotel/components/AvailableRooms";
 
@@ -22,6 +22,7 @@ export default function HotelPage() {
     const locale = params?.locale || "en";
 
     const [hotel, setHotel] = useState<HotelDetail | null>(null);
+    const [rooms, setRooms] = useState<Room[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -46,6 +47,28 @@ export default function HotelPage() {
         fetchHotelDetails();
     }, [id, checkIn, checkOut, capacity, locale]);
 
+    useEffect(() => {
+        const fetchRoomDetails = async () => {
+            try {
+                const searchUrl = new URL(`/${locale}/api/hotel/${id}/rooms`, window.location.origin);
+                if (checkIn) searchUrl.searchParams.append("checkIn", checkIn);
+                if (checkOut) searchUrl.searchParams.append("checkOut", checkOut);
+                if (capacity) searchUrl.searchParams.append("capacity", capacity.toString());
+
+                const response = await fetch(searchUrl.toString());
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                setRooms(data);
+
+            } catch (e) {
+                setRooms([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchRoomDetails();
+    }, [id, checkIn, checkOut, capacity, locale]);
+
     if (loading) {
         return (
             <Box sx={{display: "flex", justifyContent: "center", mt: 8}}>
@@ -64,7 +87,7 @@ export default function HotelPage() {
     return (
         <Container maxWidth="lg" sx={{pb: 8, pt: 6}}>
             <HotelDetails hotel={hotel} />
-            <AvailableRooms id="available-rooms" />
+            <AvailableRooms rooms={rooms} id="available-rooms" />
         </Container>
     );
 }
