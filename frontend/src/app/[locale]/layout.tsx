@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import "./globals.css";
 import React from "react";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
@@ -34,6 +35,7 @@ export default async function RootLayout({
                 <ThemeRegistry>
                     <Header/>
                     {children}
+                    <Footer/>
                 </ThemeRegistry>
             </NextIntlClientProvider>
         </body>

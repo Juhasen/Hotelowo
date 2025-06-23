@@ -45,6 +45,9 @@
     "mapLocation": "Pokaż na mapie",
     "noResults": "Brak wyników dla podanych kryteriów wyszukiwania"
   },
+  "Footer": {
+    "allRightsReserved": "Wszystkie prawa zastrzeżone"
+  },
   "countries": {
     "AD": "Andora",
     "AE": "Zjednoczone Emiraty Arabskie",

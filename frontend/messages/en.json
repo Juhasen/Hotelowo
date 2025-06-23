@@ -45,6 +45,9 @@
     "mapLocation": "Show on map",
     "noResults": "No results found for your search criteria"
   },
+  "Footer": {
+    "allRightsReserved": "All rights reserved"
+  },
   "countries": {
     "AD": "Andorra",
     "AE": "United Arab Emirates",
