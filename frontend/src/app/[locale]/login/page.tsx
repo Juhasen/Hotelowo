@@ -130,10 +130,8 @@ export default function LoginPage() {
                         </Button>
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <Link href={`/${locale}/register`} passHref>
-                                <MuiLink variant="body2" color="primary.main">
-                                    {t('noAccount')}
-                                </MuiLink>
+                            <Link href={`/${locale}/register`} passHref className="text-primaryBrown hover:underline">
+                                {t('noAccount')}
                             </Link>
                         </Box>
                     </Box>
