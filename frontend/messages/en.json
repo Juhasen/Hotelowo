@@ -117,7 +117,8 @@
     "server_error": "Server error. Please try again later.",
     "phoneNumber": "Phone Number",
     "phoneNumberRequired": "Phone number is required",
-    "phoneNumberInvalid": "Please enter a valid phone number"
+    "phoneNumberInvalid": "Please enter a valid phone number",
+    "passwordsDoNotMatch": "Passwords do not match"
   },
   "API": {
     "unauthorized": "Unauthorized. Please log in again.",

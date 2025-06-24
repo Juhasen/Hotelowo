@@ -77,7 +77,8 @@
     "errorMessage": "Wystąpił błąd. Spróbuj ponownie później.",
     "phoneNumber": "Numer telefonu",
     "phoneNumberRequired": "Numer telefonu jest wymagany",
-    "phoneNumberInvalid": "Podaj prawidłowy numer telefonu"
+    "phoneNumberInvalid": "Podaj prawidłowy numer telefonu",
+    "passwordsDoNotMatch": "Hasła nie są identyczne"
   },
   "API": {
       "unauthorized": "Brak uprawnień. Zaloguj się ponownie.",
