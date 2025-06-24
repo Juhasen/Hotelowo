@@ -261,8 +261,8 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                         <Image
                             src={selectedImg.src}
                             alt={selectedImg.alt}
-                            width={1920}
-                            height={720}
+                            width={720}
+                            height={480}
                             className="max-w-[90vw] max-h-[80vh] border-r-8"
                         />
                     </Box>
