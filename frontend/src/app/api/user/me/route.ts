@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { deleteSession, getCurrentUser } from '@/app/[locale]/lib/session';
+import { deleteSession, getSession } from '@/app/[locale]/lib/session';
 import { BASE_API_URL } from '@/app/[locale]/lib/utils';
 import { getTranslations } from 'next-intl/server';
 
@@ -10,14 +10,14 @@ export async function GET(request: NextRequest) {
         const locale = pathname.split('/')[1];
         const t = await getTranslations({ locale, namespace: '' });
 
-        const user = await getCurrentUser();
+        const user = await getSession();
 
         if (!user || !user.userToken) {
             return NextResponse.json({error: t('API.errors.unauthorized')}, {status: 401});
         }
 
         try {
-            const response = await fetch(`${BASE_API_URL}/user/me`, {
+            const response = await fetch(`${BASE_API_URL}/user`, {
                 headers: {
                     'Authorization': `Bearer ${user.userToken}`
                 }
