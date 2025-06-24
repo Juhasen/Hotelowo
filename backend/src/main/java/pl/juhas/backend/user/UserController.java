@@ -2,10 +2,8 @@ package pl.juhas.backend.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.juhas.backend.user.dto.UserResponse;
 
 import java.security.Principal;
 
@@ -23,5 +21,11 @@ public class UserController {
     ) {
         service.changePassword(request, connectedUser);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getConnectedUser(Principal connectedUser) {
+        UserResponse userResponse = service.getConnectedUser(connectedUser);
+        return ResponseEntity.ok(userResponse);
     }
 }
