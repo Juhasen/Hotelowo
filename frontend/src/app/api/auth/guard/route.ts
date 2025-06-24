@@ -4,10 +4,9 @@ import { getSession } from '@/app/[locale]/lib/session'; // or wherever your ses
 export async function GET() {
     const session = await getSession();
 
-    if (!session || !session.access_token) {
+    if (!session || !session.userToken) {
         return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Optionally fetch user info here with the token if needed
     return NextResponse.json({ user: { access_token: session.access_token } });
 }

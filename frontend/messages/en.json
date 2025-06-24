@@ -54,6 +54,17 @@
     "unexpectedResponse": "Unexpected server response",
     "invalidResponseFormat": "Invalid server response format"
   },
+  "Profile": {
+    "myProfile": "My profile",
+    "fullName": "Full name",
+    "email": "Email address",
+    "phoneNumber": "Phone number",
+    "accountDetails": "Account details",
+    "accountInfo": "Here you can find information about your account",
+    "memberSince": "Member since",
+    "profileNotAvailable": "Profile is not available",
+    "loadingProfile": "Loading profile..."
+  },
   "Register": {
     "createAccount": "Create Account",
     "emailAddress": "Email Address",
@@ -76,14 +87,12 @@
     "usernameTaken": "This username is already taken",
     "errorMessage": "An error occurred. Please try again later."
   },
-  "Api": {
-    "errors": {
-      "unauthorized": "Unauthorized. Please log in again.",
-      "serverError": "Server error",
-      "internalServerError": "Internal server error",
-      "userNotFound": "User not found",
-      "backendUnavailable": "Server is unavailable"
-    }
+  "API": {
+    "unauthorized": "Unauthorized. Please log in again.",
+    "serverError": "Server error",
+    "internalServerError": "Internal server error",
+    "userNotFound": "User not found",
+    "backendUnavailable": "Server is unavailable"
   },
   "RegisterPage": {
     "title": "Registration",
@@ -250,7 +259,8 @@
     "HT": "Haiti",
     "HU": "Hungary",
     "ID": "Indonesia",
-    "IE": "Ireland","IL": "Israel",
+    "IE": "Ireland",
+    "IL": "Israel",
     "IM": "Isle of Man",
     "IN": "India",
     "IO": "British Indian Ocean Territory",

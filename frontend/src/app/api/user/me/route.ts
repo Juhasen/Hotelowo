@@ -13,11 +13,11 @@ export async function GET(request: NextRequest) {
         const user = await getSession();
 
         if (!user || !user.userToken) {
-            return NextResponse.json({error: t('API.errors.unauthorized')}, {status: 401});
+            return NextResponse.json({error: t('API.unauthorized')}, {status: 401});
         }
 
         try {
-            const response = await fetch(`${BASE_API_URL}/user`, {
+            const response = await fetch(`${BASE_API_URL}/users/me`, {
                 headers: {
                     'Authorization': `Bearer ${user.userToken}`
                 }
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
                 const errorText = await response.text();
                 await deleteSession();
                 return NextResponse.json({
-                    error: `${t('API.errors.serverError')}: ${response.status}`,
+                    error: `${t('API.serverError')}: ${response.status}`,
                     details: errorText
                 }, {status: response.status});
             }
@@ -35,9 +35,9 @@ export async function GET(request: NextRequest) {
             const userData = await response.json();
             return NextResponse.json(userData);
         } catch (apiError) {
-            const errorMessage = apiError instanceof Error ? apiError.message : t('API.errors.internalServerError');
+            const errorMessage = apiError instanceof Error ? apiError.message : t('API.internalServerError');
             return NextResponse.json({
-                error: t('API.errors.userNotFound'),
+                error: t('API.userNotFound'),
                 details: errorMessage
             }, {status: 500});
         }
@@ -46,9 +46,9 @@ export async function GET(request: NextRequest) {
         const defaultLocale = 'pl';
         const t = await getTranslations({ locale: defaultLocale, namespace: '' });
 
-        const errorMessage = sessionError instanceof Error ? sessionError.message : t('API.errors.internalServerError');
+        const errorMessage = sessionError instanceof Error ? sessionError.message : t('API.internalServerError');
         return NextResponse.json({
-            error: t('API.errors.unauthorized'),
+            error: t('API.unauthorized'),
             details: errorMessage
         }, {status: 500});
     }

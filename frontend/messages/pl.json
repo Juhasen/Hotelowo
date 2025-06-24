@@ -54,6 +54,17 @@
     "unexpectedResponse": "Nieoczekiwana odpowiedź z serwera",
     "invalidResponseFormat": "Nieprawidłowy format odpowiedzi z serwera"
   },
+  "Profile": {
+    "myProfile": "Mój profil",
+    "fullName": "Imię i nazwisko",
+    "email": "Adres e-mail",
+    "phoneNumber": "Numer telefonu",
+    "accountDetails": "Szczegóły konta",
+    "accountInfo": "Tutaj znajdziesz informacje o swoim koncie",
+    "memberSince": "Użytkownik od",
+    "profileNotAvailable": "Profil jest niedostępny",
+    "loadingProfile": "Ładowanie profilu..."
+  },
   "Register": {
     "createAccount": "Utwórz konto",
     "emailAddress": "Adres email",
