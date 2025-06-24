@@ -55,7 +55,7 @@ export default function AvailableRooms({ id, rooms }: AvailableRoomsProps) {
 
             <Grid container spacing={4}>
                 {rooms.map((room, index) => (
-                    <Card key={index} sx={{ borderRadius: 3, boxShadow: 2, maxWidth: "800px", minWidth: "350px", margin: "0 auto" }}>
+                    <Card key={index} sx={{ borderRadius: 3, boxShadow: 2, maxWidth: "800px", minWidth: "350px", margin: "auto" }}>
                         <CardContent>
                             <Grid container spacing={3}>
                                 <Grid size={{ xs: 12, md: 8 }}>

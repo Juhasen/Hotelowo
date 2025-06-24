@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.juhas.backend.user.dto.UserResponse;
 
 import java.security.Principal;
 
@@ -31,5 +32,10 @@ public class UserService {
 
         // save the new password
         repository.save(user);
+    }
+
+    public UserResponse getConnectedUser(Principal connectedUser) {
+        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        return UserMapper.toResponse(user);
     }
 }
