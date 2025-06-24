@@ -46,21 +46,23 @@
     "rememberMe": "Zapamiętaj mnie",
     "forgotPassword": "Zapomniałeś hasła?",
     "noAccount": "Nie masz konta? Zarejestruj się",
-    "loginFailed": "Logowanie nie powiodło się"
+    "loginFailed": "Logowanie nie powiodło się",
+    "errorMessage": "Wystąpił błąd podczas logowania",
+    "invalidCredentials": "Nieprawidłowy email lub hasło",
+    "accountBlocked": "Konto zostało zablokowane",
+    "tooManyRequests": "Zbyt wiele prób logowania. Spróbuj ponownie później.",
+    "unexpectedResponse": "Nieoczekiwana odpowiedź z serwera",
+    "invalidResponseFormat": "Nieprawidłowy format odpowiedzi z serwera"
   },
-
-  "RegisterPage": {
-    "title": "Rejestracja",
-    "welcomeMessage": "Dołącz do nas i korzystaj ze wszystkich funkcji",
-    "nameLabel": "Imię",
-    "surnameLabel": "Nazwisko",
-    "passwordLabel": "Hasło",
-    "confirmPasswordLabel": "Potwierdź hasło",
-    "passwordMismatch": "Hasła nie są identyczne",
-    "registerButton": "Zarejestruj się",
-    "alreadyHaveAccount": "Masz już konto?",
-    "loginButton": "Zaloguj się",
-    "registerFailed": "Rejestracja nie powiodła się. Spróbuj ponownie później.",
+  "Register": {
+    "createAccount": "Utwórz konto",
+    "emailAddress": "Adres email",
+    "firstname": "Imię",
+    "lastname": "Nazwisko",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "signUp": "Zarejestruj się",
+    "alreadyHaveAccount": "Masz już konto? Zaloguj się",
     "firstnameRequired": "Imię jest wymagane",
     "lastnameRequired": "Nazwisko jest wymagane",
     "emailInvalid": "Podaj prawidłowy adres email",
@@ -73,21 +75,16 @@
     "confirmPasswordRequired": "Potwierdzenie hasła jest wymagane",
     "usernameTaken": "Ta nazwa użytkownika jest już zajęta",
     "errorMessage": "Wystąpił błąd. Spróbuj ponownie później.",
-    "invalid_credentials": "Nieprawidłowy email lub hasło",
-    "account_blocked": "Konto zostało zablokowane",
-    "too_many_requests": "Zbyt wiele prób logowania. Spróbuj ponownie później.",
-    "unexpected_response": "Nieoczekiwana odpowiedź z serwera",
-    "invalid_response_format": "Nieprawidłowy format odpowiedzi z serwera",
-    "server_error": "Błąd serwera. Spróbuj ponownie później."
+    "phoneNumber": "Numer telefonu",
+    "phoneNumberRequired": "Numer telefonu jest wymagany",
+    "phoneNumberInvalid": "Podaj prawidłowy numer telefonu"
   },
   "API": {
-    "errors": {
       "unauthorized": "Brak uprawnień. Zaloguj się ponownie.",
       "serverError": "Błąd serwera",
-      "internalServerError": "Wewnętrzny błąd serwera",
+      "internalServerError": "Nieznany błąd serwera",
       "userNotFound": "Nie znaleziono użytkownika",
       "backendUnavailable": "Serwer jest niedostępny"
-    }
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",

@@ -40,13 +40,50 @@
     "SUITE": "Suite"
   },
   "Login": {
-    "signIn": "Zaloguj się",
-    "emailAddress": "Adres email",
-    "password": "Hasło",
-    "rememberMe": "Zapamiętaj mnie",
-    "forgotPassword": "Zapomniałeś hasła?",
-    "noAccount": "Nie masz konta? Zarejestruj się",
-    "loginFailed": "Logowanie nie powiodło się"
+    "signIn": "Sign In",
+    "emailAddress": "Email Address",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account? Sign up",
+    "loginFailed": "Login failed",
+    "errorMessage": "An error occurred during login",
+    "invalidCredentials": "Invalid email or password",
+    "accountBlocked": "Account has been blocked",
+    "tooManyRequests": "Too many login attempts. Please try again later.",
+    "unexpectedResponse": "Unexpected server response",
+    "invalidResponseFormat": "Invalid server response format"
+  },
+  "Register": {
+    "createAccount": "Create Account",
+    "emailAddress": "Email Address",
+    "firstname": "First Name",
+    "lastname": "Last Name",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "signUp": "Sign Up",
+    "alreadyHaveAccount": "Already have an account? Sign in",
+    "firstnameRequired": "First name is required",
+    "lastnameRequired": "Last name is required",
+    "emailInvalid": "Please enter a valid email address",
+    "emailTaken": "This email address is already registered",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "passwordLetterRequired": "Password must contain at least one letter",
+    "passwordNumberRequired": "Password must contain at least one number",
+    "passwordSpecialCharRequired": "Password must contain at least one special character",
+    "passwordInvalid": "The password does not meet security requirements",
+    "confirmPasswordRequired": "Password confirmation is required",
+    "usernameTaken": "This username is already taken",
+    "errorMessage": "An error occurred. Please try again later."
+  },
+  "Api": {
+    "errors": {
+      "unauthorized": "Unauthorized. Please log in again.",
+      "serverError": "Server error",
+      "internalServerError": "Internal server error",
+      "userNotFound": "User not found",
+      "backendUnavailable": "Server is unavailable"
+    }
   },
   "RegisterPage": {
     "title": "Registration",
@@ -77,16 +114,17 @@
     "too_many_requests": "Too many login attempts. Please try again later.",
     "unexpected_response": "Unexpected response from the server",
     "invalid_response_format": "Invalid server response format",
-    "server_error": "Server error. Please try again later."
+    "server_error": "Server error. Please try again later.",
+    "phoneNumber": "Phone Number",
+    "phoneNumberRequired": "Phone number is required",
+    "phoneNumberInvalid": "Please enter a valid phone number"
   },
   "API": {
-    "errors": {
-      "unauthorized": "Unauthorized. Please log in again.",
-      "serverError": "Server error",
-      "internalServerError": "Internal server error",
-      "userNotFound": "User not found",
-      "backendUnavailable": "Server is unavailable"
-    }
+    "unauthorized": "Unauthorized. Please log in again.",
+    "serverError": "Server error",
+    "internalServerError": "Unknown server error",
+    "userNotFound": "User not found",
+    "backendUnavailable": "Server is unavailable"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",
