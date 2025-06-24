@@ -63,7 +63,8 @@
     "accountInfo": "Tutaj znajdziesz informacje o swoim koncie",
     "memberSince": "Użytkownik od",
     "profileNotAvailable": "Profil jest niedostępny",
-    "loadingProfile": "Ładowanie profilu..."
+    "loadingProfile": "Ładowanie profilu...",
+    "logout": "Wyloguj się"
   },
   "Register": {
     "createAccount": "Utwórz konto",

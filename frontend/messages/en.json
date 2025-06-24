@@ -63,7 +63,8 @@
     "accountInfo": "Here you can find information about your account",
     "memberSince": "Member since",
     "profileNotAvailable": "Profile is not available",
-    "loadingProfile": "Loading profile..."
+    "loadingProfile": "Loading profile...",
+    "logout": "Logout"
   },
   "Register": {
     "createAccount": "Create Account",

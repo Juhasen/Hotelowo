@@ -14,11 +14,14 @@ import {
     Alert,
     Card,
     CardContent,
-    Stack
+    Stack,
+    Button
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PersonIcon from '@mui/icons-material/Person';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 import {useParams, useRouter} from "next/navigation";
 
 interface UserProfile {
@@ -37,7 +40,22 @@ export default function ProfilePage() {
     const locale = params.locale as string;
     const router = useRouter();
 
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'DELETE',
+            });
 
+            if (response.ok) {
+                router.push(`/${locale}/login`);
+            } else {
+                setError('Błąd podczas wylogowywania');
+            }
+        } catch (err) {
+            setError('Wystąpił problem z wylogowaniem');
+            console.error('Błąd wylogowania:', err);
+        }
+    };
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -99,13 +117,25 @@ export default function ProfilePage() {
     return (
         <Container maxWidth="md" sx={{py: 12}}>
             <Paper elevation={3} sx={{p: 4, borderRadius: 2, mt: 4}}>
-                <Box sx={{display: 'flex', alignItems: 'center', mb: 4}}>
-                    <Avatar sx={{width: 80, height: 80, bgcolor: 'primary.main', mr: 2}}>
-                        {user?.firstname?.[0] || 'U'}
-                    </Avatar>
-                    <Typography variant="h4" component="h1">
-                        {t('myProfile')}
-                    </Typography>
+                <Box sx={{display: 'flex', alignItems: 'center', mb: 4, justifyContent: 'space-between'}}>
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <Avatar sx={{width: 80, height: 80, bgcolor: 'primary.main', mr: 2}}>
+                            {user?.firstname?.[0] || 'U'}
+                        </Avatar>
+                        <Typography variant="h4" component="h1">
+                            {t('myProfile')}
+                        </Typography>
+                    </Box>
+
+                    {/* Przycisk wylogowania */}
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<LogoutIcon />}
+                        onClick={handleLogout}
+                    >
+                        {t('logout')}
+                    </Button>
                 </Box>
 
                 <Divider sx={{mb: 4}}/>
@@ -161,12 +191,13 @@ export default function ProfilePage() {
                                 <Typography variant="h6" gutterBottom>
                                     {t('accountDetails')}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary" paragraph>
+                                <Typography variant="body2" color="text.secondary">
                                     {t('accountInfo')}
                                 </Typography>
 
-                                <Box sx={{mt: 2, p: 2, bgcolor: 'background.default', borderRadius: 1}}>
-                                    <Typography variant="body2">
+                                <Box sx={{mt: 2, p: 2, bgcolor: 'background.default', borderRadius: 1, display: 'flex', alignItems: 'center'}}>
+                                    <AccountCircleIcon sx={{mr: 2, color: 'primary.main'}}/>
+                                    <Typography variant="body1" fontWeight="medium">
                                         {t('memberSince')}: {new Date().toLocaleDateString()}
                                     </Typography>
                                 </Box>
