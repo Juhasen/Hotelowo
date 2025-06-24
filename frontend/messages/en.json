@@ -52,7 +52,8 @@
     "accountBlocked": "Account has been blocked",
     "tooManyRequests": "Too many login attempts. Please try again later.",
     "unexpectedResponse": "Unexpected server response",
-    "invalidResponseFormat": "Invalid server response format"
+    "invalidResponseFormat": "Invalid server response format",
+    "accountDoesNotExists": "Account does not exist"
   },
   "Profile": {
     "myProfile": "My profile",

@@ -33,6 +33,7 @@ export default function LoginPage() {
     const errorMap: Record<string, string> = {
       'invalid_credentials': t('invalidCredentials'),
       'account_blocked': t('accountBlocked'),
+      'account_does_not_exists': t('accountDoesNotExists'),
       'too_many_requests': t('tooManyRequests'),
       'login_failed': t('loginFailed'),
       'unexpected_response': t('unexpectedResponse'),

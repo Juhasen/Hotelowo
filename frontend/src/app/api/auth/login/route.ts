@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ errors: { email: ['invalid_credentials'] } }, { status: 401 });
         } else if (response.status === 403) {
             return NextResponse.json({ errors: { email: ['account_blocked'] } }, { status: 403 });
+        } else if (response.status === 409) {
+            return NextResponse.json({ errors: { email: ['account_does_not_exists'] } }, { status: 409 });
         } else if (response.status === 429) {
             return NextResponse.json({ errors: { email: ['too_many_requests'] } }, { status: 429 });
         }
