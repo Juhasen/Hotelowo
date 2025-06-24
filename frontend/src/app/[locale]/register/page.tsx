@@ -7,7 +7,6 @@ import {
     Typography,
     TextField,
     Button,
-    Link as MuiLink,
     Paper,
     CircularProgress,
     Alert,
@@ -71,18 +70,6 @@ export default function RegisterPage() {
         return errorMap[errorCode] || t('errorMessage');
     };
 
-    // Funkcja komunikująca się z API
-    const signup = async (userData: typeof formData) => {
-        const response = await fetch(`/${locale}/api/auth/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
-
-        return await response.json();
-    };
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -90,11 +77,23 @@ export default function RegisterPage() {
         setErrorMessage(null);
         setFieldErrors({});
 
+        console.table(formData);
+
         try {
-            const result = await signup(formData);
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData),
+                cache: 'no-store'
+            });
+
+
+            const result = await response.json();
 
             if (result?.success) {
-                // Udana rejestracja - przekieruj do profilu
                 router.push(`/${locale}/profile`);
                 return;
             }

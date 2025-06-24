@@ -43,7 +43,7 @@ export default function LoginPage() {
 
   // Funkcja komunikująca się z API
   const login = async (formData: { email: string, password: string }) => {
-    const response = await fetch('/${locale}/api/auth/login', {
+    const response = await fetch(`/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

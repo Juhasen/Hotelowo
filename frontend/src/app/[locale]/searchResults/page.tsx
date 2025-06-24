@@ -78,7 +78,7 @@ export default function SearchResultsPage() {
         setError(null);
 
         try {
-            const searchUrl = new URL(`/${locale}/api/hotel/`, window.location.origin);
+            const searchUrl = new URL(`/api/hotel/`, window.location.origin);
 
             if (country) searchUrl.searchParams.append('country', country);
             if (checkIn) searchUrl.searchParams.append('checkIn', checkIn);
