@@ -65,7 +65,7 @@ export async function deleteSession() {
     cookieStore.delete('session')
 }
 
-export async function getCurrentUser() {
+export async function getSession() {
     const session = (await cookies()).get('session')?.value;
     if (!session) return null;
     const payload = await decrypt(session);
