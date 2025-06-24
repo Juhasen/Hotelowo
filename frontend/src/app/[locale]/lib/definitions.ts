@@ -11,6 +11,8 @@ export const SignupFormSchema = z.object({
         .min(2, {message: 'Lastname must be at least 2 characters long.'})
         .trim(),
     email: z.string().email({message: 'Please enter a valid email.'}).trim(),
+    phoneNumber: z.string().min(1, "phoneNumberRequired")
+        .regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{3,6}$/, "phoneNumberInvalid"),
     password: z
         .string()
         .min(8, {message: 'Be at least 8 characters long'})
