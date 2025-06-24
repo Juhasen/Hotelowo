@@ -1,327 +1,282 @@
 ﻿'use client';
-import React, { useState, useEffect } from 'react';
+
+import { useState } from 'react';
 import {
     Container,
+    Box,
     Typography,
     TextField,
     Button,
-    Paper,
-    Box,
-    CircularProgress,
     Link as MuiLink,
-    InputAdornment,
-    IconButton
+    Paper,
+    CircularProgress,
+    Alert,
+    Grid
 } from '@mui/material';
-import { motion } from 'framer-motion';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { signup } from "@/app/[locale]/actions/auth";
-import { ErrorPopup } from "@/app/[locale]/components/ErrorPopup";
-import {getLocale} from "next-intl/server";
 
 export default function RegisterPage() {
-    const t = useTranslations('RegisterPage');
-    const params = useParams();
+    const t = useTranslations('Register');
+    const apiT = useTranslations('API');
     const router = useRouter();
+    const params = useParams();
     const locale = params.locale as string;
 
-    const [name, setName] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        firstname: '',
+        lastname: '',
+        email: '',
+        phoneNumber: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [passwordMismatch, setPasswordMismatch] = useState(false);
-    const [emailError, setEmailError] = useState<string | null>(null);
-    const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>({});
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-    // Sprawdzanie, czy użytkownik jest już zalogowany
-    useEffect(() => {
-        const locale = getLocale();
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
 
-        fetch(`/${locale}/api/me`)
-            .then(response => {
-                if (response.ok) {
-                    // Użytkownik jest zalogowany, przekieruj na stronę profilu
-                    router.replace('/profile');
-                }
-            })
-            .catch(error => {
-                console.error('Błąd podczas sprawdzania stanu logowania:', error);
-            })
-            .finally(() => {
-                setIsLoading(false);
+        // Usunięcie błędu dla pola po rozpoczęciu edycji
+        if (fieldErrors[name]) {
+            setFieldErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
             });
-    }, [router]);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setErrorMessage(null);
-        setEmailError(null);
-        setPasswordMismatch(false);
-        setFieldErrors({});
-
-        if (password !== confirmPassword) {
-            setPasswordMismatch(true);
-            setErrorMessage(t('passwordMismatch'));
-            setLoading(false);
-            return;
         }
+    };
 
-        const formData = new FormData();
-        formData.append('firstname', name);
-        formData.append('lastname', lastname);
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('confirmPassword', confirmPassword);
+    // Funkcja pomocnicza do mapowania kodów błędów
+    const getErrorMessage = (errorCode: string) => {
+        const errorMap: Record<string, string> = {
+            'firstnameRequired': t('firstnameRequired'),
+            'lastnameRequired': t('lastnameRequired'),
+            'emailInvalid': t('emailInvalid'),
+            'emailTaken': t('emailTaken'),
+            'phoneNumberRequired': t('phoneNumberRequired'),
+            'phoneNumberInvalid': t('phoneNumberInvalid'),
+            'passwordMinLength': t('passwordMinLength'),
+            'passwordLetterRequired': t('passwordLetterRequired'),
+            'passwordNumberRequired': t('passwordNumberRequired'),
+            'passwordSpecialCharRequired': t('passwordSpecialCharRequired'),
+            'passwordInvalid': t('passwordInvalid'),
+            'confirmPasswordRequired': t('confirmPasswordRequired'),
+            'usernameTaken': t('usernameTaken')
+        };
+        return errorMap[errorCode] || t('errorMessage');
+    };
+
+    // Funkcja komunikująca się z API
+    const signup = async (userData: typeof formData) => {
+        const response = await fetch(`/${locale}/api/auth/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        return await response.json();
+    };
+
+    const handleSignup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setErrorMessage(null);
+        setFieldErrors({});
 
         try {
             const result = await signup(formData);
 
-            if (result?.errors) {
-                setFieldErrors(result.errors);
-                let firstErrorKey = null;
-                if (result.errors.email && result.errors.email.length > 0) {
-                    setEmailError(t(result.errors.email[0]));
-                    firstErrorKey = result.errors.email[0];
-                } else if (result.errors.password && result.errors.password.length > 0) {
-                    firstErrorKey = result.errors.password[0];
-                } else if (result.errors.confirmPassword && result.errors.confirmPassword.length > 0) {
-                    firstErrorKey = result.errors.confirmPassword[0];
-                } else if (Object.values(result.errors).flat().length > 0) {
-                    firstErrorKey = Object.values(result.errors).flat()[0];
-                }
-                if (firstErrorKey) {
-                    setErrorMessage(t(firstErrorKey));
-                }
-            } else {
-                router.push(`/${locale}/login?registered=true`);
+            if (result?.success) {
+                // Udana rejestracja - przekieruj do profilu
+                router.push(`/${locale}/profile`);
+                return;
             }
-        } catch {
-            setErrorMessage(t('registerFailed'));
+
+            if (result?.errors) {
+                const newFieldErrors: Record<string, string> = {};
+
+                // Przetwarzanie błędów dla poszczególnych pól
+                Object.entries(result.errors).forEach(([field, errors]) => {
+                    if (Array.isArray(errors) && errors.length > 0) {
+                        newFieldErrors[field] = getErrorMessage(errors[0]);
+                    }
+                });
+
+                if (Object.keys(newFieldErrors).length > 0) {
+                    setFieldErrors(newFieldErrors);
+
+                    // Ustawienie ogólnego komunikatu o błędzie
+                    const firstError = Object.values(newFieldErrors)[0];
+                    if (firstError) {
+                        setErrorMessage(firstError);
+                    }
+                } else {
+                    setErrorMessage(t('errorMessage'));
+                }
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            setErrorMessage(apiT('internalServerError'));
         } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
-    const handleCloseError = () => {
-        setErrorMessage(null);
-    };
-
-    if (isLoading) {
-        return (
-            <Box sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'linear-gradient(to bottom, #8d6e63, #a1887f)'
-            }}>
-                <CircularProgress />
-            </Box>
-        );
-    }
-
     return (
-        <Box sx={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            p: 2,
-            background: 'linear-gradient(to bottom, #8d6e63, #a1887f)'
-        }}>
-            {errorMessage && (
-                <ErrorPopup
-                    message={errorMessage}
-                    onCloseAction={handleCloseError}
-                    autoCloseTime={6000}
-                />
-            )}
-
-            <Container maxWidth="md">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+        <Container
+            component="main"
+            maxWidth="sm"
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                minHeight: '90vh',
+                py: 6
+            }}
+        >
+            <Box
+                sx={{
+                    marginTop: 12,
+                    marginBottom: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Paper
+                    elevation={3}
+                    sx={{
+                        p: 4,
+                        width: '100%',
+                        borderRadius: 2
+                    }}
                 >
-                    <Paper elevation={6} sx={{ p: { xs: 3, sm: 4 }, borderRadius: 4 }}>
-                        <Box sx={{ textAlign: 'center', mb: 3 }}>
-                            <motion.div
-                                initial={{ opacity: 0, y: -40 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 1 }}
-                            >
-                                <Typography variant="h3" sx={{ mb: 2, fontWeight: 'bold', color: '#795548' }}>
-                                    {t('title')}
-                                </Typography>
-                            </motion.div>
+                    <Typography component="h1" variant="h5" align="center" sx={{ mb: 3 }}>
+                        {t('createAccount')}
+                    </Typography>
 
-                            <motion.div
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 1, delay: 0.2 }}
-                            >
-                                <Typography variant="h6" color="text.secondary">
-                                    {t('welcomeMessage')}
-                                </Typography>
-                            </motion.div>
-                        </Box>
+                    {errorMessage && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {errorMessage}
+                        </Alert>
+                    )}
 
-                        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                    <Box component="form" onSubmit={handleSignup} noValidate sx={{ mt: 1 }}>
+                        <Grid container spacing={2}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                                     margin="normal"
                                     required
                                     fullWidth
-                                    id="name"
-                                    label={t('nameLabel')}
-                                    name="name"
+                                    id="firstname"
+                                    label={t('firstname')}
+                                    name="firstname"
                                     autoComplete="given-name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    autoFocus
+                                    value={formData.firstname}
+                                    onChange={handleChange}
                                     error={!!fieldErrors.firstname}
-                                    helperText={fieldErrors.firstname && t(fieldErrors.firstname[0])}
+                                    helperText={fieldErrors.firstname || ''}
                                 />
-
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                                     margin="normal"
                                     required
                                     fullWidth
                                     id="lastname"
-                                    label={t('surnameLabel')}
+                                    label={t('lastname')}
                                     name="lastname"
                                     autoComplete="family-name"
-                                    value={lastname}
-                                    onChange={(e) => setLastname(e.target.value)}
+                                    value={formData.lastname}
+                                    onChange={handleChange}
                                     error={!!fieldErrors.lastname}
-                                    helperText={fieldErrors.lastname && t(fieldErrors.lastname[0])}
+                                    helperText={fieldErrors.lastname || ''}
                                 />
-                            </Box>
+                            </Grid>
+                        </Grid>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label={t('emailAddress')}
+                            name="email"
+                            autoComplete="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            error={!!fieldErrors.email}
+                            helperText={fieldErrors.email || ''}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="phoneNumber"
+                            label={t('phoneNumber')}
+                            name="phoneNumber"
+                            autoComplete="tel"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            error={!!fieldErrors.phoneNumber}
+                            helperText={fieldErrors.phoneNumber || ''}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label={t('password')}
+                            type="password"
+                            id="password"
+                            autoComplete="new-password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            error={!!fieldErrors.password}
+                            helperText={fieldErrors.password || ''}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="confirmPassword"
+                            label={t('confirmPassword')}
+                            type="password"
+                            id="confirmPassword"
+                            autoComplete="new-password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            error={!!fieldErrors.confirmPassword}
+                            helperText={fieldErrors.confirmPassword || ''}
+                        />
 
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email"
-                                name="email"
-                                autoComplete="email"
-                                value={email}
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                    setEmailError(null);
-                                }}
-                                error={!!(emailError || fieldErrors.email)}
-                                helperText={(emailError || (fieldErrors.email && t(fieldErrors.email[0])))}
-                            />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? <CircularProgress size={24} /> : t('signUp')}
+                        </Button>
 
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label={t('passwordLabel')}
-                                type={showPassword ? 'text' : 'password'}
-                                id="password"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                    setPasswordMismatch(false);
-                                }}
-                                error={!!(passwordMismatch || fieldErrors.password)}
-                                helperText={fieldErrors.password && t(fieldErrors.password[0])}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                edge="end"
-                                                aria-label="toggle password visibility"
-                                            >
-                                                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="confirmPassword"
-                                label={t('confirmPasswordLabel')}
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                id="confirmPassword"
-                                value={confirmPassword}
-                                onChange={(e) => {
-                                    setConfirmPassword(e.target.value);
-                                    setPasswordMismatch(false);
-                                }}
-                                error={!!(passwordMismatch || fieldErrors.confirmPassword)}
-                                helperText={fieldErrors.confirmPassword && t(fieldErrors.confirmPassword[0])}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                edge="end"
-                                                aria-label="toggle confirm password visibility"
-                                            >
-                                                {showConfirmPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                            {passwordMismatch && (
-                                <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                                    {t('passwordMismatch')}
-                                </Typography>
-                            )}
-
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                disabled={loading}
-                                sx={{
-                                    py: 1.5,
-                                    mt: 3,
-                                    mb: 3,
-                                    fontSize: '1rem',
-                                    fontWeight: 'bold',
-                                    backgroundColor: '#795548',
-                                    '&:hover': { backgroundColor: '#6d4c41' }
-                                }}
-                            >
-                                {loading ? <CircularProgress size={24} color="inherit" /> : t('registerButton')}
-                            </Button>
-
-                            <Box sx={{ textAlign: 'center' }}>
-                                <Typography variant="body2" color="text.secondary">
-                                    {t('alreadyHaveAccount')}{' '}
-                                    <Link href={`/${locale}/login`} style={{ textDecoration: 'none' }}>
-                                        <MuiLink component="span" sx={{ color: '#795548', fontWeight: 600 }}>
-                                            {t('loginButton')}
-                                        </MuiLink>
-                                    </Link>
-                                </Typography>
-                            </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                            <Link href={`/${locale}/login`} passHref>
+                                <span className="w-full text-center text-primaryBrown underline hover:no-underline hover:text-black">
+                                    {t('alreadyHaveAccount')}
+                                </span>
+                            </Link>
                         </Box>
-                    </Paper>
-                </motion.div>
-            </Container>
-        </Box>
+                    </Box>
+                </Paper>
+            </Box>
+        </Container>
     );
 }

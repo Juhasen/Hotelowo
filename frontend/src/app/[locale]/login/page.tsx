@@ -1,142 +1,175 @@
-﻿"use client";
+﻿'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-    Box,
-    Container,
-    Typography,
-    TextField,
-    Button,
-    Paper,
-    Link as MuiLink,
-    CircularProgress,
-    Alert
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  CircularProgress,
+  Alert
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-    const t = useTranslations('Login');
-    const params = useParams();
-    const router = useRouter();
-    const locale = params.locale as string;
+  const t = useTranslations('Login');
+  const apiT = useTranslations('API');
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-
-        try {
-            // Tutaj będzie logika logowania - zastąp odpowiednim API call
-            const response = await fetch(`/${locale}/api/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || t('loginFailed'));
-            }
-
-            //sprwadź czy w local storage jest PREVIOUS_URL, jeśli tak to przekieruj do tej strony
-            const previousUrl = localStorage.getItem('PREVIOUS_URL');
-            if (previousUrl) {
-                localStorage.removeItem('PREVIOUS_URL');
-                router.push(previousUrl);
-                return;
-            }
-
-            // Po udanym logowaniu przekieruj do strony głównej
-            router.push(`/${locale}`);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t('loginFailed'));
-        } finally {
-            setLoading(false);
-        }
+  // Funkcja pomocnicza do mapowania kodów błędów
+  const getErrorMessage = (errorCode: string) => {
+    const errorMap: Record<string, string> = {
+      'invalid_credentials': t('invalidCredentials'),
+      'account_blocked': t('accountBlocked'),
+      'too_many_requests': t('tooManyRequests'),
+      'login_failed': t('loginFailed'),
+      'unexpected_response': t('unexpectedResponse'),
+      'invalid_response_format': t('invalidResponseFormat')
     };
+    return errorMap[errorCode] || t('errorMessage');
+  };
 
-    return (
-        <Container maxWidth="sm">
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    mt: 12,
-                    mb: 8
-                }}
-            >
-                <Typography component="h1" variant="h4" sx={{ mb: 4, color: 'primary.main', fontWeight: 'bold' }}>
-                    {t('signIn')}
-                </Typography>
+  // Funkcja komunikująca się z API
+  const login = async (formData: { email: string, password: string }) => {
+    const response = await fetch('/${locale}/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
 
-                <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: 2, bgcolor: 'background.paper' }}>
-                    {error && (
-                        <Alert severity="error" sx={{ mb: 3 }}>
-                            {error}
-                        </Alert>
-                    )}
+    return await response.json();
+  };
 
-                    <Box component="form" onSubmit={handleSubmit} noValidate>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label={t('emailAddress')}
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            sx={{ mb: 2 }}
-                        />
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label={t('password')}
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            sx={{ mb: 3 }}
-                        />
+    try {
+      const result = await login({
+        email,
+        password
+      });
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            disabled={loading}
-                            sx={{
-                                py: 1.5,
-                                mb: 3,
-                                fontSize: '1rem',
-                                position: 'relative'
-                            }}
-                        >
-                            {loading ? <CircularProgress size={24} color="inherit" /> : t('signIn')}
-                        </Button>
+      if (result?.success) {
+        router.push(`/${locale}/profile`);
+        return;
+      }
 
-                        <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <Link href={`/${locale}/register`} passHref className="text-primaryBrown hover:underline">
-                                {t('noAccount')}
-                            </Link>
-                        </Box>
-                    </Box>
-                </Paper>
+      if (result?.errors) {
+        // Pobranie pierwszego błędu z listy
+        const firstErrorKey = Object.keys(result.errors)[0];
+        if (firstErrorKey && result.errors[firstErrorKey]?.[0]) {
+          setErrorMessage(getErrorMessage(result.errors[firstErrorKey][0]));
+        } else {
+          setErrorMessage(t('errorMessage'));
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrorMessage(apiT('internalServerError'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+      <Container
+          component="main"
+          maxWidth="sm"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            minHeight: '90vh',
+            py: 4
+          }}
+      >
+        <Box
+            sx={{
+              marginTop: 12,
+              marginBottom: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+        >
+          <Paper
+              elevation={3}
+              sx={{
+                p: 4,
+                width: '100%',
+                borderRadius: 2
+              }}
+          >
+            <Typography component="h1" variant="h5" align="center" sx={{ mb: 3 }}>
+              {t('signIn')}
+            </Typography>
+
+            {errorMessage && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {errorMessage}
+                </Alert>
+            )}
+
+            <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+              <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label={t('emailAddress')}
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label={t('password')}
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={isSubmitting}
+              >
+                {isSubmitting ? <CircularProgress size={24} /> : t('signIn')}
+              </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                <Link href={`/${locale}/register`} passHref>
+                  <span className="w-full text-center text-primaryBrown underline hover:no-underline hover:text-black">
+                    {t('noAccount')}
+                  </span>
+                </Link>
+              </Box>
             </Box>
-        </Container>
-    );
+          </Paper>
+        </Box>
+      </Container>
+  );
 }
