@@ -235,7 +235,7 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                         <b>{t('reviews')}</b>
                     </Typography>
                     <Divider sx={{ mb: 2, backgroundColor: primaryBrown }} />
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
                         <Rating
                             name="Hotel Rating"
                             value={hotel.rating}
@@ -252,6 +252,50 @@ const HotelDetails: React.FC<HotelDetailsProps> = ({hotel}) => {
                             ({Math.round(hotel.rating * 20)}%)
                         </Typography>
                     </Box>
+
+                    {/* Lista recenzji */}
+                    {hotel.reviews && hotel.reviews.length > 0 ? (
+                        <Box sx={{ mt: 2 }}>
+                            {hotel.reviews.map((review, index) => (
+                                <Paper
+                                    key={index}
+                                    elevation={2}
+                                    sx={{
+                                        p: 2,
+                                        mb: 2,
+                                        borderRadius: 2,
+                                        backgroundColor: 'rgba(255, 255, 255, 0.7)'
+                                    }}
+                                >
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                                            {review.firstname} {review.lastname}
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Rating
+                                                value={review.rating}
+                                                readOnly
+                                                size="small"
+                                                precision={0.5}
+                                            />
+                                            <Typography variant="body2" sx={{ fontWeight: 700, color: starColor }}>
+                                                {review.rating}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                    <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
+                                        {review.comment}
+                                    </Typography>
+                                </Paper>
+                            ))}
+                        </Box>
+                    ) : (
+                        <Box sx={{ textAlign: 'center', py: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 2 }}>
+                            <Typography variant="body1" color="text.secondary">
+                                {t('noReviews')}
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
             </Paper>
             {/* Modal z powiększonym zdjęciem */}

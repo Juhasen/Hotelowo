@@ -17,6 +17,8 @@ import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.hotelImage.HotelImage;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
 import pl.juhas.backend.hotelImage.dto.HotelImageRequest;
+import pl.juhas.backend.review.Review;
+import pl.juhas.backend.review.ReviewRepository;
 import pl.juhas.backend.utils.DateParser;
 
 import java.time.LocalDate;
@@ -36,6 +38,7 @@ public class HotelService {
     private final AmenityRepository amenityRepository;
 
     private final HotelImageRepository hotelImageRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
     public Page<HotelSearchResponse> getHotels(String locale, HotelSearchRequest hotelRequest, Pageable pageable) {
@@ -99,7 +102,9 @@ public class HotelService {
         }
         Hotel hotel = existingHotel.get();
 
-        return HotelMapper.toResponse(hotel, locale);
+        List<Review> reviews = reviewRepository.findRandomReviewsByHotelId(hotel.getId());
+
+        return HotelMapper.toResponse(hotel, locale, reviews);
     }
 
     @Transactional

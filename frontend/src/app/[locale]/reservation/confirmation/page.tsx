@@ -31,7 +31,7 @@ export default function ConfirmationPage() {
 
                 <Grid container spacing={3} justifyContent="center" sx={{ mb: 2 }}>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                        <Link href={`/${locale}/profile/reservations`} passHref style={{ textDecoration: 'none' }}>
+                        <Link href={`/${locale}/profile`} passHref style={{ textDecoration: 'none' }}>
                             <Button
                                 variant="contained"
                                 color="primary"

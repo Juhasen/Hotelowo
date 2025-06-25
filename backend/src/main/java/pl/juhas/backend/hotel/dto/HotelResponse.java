@@ -3,6 +3,7 @@ package pl.juhas.backend.hotel.dto;
 import pl.juhas.backend.address.dto.AddressRequest;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotelImage.dto.HotelImageRequest;
+import pl.juhas.backend.review.dto.ReviewResponse;
 
 import java.util.List;
 
@@ -17,5 +18,6 @@ public record HotelResponse(
         List<AmenityResponse> amenities,
         List<HotelImageRequest> images,
         String rating,
-        String stars
+        String stars,
+        List<ReviewResponse> reviews
 ) {}

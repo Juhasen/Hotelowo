@@ -25,6 +25,7 @@ interface ReviewModalProps {
 
 export default function ReviewModal({ open, onClose, hotelName , reservationId}: ReviewModalProps) {
     const t = useTranslations('Review');
+    const tApi = useTranslations('API');
 
     const [rating, setRating] = useState<number | null>(null);
     const [comment, setComment] = useState<string>('');
@@ -65,6 +66,10 @@ export default function ReviewModal({ open, onClose, hotelName , reservationId}:
             });
 
             if (!response.ok) {
+                if (response.status === 409) {
+                    setError(tApi('reviewAlreadyExists'));
+                    return;
+                }
                 throw new Error(await response.text());
             }
 

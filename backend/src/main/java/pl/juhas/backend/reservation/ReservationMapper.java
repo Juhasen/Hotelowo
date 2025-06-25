@@ -49,7 +49,7 @@ public class ReservationMapper {
         BigDecimal totalPrice = room.getPricePerNight().multiply(BigDecimal.valueOf(nights));
 
         // Tworzenie odpowiedzi
-        HotelResponse hotelResponse = HotelMapper.toResponse(hotel, locale.name());
+        HotelResponse hotelResponse = HotelMapper.toResponse(hotel, locale.name(), null);
         RoomResponse roomResponse = RoomMapper.toResponse(room, nights);
         UserResponse userResponse = UserMapper.toResponse(user);
 
@@ -109,7 +109,7 @@ public class ReservationMapper {
 
 
         // Tworzenie odpowiedzi
-        HotelResponse hotelResponse = HotelMapper.toResponse(hotel, locale.name());
+        HotelResponse hotelResponse = HotelMapper.toResponse(hotel, locale.name(), null);
         RoomResponse roomResponse = RoomMapper.toResponse(room, reservation.getNights());
         UserResponse userResponse = UserMapper.toResponse(user);
 

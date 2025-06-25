@@ -32,7 +32,8 @@
     "available": "Dostępny",
     "perNight": "za noc",
     "total": "Łącznie",
-    "priceInclude": "Zawiera opłaty i podatki"
+    "priceInclude": "Zawiera opłaty i podatki",
+    "noReviews": "Brak opinii dla tego hotelu"
   },
   "RoomType": {
     "SINGLE": "Pokój jednoosobowy",
@@ -113,7 +114,8 @@
       "serverError": "Błąd serwera",
       "internalServerError": "Nieznany błąd serwera",
       "userNotFound": "Nie znaleziono użytkownika",
-      "backendUnavailable": "Serwer jest niedostępny"
+      "backendUnavailable": "Serwer jest niedostępny",
+      "reviewAlreadyExists": "Już dodałeś opinię o tym hotelu"
   },
   "Auth": {
     "loginRequired": "Wymagane logowanie",
