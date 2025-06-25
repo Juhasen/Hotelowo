@@ -109,7 +109,7 @@ export default function AvailableRooms({ id, rooms }: AvailableRoomsProps) {
 
                         <CardActions sx={{ p: 2, pt: 0, justifyContent: "flex-end" }}>
                             <Link
-                                href={`/${locale}/reservation?roomId=${room.number}&hotelId=${hotelId}${checkIn ? `&checkIn=${checkIn}` : ''}${checkOut ? `&checkOut=${checkOut}` : ''}`}
+                                href={`/${locale}/reservation/preview?roomId=${room.number}&hotelId=${hotelId}${checkIn ? `&checkIn=${checkIn}` : ''}${checkOut ? `&checkOut=${checkOut}` : ''}`}
                                 passHref
                                 className="w-full"
                             >

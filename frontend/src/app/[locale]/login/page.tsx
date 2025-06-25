@@ -11,7 +11,7 @@ import {
   CircularProgress,
   Alert
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -19,9 +19,11 @@ import Link from 'next/link';
 export default function LoginPage() {
   const t = useTranslations('Login');
   const apiT = useTranslations('API');
-  const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -67,7 +69,18 @@ export default function LoginPage() {
       });
 
       if (result?.success) {
-        router.push(`/${locale}/profile`);
+        // Jeśli mamy parametr redirect, użyj go; w przeciwnym razie przejdź do profilu
+        if (redirectUrl) {
+          // Sprawdź, czy jest to bezpieczny URL wewnątrz aplikacji
+          if (redirectUrl.startsWith('/')) {
+            router.push(redirectUrl);
+          } else {
+            // Jeśli URL nie jest bezpieczny, przejdź do profilu
+            router.push(`/${locale}/profile`);
+          }
+        } else {
+          router.push(`/${locale}/profile`);
+        }
         return;
       }
 
