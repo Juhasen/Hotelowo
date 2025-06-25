@@ -65,7 +65,11 @@
     "memberSince": "Member since",
     "profileNotAvailable": "Profile is not available",
     "loadingProfile": "Loading profile...",
-    "logout": "Logout"
+    "logout": "Logout",
+    "myReservations": "My Reservations",
+    "noReservations": "You have no reservations",
+    "booked": "Booked",
+    "cancelled": "Cancelled"
   },
   "Register": {
     "createAccount": "Create Account",

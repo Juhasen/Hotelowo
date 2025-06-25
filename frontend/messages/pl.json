@@ -65,7 +65,11 @@
     "memberSince": "Użytkownik od",
     "profileNotAvailable": "Profil jest niedostępny",
     "loadingProfile": "Ładowanie profilu...",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "myReservations": "Moje rezerwacje",
+    "noReservations": "Nie masz jeszcze żadnych rezerwacji",
+    "booked": "Zarezerwowany",
+    "cancelled": "Anulowany"
   },
   "Register": {
     "createAccount": "Utwórz konto",
