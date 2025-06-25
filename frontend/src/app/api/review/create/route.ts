@@ -1,11 +1,11 @@
-﻿import { NextResponse } from 'next/server';
+﻿import {NextResponse} from 'next/server';
 import {BASE_API_URL} from "@/app/[locale]/lib/utils";
 import {getTranslations} from "next-intl/server";
-import { getSession } from '@/app/[locale]/lib/session';
+import {getSession} from '@/app/[locale]/lib/session';
 
 export async function POST(request: Request) {
     try {
-        const t = await getTranslations({ locale: 'pl', namespace: '' });
+        const t = await getTranslations({locale: 'pl', namespace: ''});
 
         const user = await getSession();
 
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         // Sprawdzanie, czy ciało żądania jest poprawne
         if (!request.body) {
             console.error('Request body is missing');
-            return NextResponse.json({ error: 'Request body is required' }, { status: 400 });
+            return NextResponse.json({error: 'Request body is required'}, {status: 400});
         }
 
 
@@ -35,16 +35,18 @@ export async function POST(request: Request) {
         });
 
         if (!response.ok) {
+            if (response.status === 409) {
+                throw new Error(t('API.reviewAlreadyExists'));
+            }
             console.error(`Backend returned status: ${response.status}`);
             throw new Error(`Backend API error: ${response.statusText}`);
         }
 
 
-
         // Zwracamy dane w formatowaniu zgodnym z oczekiwaniami frontendu
-        return NextResponse.json({ success: true }, { status: 200 });
+        return NextResponse.json({success: true}, {status: 200});
     } catch (error) {
         console.error('Error in hotel search API:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
     }
 }

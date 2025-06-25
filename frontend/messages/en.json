@@ -109,7 +109,8 @@
     "serverError": "Server error",
     "internalServerError": "Internal server error",
     "userNotFound": "User not found",
-    "backendUnavailable": "Server is unavailable"
+    "backendUnavailable": "Server is unavailable",
+    "reviewAlreadyExists": "You have already left a review for this hotel"
   },
   "RegisterPage": {
     "title": "Registration",
