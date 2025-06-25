@@ -38,7 +38,7 @@ export default function HotelPage() {
                 const data = await response.json();
                 setHotel(data);
 
-            } catch (e) {
+            } catch {
                 setHotel(null);
             } finally {
                 setLoading(false);
@@ -57,7 +57,7 @@ export default function HotelPage() {
                 const data = await response.json();
                 setRooms(data);
 
-            } catch (e) {
+            } catch {
                 setRooms([]);
             } finally {
                 setLoading(false);
