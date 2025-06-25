@@ -34,6 +34,7 @@ import {Hotel, Page} from '@/app/[locale]/lib/types';
 import {lightBrown, secondaryBrown, starColor} from "@/app/[locale]/lib/theme";
 import {Link} from '@/i18n/navigation';
 import {ArrowRightIcon} from "@mui/x-date-pickers";
+import HotelClassIcon from "@mui/icons-material/HotelClass";
 
 dayjs.extend(customParseFormat);
 
@@ -257,8 +258,13 @@ export default function SearchResultsPage() {
                                                 minWidth: 48,
                                                 textAlign: 'center',
                                                 zIndex: 2,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: 0.5
                                             }}
                                         >
+                                            <HotelClassIcon sx={{color: "white", fontSize: '1rem'}} />
                                             {Number(hotel.rating).toFixed(1)}
                                         </Box>
                                     </Tooltip>
