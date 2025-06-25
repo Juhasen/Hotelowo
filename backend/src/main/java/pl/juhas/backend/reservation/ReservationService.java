@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import pl.juhas.backend.hotel.LocaleType;
-import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
-import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
-import pl.juhas.backend.reservation.dto.ReservationRequest;
-import pl.juhas.backend.reservation.dto.ReservationResponse;
+import pl.juhas.backend.reservation.dto.*;
 import pl.juhas.backend.user.User;
 import pl.juhas.backend.utils.DateParser;
 
@@ -90,5 +87,19 @@ public class ReservationService {
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
         return ReservationMapper.toResponse(reservation, locale, user);
+    }
+
+    public List<ReservationOverview> getUserReservations(Principal connectedUser) {
+        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        List<Reservation> reservations = reservationRepository.findByUser(user);
+
+        if (reservations.isEmpty()) {
+            System.out.println("No reservations found for user: " + user.getUsername());
+            return List.of();
+        }
+
+        return reservations.stream()
+                .map(ReservationMapper::toOverview)
+                .toList();
     }
 }
