@@ -41,6 +41,13 @@ export type Amenity = {
     icon: string;
 }
 
+export type Review = {
+    firstname: string;
+    lastname: string;
+    rating: number;
+    comment: string;
+}
+
 export type HotelDetail = {
     name: string;
     description: string;
@@ -53,6 +60,7 @@ export type HotelDetail = {
     images: ImageType[];
     rating: number;
     stars: number;
+    reviews: Review[];
 };
 
 export type Room = {

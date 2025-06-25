@@ -32,7 +32,8 @@
     "available": "Available",
     "perNight": "per night",
     "total": "Total",
-    "priceInclude": "Includes fees and taxes"
+    "priceInclude": "Includes fees and taxes",
+    "noReviews": "No reviews yet"
   },
   "RoomType": {
     "SINGLE": "Single Room",
