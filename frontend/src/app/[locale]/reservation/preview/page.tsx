@@ -129,9 +129,10 @@ export default function ReservationPreviewPage() {
             if (!response.ok) {
                 throw new Error('Błąd podczas potwierdzania rezerwacji');
             }
+            const confirmationData = await response.text();
 
             // Przekierowanie po potwierdzeniu
-            router.push(`/${locale}/reservation/confirmation`);
+            router.push(`/${locale}/reservation/confirmation?confirmationCode=${confirmationData}`);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas potwierdzania rezerwacji');
         }

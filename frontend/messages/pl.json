@@ -133,7 +133,12 @@
     "fullName": "Imię i nazwisko",
     "contact": "Kontakt",
     "back": "Powrót",
-    "confirmReservation": "Potwierdź rezerwację"
+    "confirmReservation": "Potwierdź rezerwację",
+    "reservationConfirmed": "Rezerwacja potwierdzona!",
+    "reservationConfirmedMessage": "Twoja rezerwacja została pomyślnie utworzona. Szczegóły rezerwacji zostały wysłane na podany adres email. Możesz również zobaczyć swoje rezerwacje w swoim profilu.",
+    "viewMyReservations": "Zobacz moje rezerwacje",
+    "searchMoreHotels": "Szukaj więcej hoteli",
+    "reservationConfirmationNumber": "Kod potwierdzenia"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",

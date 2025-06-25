@@ -164,7 +164,12 @@
     "fullName": "Full Name",
     "contact": "Contact",
     "back": "Back",
-    "confirmReservation": "Confirm Reservation"
+    "confirmReservation": "Confirm Reservation",
+    "reservationConfirmed": "Reservation Confirmed!",
+    "reservationConfirmedMessage": "Your reservation has been successfully created. The reservation details have been sent to the provided email address. You can also view your reservations in your profile.",
+    "viewMyReservations": "View My Reservations",
+    "searchMoreHotels": "Search More Hotels",
+    "reservationConfirmationNumber": "Confirmation Code"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",

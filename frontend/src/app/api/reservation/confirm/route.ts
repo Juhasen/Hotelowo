@@ -1,12 +1,13 @@
 ﻿import { NextResponse } from 'next/server';
 import { BASE_API_URL } from "@/app/[locale]/lib/utils";
 import { getSession } from '@/app/[locale]/lib/session';
+import { getLocale } from "next-intl/server";
 
 export async function POST(request: Request) {
     try {
         // Parsowanie danych z body
         const { roomId, hotelId, checkIn, checkOut, paymentMethod } = await request.json();
-
+        const locale = await getLocale();
         // Weryfikacja parametrów
         if (!roomId || !hotelId || !checkIn || !checkOut || !paymentMethod) {
             console.error('Brakujące parametry rezerwacji');
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Brak autoryzacji' }, { status: 401 });
         }
 
-        const response = await fetch(`${BASE_API_URL}/reservation/confirm`, {
+        const response = await fetch(`${BASE_API_URL}/reservation/confirm/${locale}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
                 hotelId: hotelId,
                 checkInDate: checkIn,
                 checkOutDate: checkOut,
-                paymentMethod: paymentMethod
+                paymentMethod: paymentMethod.toUpperCase()
             }),
             cache: 'no-store',
         });
@@ -42,7 +43,8 @@ export async function POST(request: Request) {
         }
 
         // Przetwarzanie odpowiedzi
-        const confirmationData = await response.json();
+        const confirmationData = await response.text();
+
         return NextResponse.json(confirmationData);
     } catch (error) {
         console.error('Błąd w API rezerwacji:', error);
