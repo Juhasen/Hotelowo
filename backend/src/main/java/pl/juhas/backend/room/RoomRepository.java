@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
@@ -18,4 +19,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             AND r.capacity >= :capacity
             """)
     List<Room> findAvailableRooms(Long hotelId, LocalDateTime checkInDate, LocalDateTime checkOutDate, Integer capacity);
+
+    Optional<Room> findByNumber(String roomNumber);
 }
