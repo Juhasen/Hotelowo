@@ -65,7 +65,22 @@
     "memberSince": "Member since",
     "profileNotAvailable": "Profile is not available",
     "loadingProfile": "Loading profile...",
-    "logout": "Logout"
+    "logout": "Logout",
+    "myReservations": "My Reservations",
+    "noReservations": "You have no reservations",
+    "booked": "Booked",
+    "cancelled": "Cancelled"
+  },
+  "Review": {
+    "leaveReview": "Leave a review for your stay in",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPlaceholder": "Describe your experience during the stay...",
+    "submitReview": "Submit review",
+    "submitting": "Submitting...",
+    "reviewSubmitted": "Thank you for your review!",
+    "errorSubmitting": "An error occurred while submitting your review",
+    "ratingRequired": "Rating is required"
   },
   "Register": {
     "createAccount": "Create Account",
@@ -169,7 +184,11 @@
     "reservationConfirmedMessage": "Your reservation has been successfully created. The reservation details have been sent to the provided email address. You can also view your reservations in your profile.",
     "viewMyReservations": "View My Reservations",
     "searchMoreHotels": "Search More Hotels",
-    "reservationConfirmationNumber": "Confirmation Code"
+    "reservationConfirmationNumber": "Confirmation Code",
+    "reservationDetails": "Reservation Details",
+    "booked": "Booked",
+    "cancelled": "Cancelled",
+    "addReview": "Add Review"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",

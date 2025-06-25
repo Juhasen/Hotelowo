@@ -3,9 +3,11 @@ package pl.juhas.backend.reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
+import pl.juhas.backend.user.User;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
@@ -35,4 +37,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             LocalDateTime checkOutDate
     );
 
+    List<Reservation> findByUser(User user);
 }

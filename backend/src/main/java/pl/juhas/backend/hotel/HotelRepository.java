@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
@@ -55,4 +56,5 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             Pageable pageable
     );
 
+    Optional<Hotel> findByName(String name);
 }

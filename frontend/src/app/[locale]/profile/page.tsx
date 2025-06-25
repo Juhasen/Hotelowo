@@ -23,6 +23,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useParams, useRouter} from "next/navigation";
+import {ReservationOverview} from "@/app/[locale]/lib/types";
+import PreviewReservations from "@/app/[locale]/profile/components/PreviewReservations";
 
 interface UserProfile {
     firstname: string;
@@ -34,6 +36,7 @@ interface UserProfile {
 export default function ProfilePage() {
     const t = useTranslations('Profile');
     const [user, setUser] = useState<UserProfile | null>(null);
+    const [reservations, setReservations] = useState<ReservationOverview[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const params = useParams();
@@ -86,8 +89,26 @@ export default function ProfilePage() {
             }
         };
 
+        const fetchReservations = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch('/api/reservation/user');
+                if (!response.ok) {
+                    throw new Error('Nie udało się pobrać rezerwacji');
+                }
+                const data = await response.json();
+                setReservations(data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas pobierania rezerwacji');
+                return;
+            }finally {
+                setIsLoading(false);
+            }
+        };
+
         fetchUserProfile();
-    }, []);
+        fetchReservations();
+    }, [locale, router]);
 
     if (isLoading) {
         return (
@@ -206,6 +227,8 @@ export default function ProfilePage() {
                     </Grid>
                 </Grid>
             </Paper>
+
+            <PreviewReservations reservations={reservations} />
         </Container>
     );
 }

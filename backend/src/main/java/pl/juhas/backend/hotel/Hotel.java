@@ -47,7 +47,7 @@ public class Hotel {
     @OneToOne
     private Address address;
 
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> rooms;
 
     @Column(length = 20)

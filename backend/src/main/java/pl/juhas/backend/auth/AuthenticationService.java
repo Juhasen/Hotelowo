@@ -124,4 +124,9 @@ public class AuthenticationService {
             }
         }
     }
+
+    public User getUserByEmail(String mail) {
+        return repository.findByEmail(mail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + mail));
+    }
 }

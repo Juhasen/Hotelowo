@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.address.Address;
 import pl.juhas.backend.address.AddressRepository;
 import pl.juhas.backend.amenity.Amenity;
@@ -11,14 +12,20 @@ import pl.juhas.backend.amenity.AmenityRepository;
 import pl.juhas.backend.auth.AuthenticationService;
 import pl.juhas.backend.auth.RegisterRequest;
 import pl.juhas.backend.hotel.Hotel;
+import pl.juhas.backend.reservation.Reservation;
+
 import pl.juhas.backend.hotel.HotelRepository;
 import pl.juhas.backend.hotelImage.HotelImage;
 import pl.juhas.backend.hotelImage.HotelImageRepository;
+import pl.juhas.backend.reservation.ReservationRepository;
+import pl.juhas.backend.reservation.Status;
 import pl.juhas.backend.room.Room;
 import pl.juhas.backend.room.RoomRepository;
 import pl.juhas.backend.room.RoomType;
+import pl.juhas.backend.utils.RandomStringGenerator;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +40,7 @@ public class HotelowoApplication {
         SpringApplication.run(HotelowoApplication.class, args);
     }
 
+    @Transactional
     @Bean
     public CommandLineRunner commandLineRunner(
             AuthenticationService service,
@@ -40,7 +48,8 @@ public class HotelowoApplication {
             RoomRepository roomRepository,
             AddressRepository addressRepository,
             HotelImageRepository hotelImageRepository,
-            AmenityRepository amenityRepository
+            AmenityRepository amenityRepository,
+            ReservationRepository reservationRepository
     ) {
         return args -> {
             // Tworzenie administratora
@@ -75,6 +84,44 @@ public class HotelowoApplication {
 
             // Przypisanie udogodnień do hoteli
             addAmenitiesToHotels(hotelRepository, amenityRepository);
+
+            // create reservation for user and Aparthotel Centrum
+            // create reservation for user and Aparthotel Centrum
+            var aparthotelCentrum = hotelRepository.findByName("Aparthotel Centrum")
+                    .map(hotel -> {
+                        // Inicjalizacja kolekcji pokoi jawnie w ramach otwartej sesji
+                        if (hotel.getRooms() != null) {
+                            hotel.getRooms().size(); // To wymusza załadowanie kolekcji
+                        }
+                        return hotel;
+                    })
+                    .orElse(null);
+            var userAccount = service.getUserByEmail("juszczyk-krystian@wp.pl");
+
+            if (aparthotelCentrum != null && userAccount != null) {
+                var room = aparthotelCentrum.getRooms().getFirst();
+
+                String confirmationCode = String.format("%s-%s-%s-%s", RandomStringGenerator.generateRandomCode(4), RandomStringGenerator.generateRandomCode(4), RandomStringGenerator.generateRandomCode(4), userAccount.getId());
+                // Tworzenie przykładowej rezerwacji
+                var reservation = new Reservation()
+                        .withRoom(room)
+                        .withUser(userAccount)
+                        .withCheckInDate(LocalDate.now().minusDays(4).atStartOfDay())
+                        .withCheckOutDate(LocalDate.now().minusDays(1).atStartOfDay())
+                        .withNights(3)
+                        .withStatus(Status.BOOKED)
+                        .withConfirmationCode(confirmationCode)
+                        .withTotalPrice(room.getPricePerNight().multiply(BigDecimal.valueOf(3))); // 3 noce
+
+                reservationRepository.save(reservation);
+
+                System.out.println("Utworzono przykładową rezerwację w hotelu " + aparthotelCentrum.getName() +
+                        " dla użytkownika " + userAccount.getFirstname() + " " + userAccount.getLastname() +
+                        ", kod potwierdzenia: " + reservation.getConfirmationCode());
+
+            } else {
+                System.out.println("Nie znaleziono hotelu Aparthotel Centrum lub użytkownika");
+            }
         };
     }
 
@@ -144,7 +191,7 @@ public class HotelowoApplication {
                     .withWebsite("www." + name.toLowerCase().replace(" ", "") + ".pl")
                     .withIsAvailableSearch(true)
                     .withRating(new BigDecimal(String.format("%.2f", 3.5 + Math.random() * 1.5).replace(',', '.')))
-                    .withStars(1 + (int)(Math.random() * 5))
+                    .withStars(1 + (int) (Math.random() * 5))
                     .withRooms(new ArrayList<>())
                     .withImages(new ArrayList<>())
                     .withAmenities(new ArrayList<>());
@@ -260,7 +307,7 @@ public class HotelowoApplication {
                 .withWebsite("www.grandhotelwarszawa.pl")
                 .withIsAvailableSearch(true)
                 .withRating(new BigDecimal("4.7"))
-                .withStars(1 + (int)(Math.random() * 5))
+                .withStars(1 + (int) (Math.random() * 5))
                 .withRooms(new ArrayList<>())
                 .withImages(new ArrayList<>())
                 .withAmenities(new ArrayList<>());

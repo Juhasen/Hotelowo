@@ -65,7 +65,22 @@
     "memberSince": "Użytkownik od",
     "profileNotAvailable": "Profil jest niedostępny",
     "loadingProfile": "Ładowanie profilu...",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "myReservations": "Moje rezerwacje",
+    "noReservations": "Nie masz jeszcze żadnych rezerwacji",
+    "booked": "Zarezerwowany",
+    "cancelled": "Anulowany"
+  },
+  "Review": {
+    "leaveReview": "Oceń swój pobyt w",
+    "rating": "Ocena",
+    "comment": "Komentarz",
+    "commentPlaceholder": "Opisz swoje doświadczenia z pobytu...",
+    "submitReview": "Wyślij opinię",
+    "submitting": "Wysyłanie...",
+    "reviewSubmitted": "Dziękujemy za opinię!",
+    "errorSubmitting": "Wystąpił błąd podczas wysyłania opinii",
+    "ratingRequired": "Ocena jest wymagana"
   },
   "Register": {
     "createAccount": "Utwórz konto",
@@ -138,7 +153,11 @@
     "reservationConfirmedMessage": "Twoja rezerwacja została pomyślnie utworzona. Szczegóły rezerwacji zostały wysłane na podany adres email. Możesz również zobaczyć swoje rezerwacje w swoim profilu.",
     "viewMyReservations": "Zobacz moje rezerwacje",
     "searchMoreHotels": "Szukaj więcej hoteli",
-    "reservationConfirmationNumber": "Kod potwierdzenia"
+    "reservationConfirmationNumber": "Kod potwierdzenia",
+    "reservationDetails": "Szczegóły rezerwacji",
+    "booked": "Zarezerwowany",
+    "cancelled": "Anulowana",
+    "addReview": "Dodaj opinię"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",

@@ -5,10 +5,8 @@ import pl.juhas.backend.hotel.HotelMapper;
 import pl.juhas.backend.hotel.HotelRepository;
 import pl.juhas.backend.hotel.LocaleType;
 import pl.juhas.backend.hotel.dto.HotelResponse;
-import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
-import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
-import pl.juhas.backend.reservation.dto.ReservationRequest;
-import pl.juhas.backend.reservation.dto.ReservationResponse;
+import pl.juhas.backend.hotelImage.HotelImage;
+import pl.juhas.backend.reservation.dto.*;
 import pl.juhas.backend.room.RoomMapper;
 import pl.juhas.backend.room.RoomRepository;
 import pl.juhas.backend.room.dto.RoomResponse;
@@ -128,6 +126,34 @@ public class ReservationMapper {
                 reservation.getPaymentMethod(),
                 reservation.getCreatedAt().toString()// Domyślna metoda płatności
                  // Obecna data jako data utworzenia podglądu
+        );
+    }
+
+    public static ReservationOverview toOverview(Reservation reservation) {
+        // Pobierz hotel
+        var hotel = hotelRepository.findById(reservation
+                .getRoom()
+                .getHotel()
+                .getId())
+                .orElseThrow(() -> new ReservationNotFoundException("Hotel not found"));
+
+        // Pobierz url głównego zdjęcia hotelu
+        String hotelImageUrl = hotel.getImages().stream()
+                .filter(HotelImage::getIsPrimary)
+                .findFirst()
+                .map(HotelImage::getFilePath)
+                .orElse(null);
+
+
+        return new ReservationOverview(
+                reservation.getId(),
+                hotel.getName(),
+                hotelImageUrl,
+                reservation.getRoom().getType(),
+                reservation.getCheckInDate().toString(),
+                reservation.getCheckOutDate().toString(),
+                reservation.getTotalPrice(),
+                reservation.getStatus()
         );
     }
 }

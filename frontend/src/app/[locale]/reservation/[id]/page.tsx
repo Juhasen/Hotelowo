@@ -1,14 +1,13 @@
 ﻿'use client';
 
 import {useEffect, useState} from 'react';
-import {useSearchParams, useParams, useRouter} from 'next/navigation';
+import {useRouter, usePathname} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {
     Container,
     Paper,
     Typography,
     Box,
-    Grid,
     Divider,
     CircularProgress,
     Alert,
@@ -16,9 +15,6 @@ import {
     Card,
     CardContent,
     Chip,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
     Stack
 } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -31,6 +27,9 @@ import {Guest, HotelDetail, Room} from "@/app/[locale]/lib/types";
 import LoginRequired from '@/app/[locale]/components/LoginRequired';
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
+import CancelIcon from '@mui/icons-material/Cancel';
+import HotelClassIcon from '@mui/icons-material/HotelClass';
+import ReviewModal from "@/app/[locale]/reservation/[id]/components/ReviewModal";
 
 interface ReservationDetails {
     status: string;
@@ -45,24 +44,19 @@ interface ReservationDetails {
     createdAt: string;
 }
 
-export default function ReservationPreviewPage() {
+export default function ReservationPage() {
     const t = useTranslations('Reservation');
-    const searchParams = useSearchParams();
-    const params = useParams();
+    const pathname = usePathname();
     const router = useRouter();
-    const locale = params.locale as string;
-
-    // Pobieranie parametrów z URL
-    const roomId = searchParams.get('roomId');
-    const hotelId = searchParams.get('hotelId');
-    const checkIn = searchParams.get('checkIn');
-    const checkOut = searchParams.get('checkOut');
+    const id = pathname.split('/').pop() || '';
 
     const [reservation, setReservation] = useState<ReservationDetails | null>(null);
-    const [paymentMethod, setPaymentMethod] = useState('credit_card');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const [canReview, setCanReview] = useState(false);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+
 
     useEffect(() => {
         const checkAuthentication = async () => {
@@ -75,7 +69,7 @@ export default function ReservationPreviewPage() {
                 } else {
                     setLoading(false);
                 }
-            } catch (err) {
+            } catch {
                 setIsAuthenticated(false);
                 setLoading(false);
             }
@@ -85,11 +79,7 @@ export default function ReservationPreviewPage() {
             try {
                 setLoading(true);
 
-                const reservationUrl = new URL('/api/reservation/preview', window.location.origin);
-                reservationUrl.searchParams.append('roomId', roomId || '');
-                reservationUrl.searchParams.append('hotelId', hotelId || '');
-                reservationUrl.searchParams.append('checkIn', checkIn || '');
-                reservationUrl.searchParams.append('checkOut', checkOut || '');
+                const reservationUrl = new URL(`/api/reservation/${id}`, window.location.origin);
 
                 const response = await fetch(reservationUrl.toString());
 
@@ -107,38 +97,38 @@ export default function ReservationPreviewPage() {
             }
         };
 
+        fetchReservationDetails();
         checkAuthentication();
-    }, [roomId, hotelId, checkIn, checkOut]);
+    }, [id]);
 
-    const handleConfirmation = async () => {
-        try {
-            // Tutaj logika potwierdzenia rezerwacji
-            const response = await fetch('/api/reservation/confirm', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    roomId,
-                    hotelId,
-                    checkIn,
-                    checkOut,
-                    paymentMethod
-                })
-            });
+    useEffect(() => {
+        if (reservation) {
+            const checkOutDate = new Date(reservation.checkOutDate);
+            const currentDate = new Date();
 
-            if (!response.ok) {
-                throw new Error('Błąd podczas potwierdzania rezerwacji');
+            // Sprawdzamy, czy rezerwacja kwalifikuje się do oceny
+            if (currentDate > checkOutDate && reservation.status.toLowerCase() !== "cancelled") {
+                setCanReview(true);
             }
-            const confirmationData = await response.text();
+        }
+    }, [reservation]);
 
-            // Przekierowanie po potwierdzeniu
-            router.push(`/${locale}/reservation/confirmation?confirmationCode=${confirmationData}`);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas potwierdzania rezerwacji');
+
+    const getPaymentMethodTranslation = (method: string, t: any) => {
+        switch (method) {
+            case 'CREDIT_CARD':
+                return t('creditCard');
+            case 'PAYPAL':
+                return 'PayPal'; 
+            case 'BANK_TRANSFER':
+                return t('bankTransfer');
+            case 'CASH_ON_ARRIVAL':
+                return t('cashOnArrival');
+            default:
+                return method;
         }
     };
-
+    
     if (isAuthenticated === false) {
         return <LoginRequired/>;
     }
@@ -168,18 +158,44 @@ export default function ReservationPreviewPage() {
         );
     }
 
-    return (<Container maxWidth="lg" sx={{py: 12}}>
+    if (!reservation) {
+        return (
+            <Container maxWidth="md" sx={{py: 8}}>
+                <Alert severity="info">
+                    {t('noReservationFound')}
+                </Alert>
+            </Container>
+        );
+    }
+
+    return (
+        <Container maxWidth="lg" sx={{py: 12}}>
             <Paper elevation={3} sx={{p: 4, borderRadius: 2, display: 'flex', flexDirection: 'column'}}>
-                <Box sx={{display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'space-between'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'space-between' }}>
                     <Typography variant="h4" component="h1" gutterBottom>
-                        {t('reservationSummary')}
+                        {t('reservationDetails')}
                     </Typography>
-                    <Chip
-                        label={t('pending')}
-                        color="primary"
-                        icon={<CheckCircleIcon/>}
-                        variant="outlined"
-                    />
+
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        <Chip
+                            label={t(reservation.status.toLowerCase())}
+                            color="primary"
+                            icon={reservation.status.toLowerCase() != "cancelled" ? <CheckCircleIcon /> : <CancelIcon />}
+                            variant="outlined"
+                        />
+
+                        {canReview && (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => setShowReviewModal(true)}
+                                startIcon={<HotelClassIcon />}
+                                size="small"
+                            >
+                                {t('addReview')}
+                            </Button>
+                        )}
+                    </Stack>
                 </Box>
 
                 <Divider sx={{mb: 4}}/>
@@ -254,11 +270,11 @@ export default function ReservationPreviewPage() {
                                 <Stack direction="row" spacing={2} sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                                     <Box sx={{width: '50%', textAlign: 'center'}}>
                                         <Typography variant="subtitle2" color="text.secondary">{t('checkIn')}</Typography>
-                                        <Typography variant="body1">{reservation?.checkInDate}</Typography>
+                                        <Typography variant="body1">{reservation?.checkInDate.split("T")[0]}</Typography>
                                     </Box>
                                     <Box sx={{width: '50%', textAlign: 'center'}}>
                                         <Typography variant="subtitle2" color="text.secondary">{t('checkOut')}</Typography>
-                                        <Typography variant="body1">{reservation?.checkOutDate}</Typography>
+                                        <Typography variant="body1">{reservation?.checkOutDate.split("T")[0]}</Typography>
                                     </Box>
                                 </Stack>
 
@@ -335,17 +351,9 @@ export default function ReservationPreviewPage() {
                                 <Typography variant="subtitle2" color="text.secondary" sx={{mb: 1}}>
                                     {t('paymentMethod')}
                                 </Typography>
-                                <RadioGroup
-                                    value={paymentMethod}
-                                    onChange={(e) => setPaymentMethod(e.target.value)}
-                                >
-                                    <FormControlLabel value="credit_card" control={<Radio/>} label={t('creditCard')}/>
-                                    <FormControlLabel value="paypal" control={<Radio/>} label="PayPal"/>
-                                    <FormControlLabel value="bank_transfer" control={<Radio/>}
-                                                      label={t('bankTransfer')}/>
-                                    <FormControlLabel value="cash_on_arrival" control={<Radio/>}
-                                                      label={t('cashOnArrival')}/>
-                                </RadioGroup>
+                                <Typography variant="body1" color="text.secondary" sx={{mb: 1}}>
+                                    {getPaymentMethodTranslation(reservation?.paymentMethod, t)}
+                                </Typography>
                             </Box>
 
                             <Divider sx={{my: 2}}/>
@@ -359,21 +367,24 @@ export default function ReservationPreviewPage() {
                     </Card>
                 </Stack>
 
-                {/* Przycisk potwierdzenia rezerwacji */}
-                <Box sx={{mt: 4, display: 'flex', justifyContent: 'space-between'}}>
-                    <Button variant="outlined" onClick={() => router.back()}>
-                        {t('back')}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        onClick={handleConfirmation}
-                    >
-                        {t('confirmReservation')}
+                <Box sx={{display: 'flex', justifyContent: 'center', mt: 4}}>
+                    <Button variant="contained" onClick={() => router.push("/profile")}>
+                        {t('goBack')}
                     </Button>
                 </Box>
             </Paper>
+
+
+            {/* Modal opinii */}
+            {reservation && (
+                <ReviewModal
+                    open={showReviewModal}
+                    onClose={() => setShowReviewModal(false)}
+                    hotelName={reservation.hotel.name}
+                    reservationId={Number(id) || 0}
+                />
+            )}
+
         </Container>
     );
 }

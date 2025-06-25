@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.hotel.LocaleType;
-import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
-import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
-import pl.juhas.backend.reservation.dto.ReservationRequest;
-import pl.juhas.backend.reservation.dto.ReservationResponse;
+import pl.juhas.backend.reservation.dto.*;
 
 import java.security.Principal;
+import java.util.List;
 
 
 @RestController
@@ -18,6 +16,37 @@ import java.security.Principal;
 public class ReservationController {
 
     private final ReservationService service;
+
+    @GetMapping("/user")
+    public ResponseEntity<List<ReservationOverview>> getUserReservations(
+            Principal connectedUser
+    ) {
+        try {
+            return ResponseEntity.ok(service.getUserReservations(connectedUser));
+        } catch (Exception e) {
+            System.out.println("Error while getting user reservations: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{locale}/{id}")
+    public ResponseEntity<ReservationResponse> getReservationById(
+            @PathVariable LocaleType locale,
+            @PathVariable Long id,
+            Principal connectedUser
+    ) {
+        ReservationResponse reservationResponse;
+        try {
+            reservationResponse = service.getReservationById(id, locale, connectedUser);
+        } catch (ReservationNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println("Error while getting reservation by ID: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(reservationResponse);
+    }
 
     @GetMapping("/preview/{locale}")
     public ResponseEntity<ReservationPreviewResponse> getReservationPreview(
@@ -57,4 +86,6 @@ public class ReservationController {
         }
         return ResponseEntity.ok(response);
     }
+
+
 }
