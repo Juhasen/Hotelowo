@@ -1,5 +1,6 @@
 package pl.juhas.backend.reservation;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class ReservationService {
         return ReservationMapper.toPreviewResponse(request, locale, user, startDate, endDate);
     }
 
+    @Transactional
     public ReservationPreviewResponse confirmReservation(ReservationRequest request, Principal connectedUser, LocaleType locale) {
         List<LocalDate> checkInOutDates = DateParser.parseCheckDates(request.checkInDate(), request.checkOutDate());
         if (checkInOutDates.isEmpty()) {
