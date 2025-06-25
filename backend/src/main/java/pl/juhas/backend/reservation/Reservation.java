@@ -6,11 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.juhas.backend.room.Room;
 import pl.juhas.backend.user.User;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "reservation")
 public class Reservation {
     @Id
@@ -52,7 +53,7 @@ public class Reservation {
     private BigDecimal totalPrice;
 
     @CreatedDate
-    @Column(name ="created_at", updatable = false)
+    @Column(name ="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public Reservation(User user, Room room, Status status, LocalDate startDate, LocalDate endDate, int nights, BigDecimal totalPrice, PaymentMethod paymentMethod) {
@@ -65,12 +66,4 @@ public class Reservation {
         this.totalPrice = totalPrice;
         this.paymentMethod = paymentMethod;
     }
-
-    public long getDaysDifference() {
-        if (checkInDate != null && checkOutDate != null) {
-            return Duration.between(checkInDate, checkOutDate).toDays();
-        }
-        return 0;
-    }
 }
-

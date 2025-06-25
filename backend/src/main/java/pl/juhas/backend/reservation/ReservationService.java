@@ -68,6 +68,7 @@ public class ReservationService {
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
         Reservation reservation = reservationRepository.save(ReservationMapper.toReservation(request, user, startDate, endDate));
+        System.out.println(reservation);
 
         return ReservationMapper.toResponse(reservation, locale, user);
     }
