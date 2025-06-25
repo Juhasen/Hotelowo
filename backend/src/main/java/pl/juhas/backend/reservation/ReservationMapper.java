@@ -33,20 +33,18 @@ public class ReservationMapper {
         this.roomRepository = roomRepository;
     }
 
-    public static ReservationPreviewResponse toPreviewResponse(ReservationPreviewRequest request, LocaleType locale, User user) {
+    public static ReservationPreviewResponse toPreviewResponse(ReservationPreviewRequest request, LocaleType locale, User user, LocalDate startDate, LocalDate endDate) {
         // Pobierz hotel
         var hotel = hotelRepository.findById(request.hotelId())
                 .orElseThrow(() -> new ReservationNotFoundException("Hotel not found"));
 
         // Pobierz pokój
-        var room = roomRepository.findByNumber(request.roomNumber())
+        var room = roomRepository.findByNumberAndHotel(request.roomNumber(), hotel)
                 .orElseThrow(() -> new ReservationNotFoundException("Room not found"));
 
 
         // Oblicz liczbę nocy
-        LocalDate checkInDate = LocalDate.parse(request.checkInDate());
-        LocalDate checkOutDate = LocalDate.parse(request.checkOutDate());
-        long nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        long nights = ChronoUnit.DAYS.between(startDate, endDate);
 
         // Oblicz cenę całkowitą
         BigDecimal totalPrice = room.getPricePerNight().multiply(BigDecimal.valueOf(nights));

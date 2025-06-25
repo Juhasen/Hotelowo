@@ -2,6 +2,7 @@ package pl.juhas.backend.room;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import pl.juhas.backend.hotel.Hotel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,5 +21,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             """)
     List<Room> findAvailableRooms(Long hotelId, LocalDateTime checkInDate, LocalDateTime checkOutDate, Integer capacity);
 
-    Optional<Room> findByNumber(String roomNumber);
+    Optional<Room> findByNumberAndHotel(String number, Hotel hotel);
 }

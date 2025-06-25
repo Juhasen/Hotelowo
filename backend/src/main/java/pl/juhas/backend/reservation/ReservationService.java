@@ -42,6 +42,6 @@ public class ReservationService {
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
 
-        return ReservationMapper.toPreviewResponse(request, locale, user);
+        return ReservationMapper.toPreviewResponse(request, locale, user, startDate, endDate);
     }
 }

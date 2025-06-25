@@ -34,6 +34,7 @@ public class ReservationController {
             return ResponseEntity.notFound().build();
         }
         catch (Exception e) {
+            System.out.println("Error while getting reservation preview: " + e.getMessage());
             return ResponseEntity.badRequest().build();
         }
 
