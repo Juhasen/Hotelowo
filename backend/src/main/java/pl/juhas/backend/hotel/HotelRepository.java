@@ -57,4 +57,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     );
 
     Optional<Hotel> findByName(String name);
+
+    Optional<Hotel> findHotelById(Long id);
 }
