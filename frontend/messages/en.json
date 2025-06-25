@@ -71,6 +71,17 @@
     "booked": "Booked",
     "cancelled": "Cancelled"
   },
+  "Review": {
+    "leaveReview": "Leave a review for your stay in",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPlaceholder": "Describe your experience during the stay...",
+    "submitReview": "Submit review",
+    "submitting": "Submitting...",
+    "reviewSubmitted": "Thank you for your review!",
+    "errorSubmitting": "An error occurred while submitting your review",
+    "ratingRequired": "Rating is required"
+  },
   "Register": {
     "createAccount": "Create Account",
     "emailAddress": "Email Address",
@@ -176,7 +187,8 @@
     "reservationConfirmationNumber": "Confirmation Code",
     "reservationDetails": "Reservation Details",
     "booked": "Booked",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "addReview": "Add Review"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",

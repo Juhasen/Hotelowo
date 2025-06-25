@@ -28,6 +28,8 @@ import LoginRequired from '@/app/[locale]/components/LoginRequired';
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import CancelIcon from '@mui/icons-material/Cancel';
+import HotelClassIcon from '@mui/icons-material/HotelClass';
+import ReviewModal from "@/app/[locale]/reservation/[id]/components/ReviewModal";
 
 interface ReservationDetails {
     status: string;
@@ -52,6 +54,9 @@ export default function ReservationPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const [canReview, setCanReview] = useState(false);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+
 
     useEffect(() => {
         const checkAuthentication = async () => {
@@ -92,8 +97,21 @@ export default function ReservationPage() {
             }
         };
 
+        fetchReservationDetails();
         checkAuthentication();
     }, [id]);
+
+    useEffect(() => {
+        if (reservation) {
+            const checkOutDate = new Date(reservation.checkOutDate);
+            const currentDate = new Date();
+
+            // Sprawdzamy, czy rezerwacja kwalifikuje się do oceny
+            if (currentDate > checkOutDate && reservation.status.toLowerCase() !== "cancelled") {
+                setCanReview(true);
+            }
+        }
+    }, [reservation]);
 
 
     const getPaymentMethodTranslation = (method: string, t: any) => {
@@ -153,16 +171,31 @@ export default function ReservationPage() {
     return (
         <Container maxWidth="lg" sx={{py: 12}}>
             <Paper elevation={3} sx={{p: 4, borderRadius: 2, display: 'flex', flexDirection: 'column'}}>
-                <Box sx={{display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'space-between'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'space-between' }}>
                     <Typography variant="h4" component="h1" gutterBottom>
                         {t('reservationDetails')}
                     </Typography>
-                    <Chip
-                        label={t(reservation.status.toLowerCase())}
-                        color="primary"
-                        icon={reservation.status.toLowerCase() != "cancelled" ? <CheckCircleIcon/> : <CancelIcon/>}
-                        variant="outlined"
-                    />
+
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        <Chip
+                            label={t(reservation.status.toLowerCase())}
+                            color="primary"
+                            icon={reservation.status.toLowerCase() != "cancelled" ? <CheckCircleIcon /> : <CancelIcon />}
+                            variant="outlined"
+                        />
+
+                        {canReview && (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => setShowReviewModal(true)}
+                                startIcon={<HotelClassIcon />}
+                                size="small"
+                            >
+                                {t('addReview')}
+                            </Button>
+                        )}
+                    </Stack>
                 </Box>
 
                 <Divider sx={{mb: 4}}/>
@@ -340,6 +373,18 @@ export default function ReservationPage() {
                     </Button>
                 </Box>
             </Paper>
+
+
+            {/* Modal opinii */}
+            {reservation && (
+                <ReviewModal
+                    open={showReviewModal}
+                    onClose={() => setShowReviewModal(false)}
+                    hotelName={reservation.hotel.name}
+                    reservationId={Number(id) || 0}
+                />
+            )}
+
         </Container>
     );
 }

@@ -71,6 +71,17 @@
     "booked": "Zarezerwowany",
     "cancelled": "Anulowany"
   },
+  "Review": {
+    "leaveReview": "Oceń swój pobyt w",
+    "rating": "Ocena",
+    "comment": "Komentarz",
+    "commentPlaceholder": "Opisz swoje doświadczenia z pobytu...",
+    "submitReview": "Wyślij opinię",
+    "submitting": "Wysyłanie...",
+    "reviewSubmitted": "Dziękujemy za opinię!",
+    "errorSubmitting": "Wystąpił błąd podczas wysyłania opinii",
+    "ratingRequired": "Ocena jest wymagana"
+  },
   "Register": {
     "createAccount": "Utwórz konto",
     "emailAddress": "Adres email",
@@ -145,7 +156,8 @@
     "reservationConfirmationNumber": "Kod potwierdzenia",
     "reservationDetails": "Szczegóły rezerwacji",
     "booked": "Zarezerwowany",
-    "cancelled": "Anulowana"
+    "cancelled": "Anulowana",
+    "addReview": "Dodaj opinię"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",
