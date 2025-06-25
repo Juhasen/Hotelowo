@@ -3,6 +3,7 @@ package pl.juhas.backend.review;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.juhas.backend.review.dto.ReviewRequest;
@@ -15,8 +16,8 @@ import java.security.Principal;
 public class ReviewController {
     private final ReviewService service;
 
-    @PostMapping()
-    public ResponseEntity<?> createReview(ReviewRequest request,
+    @PostMapping("/create")
+    public ResponseEntity<?> createReview(@RequestBody ReviewRequest request,
                                           Principal connectedUser) {
         try {
             service.createReview(request, connectedUser);
