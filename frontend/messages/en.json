@@ -169,7 +169,10 @@
     "reservationConfirmedMessage": "Your reservation has been successfully created. The reservation details have been sent to the provided email address. You can also view your reservations in your profile.",
     "viewMyReservations": "View My Reservations",
     "searchMoreHotels": "Search More Hotels",
-    "reservationConfirmationNumber": "Confirmation Code"
+    "reservationConfirmationNumber": "Confirmation Code",
+    "reservationDetails": "Reservation Details",
+    "booked": "Booked",
+    "cancelled": "Cancelled"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",

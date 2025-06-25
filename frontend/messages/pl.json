@@ -138,7 +138,10 @@
     "reservationConfirmedMessage": "Twoja rezerwacja została pomyślnie utworzona. Szczegóły rezerwacji zostały wysłane na podany adres email. Możesz również zobaczyć swoje rezerwacje w swoim profilu.",
     "viewMyReservations": "Zobacz moje rezerwacje",
     "searchMoreHotels": "Szukaj więcej hoteli",
-    "reservationConfirmationNumber": "Kod potwierdzenia"
+    "reservationConfirmationNumber": "Kod potwierdzenia",
+    "reservationDetails": "Szczegóły rezerwacji",
+    "booked": "Zarezerwowany",
+    "cancelled": "Anulowana"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",

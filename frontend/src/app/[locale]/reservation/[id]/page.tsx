@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import {useEffect, useState} from 'react';
-import {useSearchParams, useRouter} from 'next/navigation';
+import {useRouter, usePathname} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {
     Container,
@@ -27,6 +27,7 @@ import {Guest, HotelDetail, Room} from "@/app/[locale]/lib/types";
 import LoginRequired from '@/app/[locale]/components/LoginRequired';
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 interface ReservationDetails {
     status: string;
@@ -43,10 +44,9 @@ interface ReservationDetails {
 
 export default function ReservationPage() {
     const t = useTranslations('Reservation');
-    const searchParams = useSearchParams();
+    const pathname = usePathname();
     const router = useRouter();
-    
-    const id = searchParams.get('id');
+    const id = pathname.split('/').pop() || '';
 
     const [reservation, setReservation] = useState<ReservationDetails | null>(null);
     const [loading, setLoading] = useState(true);
@@ -75,7 +75,6 @@ export default function ReservationPage() {
                 setLoading(true);
 
                 const reservationUrl = new URL(`/api/reservation/${id}`, window.location.origin);
-                reservationUrl.searchParams.append('id', id || '');
 
                 const response = await fetch(reservationUrl.toString());
 
@@ -96,6 +95,22 @@ export default function ReservationPage() {
         checkAuthentication();
     }, [id]);
 
+
+    const getPaymentMethodTranslation = (method: string, t: any) => {
+        switch (method) {
+            case 'CREDIT_CARD':
+                return t('creditCard');
+            case 'PAYPAL':
+                return 'PayPal'; 
+            case 'BANK_TRANSFER':
+                return t('bankTransfer');
+            case 'CASH_ON_ARRIVAL':
+                return t('cashOnArrival');
+            default:
+                return method;
+        }
+    };
+    
     if (isAuthenticated === false) {
         return <LoginRequired/>;
     }
@@ -125,17 +140,27 @@ export default function ReservationPage() {
         );
     }
 
+    if (!reservation) {
+        return (
+            <Container maxWidth="md" sx={{py: 8}}>
+                <Alert severity="info">
+                    {t('noReservationFound')}
+                </Alert>
+            </Container>
+        );
+    }
+
     return (
         <Container maxWidth="lg" sx={{py: 12}}>
             <Paper elevation={3} sx={{p: 4, borderRadius: 2, display: 'flex', flexDirection: 'column'}}>
                 <Box sx={{display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'space-between'}}>
                     <Typography variant="h4" component="h1" gutterBottom>
-                        {t('reservationSummary')}
+                        {t('reservationDetails')}
                     </Typography>
                     <Chip
-                        label={t('pending')}
+                        label={t(reservation.status.toLowerCase())}
                         color="primary"
-                        icon={<CheckCircleIcon/>}
+                        icon={reservation.status.toLowerCase() != "cancelled" ? <CheckCircleIcon/> : <CancelIcon/>}
                         variant="outlined"
                     />
                 </Box>
@@ -212,11 +237,11 @@ export default function ReservationPage() {
                                 <Stack direction="row" spacing={2} sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                                     <Box sx={{width: '50%', textAlign: 'center'}}>
                                         <Typography variant="subtitle2" color="text.secondary">{t('checkIn')}</Typography>
-                                        <Typography variant="body1">{reservation?.checkInDate}</Typography>
+                                        <Typography variant="body1">{reservation?.checkInDate.split("T")[0]}</Typography>
                                     </Box>
                                     <Box sx={{width: '50%', textAlign: 'center'}}>
                                         <Typography variant="subtitle2" color="text.secondary">{t('checkOut')}</Typography>
-                                        <Typography variant="body1">{reservation?.checkOutDate}</Typography>
+                                        <Typography variant="body1">{reservation?.checkOutDate.split("T")[0]}</Typography>
                                     </Box>
                                 </Stack>
 
@@ -294,7 +319,7 @@ export default function ReservationPage() {
                                     {t('paymentMethod')}
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary" sx={{mb: 1}}>
-                                    {reservation?.paymentMethod}
+                                    {getPaymentMethodTranslation(reservation?.paymentMethod, t)}
                                 </Typography>
                             </Box>
 
@@ -308,6 +333,12 @@ export default function ReservationPage() {
                         </CardContent>
                     </Card>
                 </Stack>
+
+                <Box sx={{display: 'flex', justifyContent: 'center', mt: 4}}>
+                    <Button variant="contained" onClick={() => router.push("/profile")}>
+                        {t('goBack')}
+                    </Button>
+                </Box>
             </Paper>
         </Container>
     );
