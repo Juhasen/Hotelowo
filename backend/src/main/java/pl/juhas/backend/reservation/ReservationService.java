@@ -1,6 +1,7 @@
 package pl.juhas.backend.reservation;
 
-import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import pl.juhas.backend.hotel.LocaleType;
 import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
 import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
 import pl.juhas.backend.reservation.dto.ReservationRequest;
+import pl.juhas.backend.reservation.dto.ReservationResponse;
 import pl.juhas.backend.user.User;
 import pl.juhas.backend.utils.DateParser;
 
@@ -48,7 +50,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationPreviewResponse confirmReservation(ReservationRequest request, Principal connectedUser, LocaleType locale) {
+    public String confirmReservation(ReservationRequest request, Principal connectedUser, LocaleType locale) {
         List<LocalDate> checkInOutDates = DateParser.parseCheckDates(request.checkInDate(), request.checkOutDate());
         if (checkInOutDates.isEmpty()) {
             System.out.println("Invalid check-in or check-out date format");
@@ -68,10 +70,8 @@ public class ReservationService {
         }
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-
         Reservation reservation = reservationRepository.save(ReservationMapper.toReservation(request, user, startDate, endDate));
-        System.out.println(reservation);
 
-        return ReservationMapper.toResponse(reservation, locale, user);
+        return reservation.getConfirmationCode();
     }
 }

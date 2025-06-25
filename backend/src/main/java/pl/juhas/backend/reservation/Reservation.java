@@ -52,11 +52,14 @@ public class Reservation {
     @Column(precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
+    @Column(name = "confirmation_code", unique = true, nullable = false)
+    private String confirmationCode;
+
     @CreatedDate
     @Column(name ="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public Reservation(User user, Room room, Status status, LocalDate startDate, LocalDate endDate, int nights, BigDecimal totalPrice, PaymentMethod paymentMethod) {
+    public Reservation(User user, Room room, Status status, LocalDate startDate, LocalDate endDate, int nights, BigDecimal totalPrice, PaymentMethod paymentMethod, String confirmationCode) {
         this.user = user;
         this.room = room;
         this.status = status;
@@ -65,5 +68,6 @@ public class Reservation {
         this.nights = nights;
         this.totalPrice = totalPrice;
         this.paymentMethod = paymentMethod;
+        this.confirmationCode = confirmationCode;
     }
 }

@@ -8,16 +8,16 @@ import pl.juhas.backend.hotel.dto.HotelResponse;
 import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
 import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
 import pl.juhas.backend.reservation.dto.ReservationRequest;
+import pl.juhas.backend.reservation.dto.ReservationResponse;
 import pl.juhas.backend.room.RoomMapper;
 import pl.juhas.backend.room.RoomRepository;
 import pl.juhas.backend.room.dto.RoomResponse;
 import pl.juhas.backend.user.User;
 import pl.juhas.backend.user.UserMapper;
-import pl.juhas.backend.user.UserRepository;
 import pl.juhas.backend.user.dto.UserResponse;
+import pl.juhas.backend.utils.RandomStringGenerator;
 
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -84,6 +84,9 @@ public class ReservationMapper {
         // Oblicz cenę całkowitą
         BigDecimal totalPrice = room.getPricePerNight().multiply(BigDecimal.valueOf(nights));
 
+        // Generowanie kodu potwierdzenia
+        String confirmationCode = String.format("%s-%s-%s-%s", RandomStringGenerator.generateRandomCode(4),RandomStringGenerator.generateRandomCode(4),RandomStringGenerator.generateRandomCode(4), user.getId());
+
         return new Reservation(
                 user,
                 room,
@@ -92,11 +95,12 @@ public class ReservationMapper {
                 endDate,
                 (int) nights,
                 totalPrice,
-                request.paymentMethod()
+                request.paymentMethod(),
+                confirmationCode
         );
     }
 
-    public static ReservationPreviewResponse toResponse(Reservation reservation, LocaleType locale, User user) {
+    public static ReservationResponse toResponse(Reservation reservation, LocaleType locale, User user) {
         // Pobierz hotel
         var hotel = hotelRepository.findById(reservation.getRoom().getHotel().getId())
                 .orElseThrow(() -> new ReservationNotFoundException("Hotel not found"));
@@ -111,7 +115,8 @@ public class ReservationMapper {
         RoomResponse roomResponse = RoomMapper.toResponse(room, reservation.getNights());
         UserResponse userResponse = UserMapper.toResponse(user);
 
-        return new ReservationPreviewResponse(
+        return new ReservationResponse(
+                reservation.getConfirmationCode(),
                 Status.BOOKED, // Domyślny status
                 hotelResponse,
                 roomResponse,

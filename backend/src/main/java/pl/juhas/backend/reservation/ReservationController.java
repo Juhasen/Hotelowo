@@ -7,6 +7,7 @@ import pl.juhas.backend.hotel.LocaleType;
 import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
 import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
 import pl.juhas.backend.reservation.dto.ReservationRequest;
+import pl.juhas.backend.reservation.dto.ReservationResponse;
 
 import java.security.Principal;
 
@@ -40,12 +41,12 @@ public class ReservationController {
     }
 
     @PostMapping("/confirm/{locale}")
-    public ResponseEntity<ReservationPreviewResponse> confirmReservation(
+    public ResponseEntity<String> confirmReservation(
             @PathVariable LocaleType locale,
             @RequestBody ReservationRequest request,
             Principal connectedUser
     ) {
-        ReservationPreviewResponse response;
+        String response;
         try {
             response = service.confirmReservation(request, connectedUser, locale);
         } catch (ReservationNotFoundException e) {
@@ -56,6 +57,4 @@ public class ReservationController {
         }
         return ResponseEntity.ok(response);
     }
-
-
 }
