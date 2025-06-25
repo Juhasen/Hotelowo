@@ -13,17 +13,13 @@ export async function POST(request: Request) {
             return NextResponse.json({error: t('API.unauthorized')}, {status: 401});
         }
 
-        // Sprawdzanie, czy ciało żądania jest poprawne
         if (!request.body) {
             console.error('Request body is missing');
             return NextResponse.json({error: 'Request body is required'}, {status: 400});
         }
 
-
         const payload = await request.json();
 
-        console.log('Received payload:', payload);
-        console.log("Calling: ", `${BASE_API_URL}/review/create`);
         const response = await fetch(`${BASE_API_URL}/review/create`, {
             method: 'POST',
             headers: {
@@ -36,7 +32,7 @@ export async function POST(request: Request) {
 
         if (!response.ok) {
             if (response.status === 409) {
-                throw new Error(t('API.reviewAlreadyExists'));
+                return NextResponse.json({error: t('API.reviewAlreadyExists')}, {status: 409});
             }
             console.error(`Backend returned status: ${response.status}`);
             throw new Error(`Backend API error: ${response.statusText}`);
