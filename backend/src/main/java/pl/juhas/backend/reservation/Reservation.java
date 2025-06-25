@@ -11,6 +11,7 @@ import pl.juhas.backend.user.User;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -53,6 +54,17 @@ public class Reservation {
     @CreatedDate
     @Column(name ="created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    public Reservation(User user, Room room, Status status, LocalDate startDate, LocalDate endDate, int nights, BigDecimal totalPrice, PaymentMethod paymentMethod) {
+        this.user = user;
+        this.room = room;
+        this.status = status;
+        this.checkInDate = startDate.atStartOfDay();
+        this.checkOutDate = endDate.atStartOfDay();
+        this.nights = nights;
+        this.totalPrice = totalPrice;
+        this.paymentMethod = paymentMethod;
+    }
 
     public long getDaysDifference() {
         if (checkInDate != null && checkOutDate != null) {
