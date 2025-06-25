@@ -28,6 +28,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {Guest, HotelDetail, Room} from "@/app/[locale]/lib/types";
+import LoginRequired from '@/app/[locale]/components/LoginRequired';
 
 interface ReservationDetails {
     status: string;
@@ -42,7 +43,7 @@ interface ReservationDetails {
     createdAt: string;
 }
 
-export default function ReservationPage() {
+export default function ReservationPreviewPage() {
     const t = useTranslations('Reservation');
     const searchParams = useSearchParams();
     const params = useParams();
@@ -59,20 +60,30 @@ export default function ReservationPage() {
     const [paymentMethod, setPaymentMethod] = useState('credit_card');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
     useEffect(() => {
+        const checkAuthentication = async () => {
+            try {
+                const guardResponse = await fetch('/api/auth/guard');
+                setIsAuthenticated(guardResponse.ok);
+
+                if (guardResponse.ok) {
+                    fetchReservationDetails();
+                } else {
+                    setLoading(false);
+                }
+            } catch (err) {
+                setIsAuthenticated(false);
+                setLoading(false);
+            }
+        };
+
         const fetchReservationDetails = async () => {
             try {
                 setLoading(true);
 
-                // Sprawdzamy najpierw sesję
-                const guardResponse = await fetch('/api/auth/guard');
-                if (!guardResponse.ok) {
-                    router.push(`/${locale}/login`);
-                    return;
-                }
-
-                const reservationUrl = new URL('/api/reservation', window.location.origin);
+                const reservationUrl = new URL('/api/reservation/preview', window.location.origin);
                 reservationUrl.searchParams.append('roomId', roomId || '');
                 reservationUrl.searchParams.append('hotelId', hotelId || '');
                 reservationUrl.searchParams.append('checkIn', checkIn || '');
@@ -93,8 +104,8 @@ export default function ReservationPage() {
             }
         };
 
-        fetchReservationDetails();
-    }, [roomId, hotelId, checkIn, checkOut, router, locale]);
+        checkAuthentication();
+    }, [roomId, hotelId, checkIn, checkOut]);
 
     const handleConfirmation = async () => {
         try {
@@ -123,6 +134,10 @@ export default function ReservationPage() {
             setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas potwierdzania rezerwacji');
         }
     };
+
+    if (isAuthenticated === false) {
+        return <LoginRequired />;
+    }
 
     if (loading) {
         return (
@@ -231,7 +246,7 @@ export default function ReservationPage() {
                     </Grid>
                     <Grid size={{xs: 12, md: 6}}>
                         <Card>
-                            <CardHeader title={t('Reservation.guestDetails')} />
+                            <CardHeader title={t('Reservation.guestDetails')}/>
                             <CardContent>
                                 <Typography>
                                     <strong>{t('Reservation.firstName')}:</strong> {reservation?.guest.firstName}
@@ -276,10 +291,13 @@ export default function ReservationPage() {
                                         value={paymentMethod}
                                         onChange={(e) => setPaymentMethod(e.target.value)}
                                     >
-                                        <FormControlLabel value="credit_card" control={<Radio />} label={t('creditCard')} />
-                                        <FormControlLabel value="paypal" control={<Radio />} label="PayPal" />
-                                        <FormControlLabel value="bank_transfer" control={<Radio />} label={t('bankTransfer')} />
-                                        <FormControlLabel value="cash_on_arrival" control={<Radio />} label={t('cashOnArrival')} />
+                                        <FormControlLabel value="credit_card" control={<Radio/>}
+                                                          label={t('creditCard')}/>
+                                        <FormControlLabel value="paypal" control={<Radio/>} label="PayPal"/>
+                                        <FormControlLabel value="bank_transfer" control={<Radio/>}
+                                                          label={t('bankTransfer')}/>
+                                        <FormControlLabel value="cash_on_arrival" control={<Radio/>}
+                                                          label={t('cashOnArrival')}/>
                                     </RadioGroup>
                                 </Box>
 
@@ -347,3 +365,4 @@ export default function ReservationPage() {
         </Container>
     );
 }
+

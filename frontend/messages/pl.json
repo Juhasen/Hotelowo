@@ -100,16 +100,22 @@
       "userNotFound": "Nie znaleziono użytkownika",
       "backendUnavailable": "Serwer jest niedostępny"
   },
+  "Auth": {
+    "loginRequired": "Wymagane logowanie",
+    "loginToViewMessage": "Aby wyświetlić tę treść, musisz być zalogowany",
+    "goToLogin": "Przejdź do logowania",
+    "signInToContinue": "Zaloguj się, aby kontynuować"
+  },
   "Reservation": {
     "reservationSummary": "Podsumowanie rezerwacji",
-    "pending": "Oczekuje",
+    "pending": "Oczekująca",
     "roomType": "Pokój",
     "capacity": "Pojemność",
     "people": "osoby",
     "stayDetails": "Szczegóły pobytu",
     "checkIn": "Zameldowanie",
     "checkOut": "Wymeldowanie",
-    "totalNights": "Liczba nocy",
+    "totalNights": "Łączna liczba nocy",
     "paymentDetails": "Szczegóły płatności",
     "pricePerNight": "Cena za noc",
     "paymentMethod": "Metoda płatności",
@@ -122,7 +128,12 @@
     "firstName": "Imię",
     "lastName": "Nazwisko",
     "email": "E-mail",
-    "phoneNumber": "Numer telefonu"
+    "phoneNumber": "Numer telefonu",
+    "loginToPreviewReservation": "Aby zobaczyć szczegóły rezerwacji, musisz być zalogowany",
+    "fullName": "Imię i nazwisko",
+    "contact": "Kontakt",
+    "back": "Powrót",
+    "confirmReservation": "Potwierdź rezerwację"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",
