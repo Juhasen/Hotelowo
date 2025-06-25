@@ -69,3 +69,14 @@ export type Guest = {
     email: string;
     phoneNumber: string;
 };
+
+export type ReservationOverview = {
+    id: number;
+    hotelName: string;
+    hotelImageUrl: string;
+    roomType: string;
+    checkInDate: string;
+    checkOutDate: string;
+    totalPrice: number;
+    status: string;
+}
