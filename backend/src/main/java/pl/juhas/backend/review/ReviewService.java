@@ -8,6 +8,8 @@ import pl.juhas.backend.hotel.HotelRepository;
 import pl.juhas.backend.reservation.Reservation;
 import pl.juhas.backend.reservation.ReservationRepository;
 import pl.juhas.backend.review.dto.ReviewRequest;
+import pl.juhas.backend.review.exception.ReviewAlreadyPostedException;
+import pl.juhas.backend.review.exception.ReviewNotFoundException;
 import pl.juhas.backend.user.User;
 
 import java.math.BigDecimal;
@@ -44,6 +46,10 @@ public class ReviewService {
         Optional<Reservation> reservation = reservationRepository.findById(request.reservationId());
         if (reservation.isEmpty()) {
             throw new IllegalArgumentException("Reservation not found with id: " + request.reservationId());
+        }
+
+        if (reviewRepository.existsByUserAndReservation(user, reservation.get())) {
+            throw new ReviewAlreadyPostedException("You have already reviewed this reservation.");
         }
 
         Review review = new Review();

@@ -2,6 +2,8 @@ package pl.juhas.backend.review;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import pl.juhas.backend.reservation.Reservation;
+import pl.juhas.backend.user.User;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -14,4 +16,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             WHERE r.hotel.id = :hotelId
             """)
     Optional<BigDecimal> findAverageRatingByHotelId(Long hotelId);
+
+    @Query("""
+            SELECT COUNT(r)
+            FROM Review r
+            WHERE r.hotel.id = :hotelId
+            AND r.user = :user
+            """)
+    boolean existsByUserAndReservation(User user, Reservation reservation);
 }

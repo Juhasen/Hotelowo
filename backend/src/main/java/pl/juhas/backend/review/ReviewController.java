@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.juhas.backend.review.dto.ReviewRequest;
+import pl.juhas.backend.review.exception.ReviewAlreadyPostedException;
 
 import java.security.Principal;
 
@@ -22,6 +23,9 @@ public class ReviewController {
         try {
             service.createReview(request, connectedUser);
             return ResponseEntity.ok().build();
+        } catch (ReviewAlreadyPostedException e) {
+            System.out.println("Review already posted: " + e.getMessage());
+            return ResponseEntity.status(409).build();
         } catch (Exception e) {
             System.out.println("Error while creating review: " + e.getMessage());
             return ResponseEntity.badRequest().build();
