@@ -19,14 +19,18 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Request body is required' }, { status: 400 });
         }
 
-        console.log("Calling: ", `${BASE_API_URL}/review`);
-        const response = await fetch(`${BASE_API_URL}/review`, {
+
+        const payload = await request.json();
+
+        console.log('Received payload:', payload);
+        console.log("Calling: ", `${BASE_API_URL}/review/create`);
+        const response = await fetch(`${BASE_API_URL}/review/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.userToken}`
             },
-            body: await request.text(), // Przekazujemy ciało żądania bezpośrednio
+            body: JSON.stringify(payload),
             cache: 'no-store', // Wyłączenie cache'owania
         });
 
@@ -35,11 +39,10 @@ export async function POST(request: Request) {
             throw new Error(`Backend API error: ${response.statusText}`);
         }
 
-        // Przetwarzanie odpowiedzi
-        const data = await response.json();
+
 
         // Zwracamy dane w formatowaniu zgodnym z oczekiwaniami frontendu
-        return NextResponse.json(data);
+        return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.error('Error in hotel search API:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
