@@ -19,6 +19,25 @@ public class ReservationController {
 
     private final ReservationService service;
 
+    @GetMapping("/{locale}/{id}")
+    public ResponseEntity<ReservationResponse> getReservationById(
+            @PathVariable LocaleType locale,
+            @PathVariable Long id,
+            Principal connectedUser
+    ) {
+        ReservationResponse reservationResponse;
+        try {
+            reservationResponse = service.getReservationById(id, locale, connectedUser);
+        } catch (ReservationNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println("Error while getting reservation by ID: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(reservationResponse);
+    }
+
     @GetMapping("/preview/{locale}")
     public ResponseEntity<ReservationPreviewResponse> getReservationPreview(
             @PathVariable LocaleType locale,
@@ -57,4 +76,6 @@ public class ReservationController {
         }
         return ResponseEntity.ok(response);
     }
+
+
 }

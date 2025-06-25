@@ -74,4 +74,21 @@ public class ReservationService {
 
         return reservation.getConfirmationCode();
     }
+
+    public ReservationResponse getReservationById(Long id, LocaleType locale, Principal connectedUser) {
+        var reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+
+        if (!Hibernate.isInitialized(reservation.getRoom())) {
+            Hibernate.initialize(reservation.getRoom());
+        }
+
+        if (!Hibernate.isInitialized(reservation.getUser())) {
+            Hibernate.initialize(reservation.getUser());
+        }
+
+        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        return ReservationMapper.toResponse(reservation, locale, user);
+    }
 }
