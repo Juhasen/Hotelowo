@@ -52,7 +52,8 @@
     "accountBlocked": "Account has been blocked",
     "tooManyRequests": "Too many login attempts. Please try again later.",
     "unexpectedResponse": "Unexpected server response",
-    "invalidResponseFormat": "Invalid server response format"
+    "invalidResponseFormat": "Invalid server response format",
+    "accountDoesNotExists": "Account does not exist"
   },
   "Profile": {
     "myProfile": "My profile",
@@ -130,12 +131,45 @@
     "phoneNumberInvalid": "Please enter a valid phone number",
     "passwordsDoNotMatch": "Passwords do not match"
   },
-  "API": {
-    "unauthorized": "Unauthorized. Please log in again.",
-    "serverError": "Server error",
-    "internalServerError": "Unknown server error",
-    "userNotFound": "User not found",
-    "backendUnavailable": "Server is unavailable"
+  "Auth": {
+    "loginRequired": "Login Required",
+    "loginToViewMessage": "To view this content, you need to be logged in",
+    "goToLogin": "Go to Login",
+    "signInToContinue": "Sign in to continue"
+  },
+  "Reservation": {
+    "reservationSummary": "Reservation Summary",
+    "pending": "Pending",
+    "roomType": "Room",
+    "capacity": "Capacity",
+    "people": "people",
+    "stayDetails": "Stay Details",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "totalNights": "Total Nights",
+    "paymentDetails": "Payment Details",
+    "pricePerNight": "Price per Night",
+    "paymentMethod": "Payment Method",
+    "creditCard": "Credit Card",
+    "bankTransfer": "Bank Transfer",
+    "cashOnArrival": "Cash on Arrival",
+    "totalPrice": "Total Price",
+    "goBack": "Go Back",
+    "guestDetails": "Guest Details",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "loginToPreviewReservation": "To preview your reservation details, you need to be logged in",
+    "fullName": "Full Name",
+    "contact": "Contact",
+    "back": "Back",
+    "confirmReservation": "Confirm Reservation",
+    "reservationConfirmed": "Reservation Confirmed!",
+    "reservationConfirmedMessage": "Your reservation has been successfully created. The reservation details have been sent to the provided email address. You can also view your reservations in your profile.",
+    "viewMyReservations": "View My Reservations",
+    "searchMoreHotels": "Search More Hotels",
+    "reservationConfirmationNumber": "Confirmation Code"
   },
   "SearchResults": {
     "searchParams": "Search Parameters",
@@ -410,3 +444,4 @@
     "ZW": "Zimbabwe"
   }
 }
+

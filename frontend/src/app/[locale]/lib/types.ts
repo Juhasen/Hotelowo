@@ -62,3 +62,10 @@ export type Room = {
     pricePerNight: number;
     totalPrice: number;
 }
+
+export type Guest = {
+    firstname: string;
+    lastname: string;
+    email: string;
+    phoneNumber: string;
+};

@@ -4,10 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.juhas.backend.reservation.ReservationService;
 
 import java.io.IOException;
 
@@ -17,6 +19,7 @@ import java.io.IOException;
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    private final ReservationService reservationService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -29,7 +32,13 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse response;
+        try {
+            response = service.authenticate(request);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(409).build();
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh-token")

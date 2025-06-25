@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static pl.juhas.backend.user.Role.ADMIN;
+import static pl.juhas.backend.user.Role.USER;
 
 @SpringBootApplication
 public class HotelowoApplication {
@@ -51,6 +52,16 @@ public class HotelowoApplication {
                     .role(ADMIN)
                     .build();
             System.out.println("Admin token: " + service.register(admin).getAccessToken());
+
+            var user = RegisterRequest.builder()
+                    .firstname("Krystian")
+                    .lastname("Juszczyk")
+                    .email("juszczyk-krystian@wp.pl")
+                    .phoneNumber("692187092")
+                    .password("qwerty123!")
+                    .role(USER)
+                    .build();
+            System.out.println("User token: " + service.register(user).getAccessToken());
 
 
             // Tworzenie udogodnień

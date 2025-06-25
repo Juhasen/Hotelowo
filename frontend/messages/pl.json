@@ -52,7 +52,8 @@
     "accountBlocked": "Konto zostało zablokowane",
     "tooManyRequests": "Zbyt wiele prób logowania. Spróbuj ponownie później.",
     "unexpectedResponse": "Nieoczekiwana odpowiedź z serwera",
-    "invalidResponseFormat": "Nieprawidłowy format odpowiedzi z serwera"
+    "invalidResponseFormat": "Nieprawidłowy format odpowiedzi z serwera",
+    "accountDoesNotExists": "Konto nie istnieje"
   },
   "Profile": {
     "myProfile": "Mój profil",
@@ -98,6 +99,46 @@
       "internalServerError": "Nieznany błąd serwera",
       "userNotFound": "Nie znaleziono użytkownika",
       "backendUnavailable": "Serwer jest niedostępny"
+  },
+  "Auth": {
+    "loginRequired": "Wymagane logowanie",
+    "loginToViewMessage": "Aby wyświetlić tę treść, musisz być zalogowany",
+    "goToLogin": "Przejdź do logowania",
+    "signInToContinue": "Zaloguj się, aby kontynuować"
+  },
+  "Reservation": {
+    "reservationSummary": "Podsumowanie rezerwacji",
+    "pending": "Oczekująca",
+    "roomType": "Pokój",
+    "capacity": "Pojemność",
+    "people": "osoby",
+    "stayDetails": "Szczegóły pobytu",
+    "checkIn": "Zameldowanie",
+    "checkOut": "Wymeldowanie",
+    "totalNights": "Łączna liczba nocy",
+    "paymentDetails": "Szczegóły płatności",
+    "pricePerNight": "Cena za noc",
+    "paymentMethod": "Metoda płatności",
+    "creditCard": "Karta kredytowa",
+    "bankTransfer": "Przelew bankowy",
+    "cashOnArrival": "Gotówka przy przyjeździe",
+    "totalPrice": "Łączna cena",
+    "goBack": "Wróć",
+    "guestDetails": "Dane gościa",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "email": "E-mail",
+    "phoneNumber": "Numer telefonu",
+    "loginToPreviewReservation": "Aby zobaczyć szczegóły rezerwacji, musisz być zalogowany",
+    "fullName": "Imię i nazwisko",
+    "contact": "Kontakt",
+    "back": "Powrót",
+    "confirmReservation": "Potwierdź rezerwację",
+    "reservationConfirmed": "Rezerwacja potwierdzona!",
+    "reservationConfirmedMessage": "Twoja rezerwacja została pomyślnie utworzona. Szczegóły rezerwacji zostały wysłane na podany adres email. Możesz również zobaczyć swoje rezerwacje w swoim profilu.",
+    "viewMyReservations": "Zobacz moje rezerwacje",
+    "searchMoreHotels": "Szukaj więcej hoteli",
+    "reservationConfirmationNumber": "Kod potwierdzenia"
   },
   "SearchResults": {
     "searchParams": "Parametry wyszukiwania",
