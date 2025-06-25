@@ -35,6 +35,16 @@
     "priceInclude": "Includes fees and taxes",
     "noReviews": "No reviews yet"
   },
+  "Admin": {
+    "title": "Admin Panel",
+    "welcome": "Welcome to the admin panel",
+    "manageHotels": "Manage hotels",
+    "manageAmenities": "Manage amenities",
+    "manageUsers": "Manage users",
+    "unauthorized": "You are not authorized to view this page",
+    "loading": "Loading..."
+  },
+
   "RoomType": {
     "SINGLE": "Single Room",
     "DOUBLE": "Double Room",

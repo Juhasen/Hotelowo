@@ -35,6 +35,15 @@
     "priceInclude": "Zawiera opłaty i podatki",
     "noReviews": "Brak opinii dla tego hotelu"
   },
+  "Admin": {
+    "title": "Panel Administracyjny",
+    "welcome": "Witaj w panelu administracyjnym",
+    "manageHotels": "Zarządzaj hotelami",
+    "manageAmenities": "Zarządzaj udogodnieniami",
+    "manageUsers": "Zarządzaj użytkownikami",
+    "unauthorized": "Nie masz uprawnień do wyświetlenia tej strony",
+    "loading": "Ładowanie..."
+  },
   "RoomType": {
     "SINGLE": "Pokój jednoosobowy",
     "DOUBLE": "Pokój dwuosobowy",

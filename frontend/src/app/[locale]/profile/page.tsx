@@ -31,6 +31,7 @@ interface UserProfile {
     lastname: string;
     email: string;
     phoneNumber: string;
+    role: string;
 }
 
 export default function ProfilePage() {
@@ -133,6 +134,11 @@ export default function ProfilePage() {
                 </Paper>
             </Container>
         );
+    }
+    console.log(user);
+    if(user?.role === 'ADMIN') {
+        router.push('/admin');
+        return null;
     }
 
     return (
