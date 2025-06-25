@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
         // Budowanie URL do backendu
         const backendUrl = new URL(`${BASE_API_URL}/reservation/preview/${locale}`);
-        backendUrl.searchParams.append('roomId', roomId);
+        backendUrl.searchParams.append('roomNumber', roomId);
         backendUrl.searchParams.append('hotelId', hotelId);
         backendUrl.searchParams.append('checkInDate', checkIn);
         backendUrl.searchParams.append('checkOutDate', checkOut);
