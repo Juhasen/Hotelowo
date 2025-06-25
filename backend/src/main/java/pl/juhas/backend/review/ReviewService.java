@@ -63,5 +63,6 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalArgumentException("Hotel not found with id: " + hotelId));
 
         hotel.setRating(averageRating);
+        hotelRepository.save(hotel);
     }
 }
