@@ -6,14 +6,16 @@ import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.dto.HotelResponse;
 import pl.juhas.backend.hotelImage.HotelImageMapper;
 import pl.juhas.backend.hotelImage.dto.HotelImageRequest;
+import pl.juhas.backend.review.Review;
+import pl.juhas.backend.review.dto.ReviewResponse;
 
 import java.util.List;
 
 public class HotelMapper {
-    public static HotelResponse toResponse(Hotel hotel, String locale) {
+    public static HotelResponse toResponse(Hotel hotel, String locale, List<Review> reviews) {
 
         String description;
-        if(locale.equals("pl")) {
+        if (locale.equals("pl")) {
             description = hotel.getDescription_pl();
         } else {
             description = hotel.getDescription_en();
@@ -38,6 +40,19 @@ public class HotelMapper {
                 })
                 .toList();
 
+        List<ReviewResponse> reviewResponses = List.of();
+        if (reviews != null) {
+            reviewResponses = reviews.stream()
+                    .map(review -> new ReviewResponse(
+                            review.getUser().getFirstname(),
+                            review.getUser().getLastname(),
+                            review.getRating(),
+                            review.getComment()
+                    ))
+                    .toList();
+        }
+
+
         return new HotelResponse(
                 hotel.getName(),
                 description,
@@ -49,7 +64,8 @@ public class HotelMapper {
                 amenities,
                 images,
                 hotel.getRating() != null ? hotel.getRating().toString() : null,
-                hotel.getStars() != null ? hotel.getStars().toString() : null
+                hotel.getStars() != null ? hotel.getStars().toString() : null,
+                reviewResponses
         );
     }
 }

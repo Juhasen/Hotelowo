@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.juhas.backend.address.Address;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.hotelImage.HotelImage;
+import pl.juhas.backend.review.Review;
 import pl.juhas.backend.room.Room;
 
 import java.math.BigDecimal;
@@ -66,6 +67,10 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HotelImage> images;
+
+    @Column(name = "reviews")
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
