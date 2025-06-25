@@ -2,13 +2,11 @@ package pl.juhas.backend.reservation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.hotel.LocaleType;
 import pl.juhas.backend.reservation.dto.ReservationPreviewRequest;
 import pl.juhas.backend.reservation.dto.ReservationPreviewResponse;
+import pl.juhas.backend.reservation.dto.ReservationRequest;
 
 import java.security.Principal;
 
@@ -40,4 +38,24 @@ public class ReservationController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/confirm/{locale}")
+    public ResponseEntity<ReservationPreviewResponse> confirmReservation(
+            @PathVariable LocaleType locale,
+            @RequestBody ReservationRequest request,
+            Principal connectedUser
+    ) {
+        ReservationPreviewResponse response;
+        try {
+            response = service.confirmReservation(request, connectedUser, locale);
+        } catch (ReservationNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println("Error while confirming reservation: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+
 }
