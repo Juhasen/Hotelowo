@@ -48,7 +48,7 @@ public class ReviewService {
             throw new IllegalArgumentException("Reservation not found with id: " + request.reservationId());
         }
 
-        if (reviewRepository.existsByUserAndReservation(user, reservation.get())) {
+        if (reviewRepository.countByUserAndReservation(user, reservation.get().getRoom().getHotel().getId()) > 0) {
             throw new ReviewAlreadyPostedException("You have already reviewed this reservation.");
         }
 

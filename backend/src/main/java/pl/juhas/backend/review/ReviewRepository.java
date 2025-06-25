@@ -23,5 +23,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             WHERE r.hotel.id = :hotelId
             AND r.user = :user
             """)
-    boolean existsByUserAndReservation(User user, Reservation reservation);
+    Long countByUserAndReservation(User user, Long hotelId);
 }
