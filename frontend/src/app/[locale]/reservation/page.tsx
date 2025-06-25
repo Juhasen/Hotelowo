@@ -18,8 +18,7 @@ import {
     Chip,
     RadioGroup,
     FormControlLabel,
-    Radio,
-    CardHeader
+    Radio
 } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -229,25 +228,41 @@ export default function ReservationPage() {
                             </CardContent>
                         </Card>
                     </Grid>
+                    {/* Informacje o gościu */}
                     <Grid size={{xs: 12, md: 6}}>
-                        <Card>
-                            <CardHeader title={t('Reservation.guestDetails')} />
+                        <Card elevation={1}>
                             <CardContent>
-                                <Typography>
-                                    <strong>{t('Reservation.firstName')}:</strong> {reservation?.guest.firstName}
-                                </Typography>
-                                <Typography>
-                                    <strong>{t('Reservation.lastName')}:</strong> {reservation?.guest.lastName}
-                                </Typography>
-                                <Typography>
-                                    <strong>{t('Reservation.email')}:</strong> {reservation?.guest.email}
-                                </Typography>
-                                <Typography>
-                                    <strong>{t('Reservation.phoneNumber')}:</strong> {reservation?.guest.phoneNumber}
-                                </Typography>
+                                <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
+                                    <PersonIcon sx={{mr: 2, color: 'primary.main'}}/>
+                                    <Typography variant="h6">{t('guestDetails')}</Typography>
+                                </Box>
+
+                                <Grid container spacing={2}>
+                                    <Grid size={{xs: 12, md: 6}}>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            {t('fullName')}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {reservation?.guest.firstname} {reservation?.guest.lastname}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid size={{xs: 12, md: 6}}>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            {t('contact')}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {reservation?.guest.email}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {reservation?.guest.phoneNumber}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
                             </CardContent>
                         </Card>
                     </Grid>
+                </Grid>
 
                     {/* Informacje o płatności */}
                     <Grid size={{xs: 12, md: 6}}>
@@ -293,42 +308,6 @@ export default function ReservationPage() {
                             </CardContent>
                         </Card>
                     </Grid>
-
-                    {/* Informacje o gościu */}
-                    <Grid size={{xs: 12}}>
-                        <Card elevation={1}>
-                            <CardContent>
-                                <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
-                                    <PersonIcon sx={{mr: 2, color: 'primary.main'}}/>
-                                    <Typography variant="h6">{t('guestDetails')}</Typography>
-                                </Box>
-
-                                <Grid container spacing={2}>
-                                    <Grid size={{xs: 12, md: 6}}>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            {t('fullName')}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {reservation?.guest.firstName} {reservation?.guest.lastName}
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid size={{xs: 12, md: 6}}>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            {t('contact')}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {reservation?.guest.email}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {reservation?.guest.phoneNumber}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
 
                 <Box sx={{mt: 4, display: 'flex', justifyContent: 'space-between'}}>
                     <Button variant="outlined" onClick={() => router.back()}>
