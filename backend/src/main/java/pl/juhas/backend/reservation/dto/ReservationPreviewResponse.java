@@ -9,7 +9,6 @@ import pl.juhas.backend.user.dto.UserResponse;
 import java.math.BigDecimal;
 
 public record ReservationPreviewResponse(
-        Long id,
         Status status,
         HotelResponse hotel,
         RoomResponse room,
