@@ -1,7 +1,6 @@
 package pl.juhas.backend.management;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.LocaleType;
@@ -34,11 +33,6 @@ public class ManagementController {
         return "Room created successfully";
     }
 
-    @PostMapping("/create/amenity")
-    public String createAmenity() {
-        // Logic to create an amenity
-        return "Amenity created successfully";
-    }
 
     @DeleteMapping("/delete/hotel")
     public String deleteHotel() {
@@ -50,12 +44,6 @@ public class ManagementController {
     public String deleteRoom() {
         // Logic to delete a room
         return "Room deleted successfully";
-    }
-
-    @DeleteMapping("/delete/amenity")
-    public String deleteAmenity() {
-        // Logic to delete an amenity
-        return "Amenity deleted successfully";
     }
 
     @PatchMapping("/update/hotel")
