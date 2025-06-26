@@ -110,7 +110,7 @@ export default function AdminPage() {
                 </Typography>
 
                 <Grid container spacing={3} justifyContent="center">
-                    <Grid size={{xs: 12, md: 4}}>
+                    <Grid size={{xs: 12, md: 6}}>
                         <Button
                             variant="contained"
                             size="large"
@@ -123,20 +123,7 @@ export default function AdminPage() {
                         </Button>
                     </Grid>
 
-                    <Grid size={{xs: 12, md: 4}}>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            fullWidth
-                            startIcon={<RoomPreferencesIcon />}
-                            onClick={() => router.push(`/${locale}/admin/amenities`)}
-                            sx={{ py: 3, height: '100%'  }}
-                        >
-                            {t('manageAmenities')}
-                        </Button>
-                    </Grid>
-
-                    <Grid size={{xs: 12, md: 4}}>
+                    <Grid size={{xs: 12, md: 6}}>
                         <Button
                             variant="contained"
                             size="large"

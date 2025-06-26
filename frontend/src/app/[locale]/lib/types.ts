@@ -88,3 +88,11 @@ export type ReservationOverview = {
     totalPrice: number;
     status: string;
 }
+
+export type User = {
+    email: string;
+    firstname: string;
+    lastname: string;
+    phoneNumber: string;
+    role: 'USER' | 'ADMIN';
+}
