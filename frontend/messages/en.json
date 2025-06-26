@@ -93,7 +93,8 @@
     "confirmDelete": "Confirm deletion",
     "deleteConfirmationText": "Are you sure you want to delete hotel \"{name}\" (ID: {email})?",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "addHotel": "Add Hotel"
   },
   "RoomType": {
     "SINGLE": "Single Room",

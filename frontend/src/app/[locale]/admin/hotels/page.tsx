@@ -14,6 +14,7 @@ import {Hotel, HotelPage} from '@/app/[locale]/lib/types';
 import Image from 'next/image';
 import {DialogActions} from "@mui/material";
 import {Button} from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 export default function AdminHotelsPage() {
     const t = useTranslations('AdminHotels');
     const params = useParams();
@@ -106,6 +107,16 @@ export default function AdminHotelsPage() {
             <Typography variant="h4" component="h1" sx={{ mb: 4 }}>
                 {t('title')}
             </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AddIcon />}
+                    onClick={() => router.push(`/${locale}/admin/hotels/add`)}
+                >
+                    {t('addHotel', { defaultValue: 'Dodaj hotel' })}
+                </Button>
+            </Box>
             <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
                 {hotels.length === 0 ? (
                     <Typography align="center" sx={{ py: 4 }}>

@@ -93,8 +93,8 @@
     "confirmDelete": "Potwierdź usunięcie",
     "deleteConfirmationText": "Czy na pewno chcesz usunąć hotel \"{name}\" (ID: {email})?",
     "cancel": "Anuluj",
-    "delete": "Usuń"
-  }
+    "delete": "Usuń",
+    "addHotel": "Dodaj hotel"
   },
   "RoomType": {
     "SINGLE": "Pokój jednoosobowy",
