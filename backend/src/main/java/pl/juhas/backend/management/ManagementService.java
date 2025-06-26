@@ -1,24 +1,30 @@
 package pl.juhas.backend.management;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.LocaleType;
+import pl.juhas.backend.reservation.ReservationRepository;
+import pl.juhas.backend.token.TokenRepository;
+import pl.juhas.backend.user.User;
 import pl.juhas.backend.user.UserRepository;
 import pl.juhas.backend.user.dto.UserResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 
 @Service
 @AllArgsConstructor
 public class ManagementService {
     private final AmenityRepository amenityRepository;
     private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
+    private final TokenRepository tokenRepository;
 
     public List<AmenityResponse> getAmenities(String locale) {
         return amenityRepository.findAll().stream()
@@ -44,8 +50,18 @@ public class ManagementService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteUser(String email) {
-        userRepository.findByEmail(email)
-                .ifPresent(userRepository::delete);
+        // Znajdź użytkownika
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Użytkownik o emailu " + email + " nie został znaleziony"));
+
+        // Usuń wszystkie tokeny użytkownika
+        tokenRepository.deleteAllByUserId(user.getId());
+        // Usuń wszystkie rezerwacje użytkownika
+        reservationRepository.deleteAllByUserId(user.getId());
+
+        // Teraz możesz bezpiecznie usunąć użytkownika
+        userRepository.delete(user);
     }
 }
