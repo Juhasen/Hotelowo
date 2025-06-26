@@ -32,6 +32,7 @@ export default function ReviewModal({ open, onClose, hotelName , reservationId}:
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
+    const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
 
     // Resetowanie stanu po zamknięciu
     useEffect(() => {
@@ -53,7 +54,7 @@ export default function ReviewModal({ open, onClose, hotelName , reservationId}:
             setLoading(true);
             setError(null);
 
-            const response = await fetch('/api/review/create', {
+            const response = await fetch(`/${locale}/api/review/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

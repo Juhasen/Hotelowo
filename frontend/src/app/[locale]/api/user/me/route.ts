@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteSession, getSession } from '@/app/[locale]/lib/session';
 import { BASE_API_URL } from '@/app/[locale]/lib/utils';
-import { getTranslations } from 'next-intl/server';
+import {getLocale, getTranslations} from 'next-intl/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
-        // Get translations based on the request locale
-        const { pathname } = new URL(request.url);
-        const locale = pathname.split('/')[1];
+
+        const locale = await getLocale();
         const t = await getTranslations({ locale, namespace: '' });
 
         const user = await getSession();

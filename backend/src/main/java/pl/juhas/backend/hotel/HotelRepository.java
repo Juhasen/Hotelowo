@@ -59,4 +59,11 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     Optional<Hotel> findByName(String name);
 
     Optional<Hotel> findHotelById(Long id);
+
+    @Query("""
+            SELECT img.filePath
+            FROM HotelImage img
+            WHERE img.hotel.id = :hotelId AND img.isPrimary = true
+            """)
+    String findMainImageForHotel(@Param("hotelId") Long id);
 }

@@ -67,7 +67,7 @@ export default function ReservationPreviewPage() {
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const guardResponse = await fetch('/api/auth/guard');
+                const guardResponse = await fetch(`/${locale}/api/auth/guard`);
                 setIsAuthenticated(guardResponse.ok);
 
                 if (guardResponse.ok) {
@@ -75,7 +75,7 @@ export default function ReservationPreviewPage() {
                 } else {
                     setLoading(false);
                 }
-            } catch (err) {
+            } catch {
                 setIsAuthenticated(false);
                 setLoading(false);
             }
@@ -85,7 +85,7 @@ export default function ReservationPreviewPage() {
             try {
                 setLoading(true);
 
-                const reservationUrl = new URL('/api/reservation/preview', window.location.origin);
+                const reservationUrl = new URL(`/${locale}/api/reservation/preview`, window.location.origin);
                 reservationUrl.searchParams.append('roomId', roomId || '');
                 reservationUrl.searchParams.append('hotelId', hotelId || '');
                 reservationUrl.searchParams.append('checkIn', checkIn || '');
@@ -113,7 +113,7 @@ export default function ReservationPreviewPage() {
     const handleConfirmation = async () => {
         try {
             // Tutaj logika potwierdzenia rezerwacji
-            const response = await fetch('/api/reservation/confirm', {
+            const response = await fetch(`/${locale}/api/reservation/confirm`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export default function ReservationPreviewPage() {
             const confirmationData = await response.text();
 
             // Przekierowanie po potwierdzeniu
-            router.push(`/${locale}/reservation/confirmation?confirmationCode=${confirmationData}`);
+            router.push(`/reservation/confirmation?confirmationCode=${confirmationData}`);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas potwierdzania rezerwacji');
         }

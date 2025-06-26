@@ -80,7 +80,7 @@ export default function RegisterPage() {
         console.table(formData);
 
         try {
-            const response = await fetch('/api/auth/signup', {
+            const response = await fetch(`/${locale}/api/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export default function RegisterPage() {
             const result = await response.json();
 
             if (result?.success) {
-                router.push(`/${locale}/profile`);
+                router.push(`/profile`);
                 return;
             }
 

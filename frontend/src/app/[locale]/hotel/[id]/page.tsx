@@ -28,7 +28,7 @@ export default function HotelPage() {
     useEffect(() => {
         const fetchHotelDetails = async () => {
             try {
-                const searchUrl = new URL(`/api/hotel/${id}`, window.location.origin);
+                const searchUrl = new URL(`/${locale}/api/hotel/${id}`, window.location.origin);
                 if (checkIn) searchUrl.searchParams.append("checkIn", checkIn);
                 if (checkOut) searchUrl.searchParams.append("checkOut", checkOut);
                 if (capacity) searchUrl.searchParams.append("capacity", capacity.toString());
@@ -47,7 +47,7 @@ export default function HotelPage() {
 
         const fetchRoomDetails = async () => {
             try {
-                const searchUrl = new URL(`/api/hotel/rooms/${id}`, window.location.origin);
+                const searchUrl = new URL(`/${locale}/api/hotel/rooms/${id}`, window.location.origin);
                 if (checkIn) searchUrl.searchParams.append("checkIn", checkIn);
                 if (checkOut) searchUrl.searchParams.append("checkOut", checkOut);
                 if (capacity) searchUrl.searchParams.append("capacity", capacity.toString());

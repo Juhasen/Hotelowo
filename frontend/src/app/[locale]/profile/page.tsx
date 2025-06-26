@@ -31,6 +31,7 @@ interface UserProfile {
     lastname: string;
     email: string;
     phoneNumber: string;
+    role: string;
 }
 
 export default function ProfilePage() {
@@ -45,12 +46,12 @@ export default function ProfilePage() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('/api/auth/logout', {
+            const response = await fetch(`/${locale}/api/auth/logout`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                router.push(`/${locale}/login`);
+                router.push(`/login`);
             } else {
                 setError('Błąd podczas wylogowywania');
             }
@@ -65,14 +66,14 @@ export default function ProfilePage() {
             try {
                 setIsLoading(true);
                 // Sprawdź najpierw sesję
-                const guardResponse = await fetch('/api/auth/guard');
+                const guardResponse = await fetch(`/${locale}/api/auth/guard`);
                 if (!guardResponse.ok) {
                     // Przekieruj do logowania z uwzględnieniem locale
-                    router.push(`/${locale}/login`);
+                    router.push(`/login`);
                     return;
                 }
 
-                const response = await fetch('/api/user/me');
+                const response = await fetch(`/${locale}/api/user/me`);
 
                 if (!response.ok) {
                     router.push('/login');
@@ -81,6 +82,10 @@ export default function ProfilePage() {
 
                 const userData = await response.json();
                 setUser(userData);
+                if(userData?.role === 'ADMIN') {
+                    router.push('/admin');
+                    return null;
+                }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas pobierania danych profilu');
                 router.push('/login');
@@ -92,7 +97,7 @@ export default function ProfilePage() {
         const fetchReservations = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch('/api/reservation/user');
+                const response = await fetch(`/${locale}/api/reservation/user`);
                 if (!response.ok) {
                     throw new Error('Nie udało się pobrać rezerwacji');
                 }
@@ -134,6 +139,7 @@ export default function ProfilePage() {
             </Container>
         );
     }
+
 
     return (
         <Container maxWidth="md" sx={{py: 12}}>

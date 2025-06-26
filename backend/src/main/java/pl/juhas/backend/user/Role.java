@@ -14,6 +14,7 @@ import static pl.juhas.backend.user.Permission.ADMIN_DELETE;
 import static pl.juhas.backend.user.Permission.ADMIN_READ;
 import static pl.juhas.backend.user.Permission.ADMIN_UPDATE;
 
+@Getter
 @RequiredArgsConstructor
 public enum Role {
     USER(Collections.emptySet()),
@@ -26,7 +27,6 @@ public enum Role {
             )
     );
 
-    @Getter
     private final Set<Permission> permissions;
 
     public List<SimpleGrantedAuthority> getAuthorities() {

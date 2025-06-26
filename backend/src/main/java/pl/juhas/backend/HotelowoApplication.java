@@ -57,7 +57,7 @@ public class HotelowoApplication {
                     .firstname("Admin")
                     .lastname("Admin")
                     .email("admin@mail.com")
-                    .password("password")
+                    .password("password123!")
                     .role(ADMIN)
                     .build();
             System.out.println("Admin token: " + service.register(admin).getAccessToken());
