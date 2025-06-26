@@ -48,7 +48,7 @@ public class Hotel {
     @OneToOne
     private Address address;
 
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Room> rooms;
 
     @Column(length = 20)
@@ -65,11 +65,10 @@ public class Hotel {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Amenity> amenities;
 
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<HotelImage> images;
 
-    @Column(name = "reviews")
-    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews;
 
     @CreatedDate

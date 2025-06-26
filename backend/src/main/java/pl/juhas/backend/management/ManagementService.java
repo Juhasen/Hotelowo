@@ -110,4 +110,12 @@ public class ManagementService {
                 null
         ));
     }
+
+    public void deleteHotel(Long id) {
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Hotel o ID " + id + " nie został znaleziony"));
+
+        // Usuń hotel
+        hotelRepository.delete(hotel);
+    }
 }

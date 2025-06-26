@@ -29,6 +29,16 @@ public class ManagementController {
         return ResponseEntity.ok(managementService.getHotels(page, size, sort));
     }
 
+    @DeleteMapping("/hotels/{id}")
+    public ResponseEntity<Void> deleteHotel(@PathVariable Long id) {
+        try {
+            managementService.deleteHotel(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<UserResponse>> getUsers() {
         return ResponseEntity.ok(managementService.getUsers());
