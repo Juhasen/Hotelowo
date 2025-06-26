@@ -32,13 +32,13 @@ export default function AdminPage() {
             try {
                 setIsLoading(true);
 
-                const guardResponse = await fetch('/api/auth/guard');
+                const guardResponse = await fetch(`/${locale}/api/auth/guard`);
                 if (!guardResponse.ok) {
-                    router.push(`/${locale}/login`);
+                    router.push(`/login`);
                     return;
                 }
 
-                const response = await fetch('/api/user/me');
+                const response = await fetch(`/${locale}/api/user/me`);
                 if (!response.ok) {
                     throw new Error(t('errorFetchingUser'));
                 }

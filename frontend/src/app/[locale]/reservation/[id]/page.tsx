@@ -56,12 +56,12 @@ export default function ReservationPage() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     const [canReview, setCanReview] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
-
+    const locale = pathname.split('/')[1] || 'en'; // Assuming locale is the first segment of the path
 
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const guardResponse = await fetch('/api/auth/guard');
+                const guardResponse = await fetch(`/${locale}/api/auth/guard`);
                 setIsAuthenticated(guardResponse.ok);
 
                 if (guardResponse.ok) {
@@ -79,7 +79,7 @@ export default function ReservationPage() {
             try {
                 setLoading(true);
 
-                const reservationUrl = new URL(`/api/reservation/${id}`, window.location.origin);
+                const reservationUrl = new URL(`/${locale}/api/reservation/${id}`, window.location.origin);
 
                 const response = await fetch(reservationUrl.toString());
 

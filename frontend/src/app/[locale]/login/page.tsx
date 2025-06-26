@@ -46,7 +46,7 @@ export default function LoginPage() {
 
   // Funkcja komunikująca się z API
   const login = async (formData: { email: string, password: string }) => {
-    const response = await fetch(`/api/auth/login`, {
+    const response = await fetch(`/${locale}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,10 +76,10 @@ export default function LoginPage() {
             router.push(redirectUrl);
           } else {
             // Jeśli URL nie jest bezpieczny, przejdź do profilu
-            router.push(`/${locale}/profile`);
+            router.push(`/profile`);
           }
         } else {
-          router.push(`/${locale}/profile`);
+          router.push(`/profile`);
         }
         return;
       }
@@ -175,7 +175,7 @@ export default function LoginPage() {
                 {isSubmitting ? <CircularProgress size={24} /> : t('signIn')}
               </Button>
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                <Link href={`/${locale}/register`} passHref>
+                <Link href={`/register`} passHref>
                   <span className="w-full text-center text-primaryBrown underline hover:no-underline hover:text-black">
                     {t('noAccount')}
                   </span>

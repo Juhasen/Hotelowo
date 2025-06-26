@@ -27,8 +27,6 @@ interface PreviewReservationsProps {
 
 export default function PreviewReservations({reservations}: PreviewReservationsProps) {
     const t = useTranslations('Profile');
-    const params = useParams();
-    const locale = params.locale as string;
     const router = useRouter();
 
     const getStatusIcon = (status: string) => {
@@ -49,7 +47,7 @@ export default function PreviewReservations({reservations}: PreviewReservationsP
     };
 
     const handleReservationClick = (id: number) => {
-        router.push(`/${locale}/reservation/${id}`);
+        router.push(`/reservation/${id}`);
     };
 
     if (reservations.length === 0) {
