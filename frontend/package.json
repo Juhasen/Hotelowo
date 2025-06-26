@@ -17,6 +17,7 @@
     "@mui/x-date-pickers": "^8.5.2",
     "@mui/x-date-pickers-pro": "^8.5.2",
     "dayjs": "^1.11.13",
+    "formidable": "^3.5.4",
     "jose": "^6.0.11",
     "next": "15.2.3",
     "next-intl": "^4.1.0",
