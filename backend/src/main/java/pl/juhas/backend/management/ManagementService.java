@@ -2,19 +2,23 @@ package pl.juhas.backend.management;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.juhas.backend.amenity.Amenity;
 import pl.juhas.backend.amenity.AmenityRepository;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
-import pl.juhas.backend.hotel.LocaleType;
+import pl.juhas.backend.hotel.Hotel;
+import pl.juhas.backend.hotel.HotelRepository;
+import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.reservation.ReservationRepository;
 import pl.juhas.backend.token.TokenRepository;
 import pl.juhas.backend.user.User;
 import pl.juhas.backend.user.UserRepository;
 import pl.juhas.backend.user.dto.UserResponse;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,7 @@ public class ManagementService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final TokenRepository tokenRepository;
+    private final HotelRepository hotelRepository;
 
     public List<AmenityResponse> getAmenities(String locale) {
         return amenityRepository.findAll().stream()
@@ -87,5 +92,22 @@ public class ManagementService {
                 user.getPhoneNumber(),
                 user.getRole()
         );
+    }
+
+    public Page<HotelSearchResponse> getHotels(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+
+        Page<Hotel> hotelsPage = hotelRepository.findAll(pageable);
+
+        return hotelsPage.map(hotel -> new HotelSearchResponse(
+                hotel.getId(),
+                hotel.getName(),
+                hotelRepository.findMainImageForHotel(hotel.getId()),
+                hotel.getRating(),
+                null,
+                hotel.getStars(),
+                null,
+                null
+        ));
     }
 }

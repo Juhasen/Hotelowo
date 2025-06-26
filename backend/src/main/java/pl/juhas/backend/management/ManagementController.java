@@ -1,10 +1,12 @@
 package pl.juhas.backend.management;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.LocaleType;
+import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.user.dto.UserResponse;
 
 import java.util.List;
@@ -16,6 +18,15 @@ public class ManagementController {
 
     public ManagementController(ManagementService managementService) {
         this.managementService = managementService;
+    }
+
+    @GetMapping("/hotels")
+    public ResponseEntity<Page<HotelSearchResponse>> getHotels(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort) {
+
+        return ResponseEntity.ok(managementService.getHotels(page, size, sort));
     }
 
     @GetMapping("/users")
