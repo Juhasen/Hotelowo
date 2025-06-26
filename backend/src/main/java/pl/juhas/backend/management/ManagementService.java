@@ -14,6 +14,7 @@ import pl.juhas.backend.user.User;
 import pl.juhas.backend.user.UserRepository;
 import pl.juhas.backend.user.dto.UserResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,5 +64,28 @@ public class ManagementService {
 
         // Teraz możesz bezpiecznie usunąć użytkownika
         userRepository.delete(user);
+    }
+
+    public UserResponse updateUser(String email, UserResponse userRequest) {
+        // Znajdź użytkownika
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Użytkownik o emailu " + email + " nie został znaleziony"));
+
+        // Zaktualizuj dane użytkownika
+        user.setFirstname(userRequest.firstname());
+        user.setLastname(userRequest.lastname());
+        user.setPhoneNumber(userRequest.phoneNumber());
+        user.setRole(userRequest.role());
+
+        // Zapisz zmiany
+        userRepository.save(user);
+
+        return new UserResponse(
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getRole()
+        );
     }
 }

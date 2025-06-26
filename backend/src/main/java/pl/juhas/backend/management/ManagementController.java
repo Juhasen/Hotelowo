@@ -1,5 +1,6 @@
 package pl.juhas.backend.management;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
@@ -26,6 +27,11 @@ public class ManagementController {
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
         managementService.deleteUser(email);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/users/{email}")
+    public ResponseEntity<UserResponse> updateUserRole(@PathVariable String email, @RequestBody UserResponse userRequest) {
+        return ResponseEntity.ok(managementService.updateUser(email, userRequest));
     }
 
     @GetMapping("/amenities/{locale}")
