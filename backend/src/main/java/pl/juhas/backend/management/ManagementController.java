@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.LocaleType;
+import pl.juhas.backend.user.dto.UserResponse;
 
 import java.util.List;
 
@@ -16,57 +17,20 @@ public class ManagementController {
         this.managementService = managementService;
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponse>> getUsers() {
+        return ResponseEntity.ok(managementService.getUsers());
+    }
+
+    @DeleteMapping("/users/{email}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String email) {
+        managementService.deleteUser(email);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/amenities/{locale}")
     public ResponseEntity<List<AmenityResponse>> getAmenities(@PathVariable LocaleType locale) {
         return ResponseEntity.ok(managementService.getAmenities(locale.name()));
     }
 
-    @PostMapping("/create/hotel")
-    public String createHotel() {
-        // Logic to create a hotel
-        return "Hotel created successfully";
-    }
-
-    @PostMapping("/create/room")
-    public String createRoom() {
-        // Logic to create a room
-        return "Room created successfully";
-    }
-
-
-    @DeleteMapping("/delete/hotel")
-    public String deleteHotel() {
-        // Logic to delete a hotel
-        return "Hotel deleted successfully";
-    }
-
-    @DeleteMapping("/delete/room")
-    public String deleteRoom() {
-        // Logic to delete a room
-        return "Room deleted successfully";
-    }
-
-    @PatchMapping("/update/hotel")
-    public String updateHotel() {
-        // Logic to update a hotel
-        return "Hotel updated successfully";
-    }
-
-    @PatchMapping("/update/room")
-    public String updateRoom() {
-        // Logic to update a room
-        return "Room updated successfully";
-    }
-
-    @PatchMapping("/update/amenity")
-    public String updateAmenity() {
-        // Logic to update an amenity
-        return "Amenity updated successfully";
-    }
-
-    @PatchMapping("/update/reservation")
-    public String updateReservation() {
-        // Logic to update an amenity
-        return "Amenity updated successfully";
-    }
 }
