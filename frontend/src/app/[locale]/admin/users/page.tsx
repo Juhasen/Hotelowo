@@ -223,7 +223,7 @@ export default function AdminUsersPage() {
         <Container maxWidth="lg" sx={{py: 8}}>
             <Box sx={{display: 'flex', alignItems: 'center', mb: 4}}>
                 <IconButton onClick={() => router.push(`/${locale}/admin`)} sx={{mr: 2}}>
-                    <ArrowBackIcon/>
+                    <ArrowBackIcon color="primary"/>
                 </IconButton>
                 <Typography variant="h4" component="h1">
                     {t('title')}
@@ -352,6 +352,7 @@ export default function AdminUsersPage() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
 
             {/* Powiadomienie */}
             <Snackbar

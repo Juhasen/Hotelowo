@@ -71,7 +71,9 @@
     "firstName": "Imię",
     "lastName": "Nazwisko",
     "save": "Zapisz",
-    "roleHelperText": "Wybierz rolę użytkownika"
+    "roleHelperText": "Wybierz rolę użytkownika",
+    "addUser": "Dodaj użytkownika",
+    "addUserFailed": "Nie udało się dodać użytkownika."
   },
   "RoomType": {
     "SINGLE": "Pokój jednoosobowy",
@@ -153,7 +155,9 @@
       "internalServerError": "Nieznany błąd serwera",
       "userNotFound": "Nie znaleziono użytkownika",
       "backendUnavailable": "Serwer jest niedostępny",
-      "reviewAlreadyExists": "Już dodałeś opinię o tym hotelu"
+      "reviewAlreadyExists": "Już dodałeś opinię o tym hotelu",
+      "invalidRequest": "Nieprawidłowe żądanie",
+      "forbidden": "Zabroniony dostęp"
   },
   "Auth": {
     "loginRequired": "Wymagane logowanie",

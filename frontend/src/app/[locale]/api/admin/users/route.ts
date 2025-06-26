@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server';
+﻿import {NextRequest, NextResponse} from 'next/server';
 import { BASE_API_URL } from '@/app/[locale]/lib/utils';
 import { getSession } from '@/app/[locale]/lib/session';
 import { getLocale, getTranslations } from 'next-intl/server';

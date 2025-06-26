@@ -71,7 +71,9 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "save": "Save",
-    "roleHelperText": "Select the user role."
+    "roleHelperText": "Select the user role.",
+    "addUser": "Add User",
+    "addUserFailed": "Failed to add user."
   },
   "RoomType": {
     "SINGLE": "Single Room",
@@ -149,7 +151,9 @@
     "internalServerError": "Internal server error",
     "userNotFound": "User not found",
     "backendUnavailable": "Server is unavailable",
-    "reviewAlreadyExists": "You have already left a review for this hotel"
+    "reviewAlreadyExists": "You have already left a review for this hotel",
+    "invalidRequest": "Invalid request",
+    "forbidden": "Forbidden"
   },
   "RegisterPage": {
     "title": "Registration",
