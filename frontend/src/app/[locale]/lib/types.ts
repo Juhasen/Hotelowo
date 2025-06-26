@@ -1,7 +1,7 @@
 ﻿export interface Hotel {
     id: number;
     name: string;
-    mainImageUrl?: string;
+    mainImageUrl: string;
     rating: number;
     oneNightPrice: number;
     stars: number;
@@ -18,6 +18,16 @@ export interface Page {
             totalElements: number;
             totalPages: number;
         }
+    }
+}
+
+export interface HotelPage {
+    content: Hotel[];
+    page: {
+        size: number;
+        number: number;
+        totalElements: number;
+        totalPages: number;
     }
 }
 

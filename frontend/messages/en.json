@@ -75,6 +75,26 @@
     "addUser": "Add User",
     "addUserFailed": "Failed to add user."
   },
+  "AdminHotels": {
+    "title": "Hotel Management",
+    "name": "Name",
+    "rating": "Rating",
+    "oneNightPrice": "Price per night",
+    "stars": "Stars",
+    "actions": "Actions",
+    "loading": "Loading hotels...",
+    "noHotels": "No hotels to display.",
+    "editHotel": "Edit hotel",
+    "deleteHotel": "Delete hotel",
+    "errorFetchingHotels": "Error while fetching hotels.",
+    "unknownError": "Unknown error.",
+    "image": "Image",
+    "hotelDeleted": "Hotel has been deleted.",
+    "confirmDelete": "Confirm deletion",
+    "deleteConfirmationText": "Are you sure you want to delete hotel \"{name}\" (ID: {email})?",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
   "RoomType": {
     "SINGLE": "Single Room",
     "DOUBLE": "Double Room",

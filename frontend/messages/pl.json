@@ -75,6 +75,27 @@
     "addUser": "Dodaj użytkownika",
     "addUserFailed": "Nie udało się dodać użytkownika."
   },
+  "AdminHotels": {
+    "title": "Zarządzanie hotelami",
+    "name": "Nazwa",
+    "rating": "Ocena",
+    "oneNightPrice": "Cena za noc",
+    "stars": "Gwiazdki",
+    "actions": "Akcje",
+    "loading": "Ładowanie hoteli...",
+    "noHotels": "Brak hoteli do wyświetlenia.",
+    "editHotel": "Edytuj hotel",
+    "deleteHotel": "Usuń hotel",
+    "errorFetchingHotels": "Błąd podczas pobierania hoteli.",
+    "unknownError": "Nieznany błąd.",
+    "image": "Obraz",
+    "hotelDeleted": "Hotel został usunięty.",
+    "confirmDelete": "Potwierdź usunięcie",
+    "deleteConfirmationText": "Czy na pewno chcesz usunąć hotel \"{name}\" (ID: {email})?",
+    "cancel": "Anuluj",
+    "delete": "Usuń"
+  }
+  },
   "RoomType": {
     "SINGLE": "Pokój jednoosobowy",
     "DOUBLE": "Pokój dwuosobowy",
