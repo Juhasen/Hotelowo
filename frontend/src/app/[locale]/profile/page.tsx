@@ -82,6 +82,10 @@ export default function ProfilePage() {
 
                 const userData = await response.json();
                 setUser(userData);
+                if(userData?.role === 'ADMIN') {
+                    router.push('/admin');
+                    return null;
+                }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Wystąpił błąd podczas pobierania danych profilu');
                 router.push('/login');
@@ -135,11 +139,7 @@ export default function ProfilePage() {
             </Container>
         );
     }
-    console.log(user);
-    if(user?.role === 'ADMIN') {
-        router.push('/admin');
-        return null;
-    }
+
 
     return (
         <Container maxWidth="md" sx={{py: 12}}>
