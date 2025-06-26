@@ -2,10 +2,13 @@ package pl.juhas.backend.management;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.juhas.backend.amenity.dto.AdminAmenityResponse;
 import pl.juhas.backend.amenity.dto.AmenityResponse;
 import pl.juhas.backend.hotel.LocaleType;
+import pl.juhas.backend.hotel.dto.HotelCreateRequest;
 import pl.juhas.backend.hotel.dto.HotelSearchResponse;
 import pl.juhas.backend.user.dto.UserResponse;
 
@@ -27,6 +30,16 @@ public class ManagementController {
             @RequestParam(defaultValue = "id") String sort) {
 
         return ResponseEntity.ok(managementService.getHotels(page, size, sort));
+    }
+
+    @PostMapping("/hotels")
+    public ResponseEntity<HotelSearchResponse> createHotel(@RequestBody HotelCreateRequest hotelRequest) {
+        try {
+            HotelSearchResponse createdHotel = managementService.createHotel(hotelRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdHotel);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/hotels/{id}")
@@ -56,7 +69,7 @@ public class ManagementController {
     }
 
     @GetMapping("/amenities/{locale}")
-    public ResponseEntity<List<AmenityResponse>> getAmenities(@PathVariable LocaleType locale) {
+    public ResponseEntity<List<AdminAmenityResponse>> getAmenities(@PathVariable LocaleType locale) {
         return ResponseEntity.ok(managementService.getAmenities(locale.name()));
     }
 
