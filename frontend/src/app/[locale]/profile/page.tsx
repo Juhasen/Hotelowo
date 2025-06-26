@@ -97,7 +97,7 @@ export default function ProfilePage() {
         const fetchReservations = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`${locale}/api/reservation/user`);
+                const response = await fetch(`/${locale}/api/reservation/user`);
                 if (!response.ok) {
                     throw new Error('Nie udało się pobrać rezerwacji');
                 }

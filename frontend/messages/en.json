@@ -42,7 +42,8 @@
     "manageAmenities": "Manage amenities",
     "manageUsers": "Manage users",
     "unauthorized": "You are not authorized to view this page",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "logout": "Logout"
   },
   "AdminUsers": {
     "title": "User Management",

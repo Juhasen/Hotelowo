@@ -42,7 +42,8 @@
     "manageAmenities": "Zarządzaj udogodnieniami",
     "manageUsers": "Zarządzaj użytkownikami",
     "unauthorized": "Nie masz uprawnień do wyświetlenia tej strony",
-    "loading": "Ładowanie..."
+    "loading": "Ładowanie...",
+    "logout": "Wyloguj się"
   },
   "AdminUsers": {
     "title": "Zarządzanie użytkownikami",

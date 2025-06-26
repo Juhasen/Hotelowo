@@ -16,6 +16,7 @@ import { useParams, useRouter } from "next/navigation";
 import HotelIcon from '@mui/icons-material/Hotel';
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import PeopleIcon from '@mui/icons-material/People';
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function AdminPage() {
     const t = useTranslations('Admin');
@@ -65,6 +66,23 @@ export default function AdminPage() {
 
         checkAdminAccess();
     }, [locale, router, t]);
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(`/${locale}/api/auth/logout`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                router.push(`/login`);
+            } else {
+                setError('Błąd podczas wylogowywania');
+            }
+        } catch (err) {
+            setError('Wystąpił problem z wylogowaniem');
+            console.error('Błąd wylogowania:', err);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -136,6 +154,16 @@ export default function AdminPage() {
                         </Button>
                     </Grid>
                 </Grid>
+                <Box sx={{ mt: 4, textAlign: 'center' }}>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<LogoutIcon />}
+                        onClick={handleLogout}
+                    >
+                        {t('logout')}
+                    </Button>
+                </Box>
             </Paper>
         </Container>
     );
